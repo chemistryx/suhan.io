@@ -1,0 +1,18 @@
+.base {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+
+    &.divider {
+        border-block-start: 1px solid var(--primary200);
+    }
+
+    .title {
+        font-size: 1.75rem;
+    }
+
+    .description {
+        font-size: .95rem;
+    }
+}

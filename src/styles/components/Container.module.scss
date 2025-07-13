@@ -1,0 +1,25 @@
+@use "@/styles/variables" as *;
+
+.base {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    margin: 15vh auto 0;
+    width: 55%;
+
+    @media screen and (max-width: $viewport-xl) {
+        width: 70%;
+    }
+
+    @media screen and (max-width: $viewport-lg) {
+        width: 80%;
+    }
+
+    @media screen and (max-width: $viewport-md) {
+        width: 90%;
+    }
+
+    @media screen and (max-width: $viewport-sm) {
+        width: 95%;
+    }
+}

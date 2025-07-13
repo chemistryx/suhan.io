@@ -1,0 +1,103 @@
+@use "@/styles/variables" as *;
+
+.base {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    width: 16%;
+    padding-right: .5rem;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 1px;
+        height: 100%;
+        background: linear-gradient(to bottom, transparent, var(--primary100), transparent);
+    }
+
+    @media screen and (max-width: $viewport-lg) {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        padding: unset;
+
+        &::after {
+            content: none;
+        }
+    }
+
+
+    .logoWrapper {
+        display: flex;
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+        white-space: nowrap;
+
+        &:hover {
+            background: var(--primary100);
+
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .4rem .6rem;
+            width: 100%;
+            text-decoration: none;
+
+            img {
+                border-radius: 50%;
+            }
+
+            .textWrapper {
+                display: flex;
+                flex-direction: column;
+
+                .title {
+                    font-size: 1rem;
+                    font-weight: 700;
+                }
+
+                .description {
+                    font-size: .75rem;
+                    color: var(--secondary400);
+                }
+            }
+        }
+    }
+
+    .items {
+        display: flex;
+        flex-direction: column;
+        gap: .25rem;
+        list-style: none;
+
+        @media screen and (max-width: $viewport-lg) {
+            flex-direction: row;
+            align-items: center;
+            padding: unset;
+            border: none;
+        }
+
+        .item {
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+
+            &:hover,
+            &:active {
+                background: var(--primary100);
+            }
+
+            .link {
+                display: flex;
+                align-items: center;
+                padding: .4rem .6rem;
+                text-decoration: none;
+            }
+        }
+    }
+}

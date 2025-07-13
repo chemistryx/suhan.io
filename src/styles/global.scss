@@ -1,1 +1,99 @@
-:root {}
+@use "@/styles/variables" as *;
+@use "@/styles/fonts";
+
+:root {
+    --font-family: "MaruBuri", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+    --border-radius: 8px;
+    --line-height: 2.1;
+
+    --primary50: #f8f8f2;
+    --primary100: #efefe2;
+    --primary200: #d5d5b2;
+    --primary300: #bfbd8a;
+    --primary400: #b0ab6f;
+    --primary500: #a3975d;
+    --primary600: #8f7f50;
+    --primary700: #786545;
+    --primary800: #64533c;
+    --primary900: #534534;
+    --primary950: #2e251a;
+
+    --secondary50: #f6f6f6;
+    --secondary100: #e7e7e7;
+    --secondary200: #d1d1d1;
+    --secondary300: #b0b0b0;
+    --secondary400: #888888;
+    --secondary500: #6d6d6d;
+    --secondary600: #5d5d5d;
+    --secondary700: #4f4f4f;
+    --secondary800: #454545;
+    --secondary900: #3d3d3d;
+    --secondary950: #252525;
+
+    --background-start: #fffff0;
+    --background-end: #f0f0f0;
+
+    --transition: all .1s ease-in-out;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(to bottom, var(--background-start), var(--background-end));
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+    color: var(--secondary950);
+}
+
+main {
+    display: flex;
+    gap: .5rem;
+
+    @media screen and (max-width: $viewport-lg) {
+        flex-direction: column;
+    }
+
+    .content {
+        position: relative;
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        line-height: var(--line-height);
+    }
+}
+
+a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: .3rem;
+    transition: var(--transition);
+
+    &:hover {
+        text-decoration-color: var(--secondary950);
+        text-underline-offset: .4rem;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+    font-weight: 600;
+}
+
+::selection {
+    background-color: var(--primary100);
+}
