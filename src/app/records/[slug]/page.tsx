@@ -5,7 +5,7 @@ import RecordPageComponent from "./RecordPageComponent";
 import { RECORDS_TABLE_NAME } from "@/constants";
 
 interface Props {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }
 
 export default async function RecordPage({ params }: Props) {

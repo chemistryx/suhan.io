@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import EditRecordPageComponent from "./EditRecordPageComponent";
 
 interface Props {
-    params: { slug: string };
+    params: Promise<{ slug: string }>;
 }
 
 export default async function EditRecordPage({ params }: Props) {
