@@ -5,6 +5,7 @@ import Container from "@/components/Container";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { NavigationGuardProvider } from "next-navigation-guard";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 interface Props {
     children: Readonly<React.ReactNode>;
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: Props) {
                         <Footer />
                     </Container>
                 </NavigationGuardProvider>
+                <SpeedInsights />
             </body>
         </html>
     );
