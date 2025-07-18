@@ -18,9 +18,6 @@ const Navbar = () => {
                 <li className={styles.item}>
                     <Link className={styles.link} href="/records">기록</Link>
                 </li>
-                <li className={styles.item}>
-                    <Link className={styles.link} href="/records">기록</Link>
-                </li>
             </ul>
         </nav>
     );

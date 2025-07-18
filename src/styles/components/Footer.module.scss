@@ -7,9 +7,9 @@
     &::before {
         content: '';
         display: block;
-        width: 60%;
+        width: 40%;
         height: 1px;
-        background: linear-gradient(to right, transparent 0%, var(--primary100) 30%);
+        background: linear-gradient(to right, transparent, var(--primary100));
     }
 
     .items {
@@ -40,5 +40,15 @@
         font-size: .8rem;
         color: var(--secondary300);
         text-align: end;
+    }
+
+    .auth {
+        color: var(--primary300);
+        font-size: .75rem;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 }

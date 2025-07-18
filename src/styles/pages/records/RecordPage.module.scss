@@ -1,0 +1,30 @@
+.base {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+
+        .manage {
+            display: flex;
+            gap: .5rem;
+        }
+
+        .list {
+            margin-left: auto;
+        }
+    }
+
+    .contentWrapper {
+
+        pre,
+        code {
+            background: var(--primary50);
+            border: 1px solid var(--primary100);
+            padding: .5rem;
+            border-radius: var(--border-radius);
+        }
+    }
+}

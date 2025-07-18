@@ -1,0 +1,54 @@
+.base {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: .6rem 1.2rem;
+    font-size: .85rem;
+    background: var(--primary200);
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+    transition: var(--transition);
+
+    &.sm {
+        padding: .3rem .6rem;
+        height: 2rem;
+    }
+
+    &.md {
+        padding: .6rem 1.2rem;
+        height: 2.5rem;
+    }
+
+    &.lg {
+        padding: 1rem 1.5rem;
+        font-size: .9rem;
+        height: 3rem;
+    }
+
+    &.xl {
+        padding: 1rem 1.75rem;
+        font-size: 1rem;
+        height: 3.5rem;
+    }
+
+    &:hover {
+        background: var(--primary300);
+    }
+
+    &:disabled {
+        background: var(--primary100);
+        cursor: not-allowed;
+    }
+
+    &.outline {
+        background: transparent;
+
+        &:hover {
+            background: var(--primary100);
+        }
+    }
+}
