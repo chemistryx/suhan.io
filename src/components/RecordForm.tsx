@@ -1,5 +1,5 @@
 import { Record } from "@/types/record";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
 import MarkdownEditor from "./MarkdownEditor";
@@ -30,6 +30,10 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
         setFormData({ ...formData, title: newTitle, slug: normalize(newTitle) });
     };
 
+    const handleContentChange = useCallback((value?: string) => {
+        setFormData((prev) => prev.content === value ? prev : { ...prev, content: value ?? "" });
+    }, []);
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         onSubmit(formData);
@@ -37,10 +41,9 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
 
     return (
         <>
-            <Input label="제목" type="text" placeholder="제목" value={formData.title} onChange={handleTitleChange} />
-            <Input label="Slug" type="text" placeholder="slug" value={decodeURIComponent(formData.slug)} readOnly />
-            <Input label="Draft" type="checkbox" checked={formData.draft} onChange={(e) => setFormData({ ...formData, draft: e.target.checked })} />
-            <MarkdownEditor value={formData.content} onChange={(value) => setFormData({ ...formData, content: value ?? "" })} />
+            <Input label={`제목 (${formData.slug})`} type="text" placeholder="제목" value={formData.title} onChange={handleTitleChange} />
+            <Input label="초안 (공개 여부)" type="checkbox" checked={formData.draft} onChange={(e) => setFormData({ ...formData, draft: e.target.checked })} />
+            <MarkdownEditor value={formData.content} onChange={handleContentChange} />
             <Button type="submit" onClick={handleSubmit}>{mode === "create" ? "등록하기" : "수정하기"}</Button>
         </>
     );

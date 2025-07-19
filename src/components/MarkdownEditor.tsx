@@ -1,4 +1,5 @@
 import MDEditor, { MDEditorProps } from "@uiw/react-md-editor";
+import React from "react";
 
 const MarkdownEditor = ({ ...props }: MDEditorProps) => {
     return (
@@ -6,4 +7,4 @@ const MarkdownEditor = ({ ...props }: MDEditorProps) => {
     );
 };
 
-export default MarkdownEditor;
+export default React.memo(MarkdownEditor);
