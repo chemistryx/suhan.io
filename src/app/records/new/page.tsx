@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import NewRecordPageComponent from "./NewRecordPageComponent";
+import { NavigationGuardProvider } from "next-navigation-guard";
 
 export default async function NewRecordPage() {
     const supabase = await createClient();
@@ -8,5 +9,9 @@ export default async function NewRecordPage() {
 
     if (!user) notFound(); // fallback
 
-    return <NewRecordPageComponent user={user} />
+    return (
+        <NavigationGuardProvider>
+            <NewRecordPageComponent user={user} />
+        </NavigationGuardProvider>
+    );
 }

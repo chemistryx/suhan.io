@@ -12,13 +12,13 @@ export default async function RecordPage({ params }: Props) {
     const { slug } = await params;
     const supabase = await createClient();
 
-    const { data: record, error } = await supabase
+    const { data, error } = await supabase
         .from(RECORDS_TABLE_NAME)
         .select("*")
         .eq("slug", slug)
         .single();
 
-    if (!record || error) return notFound();
+    if (!data || error) return notFound();
 
-    return <RecordPageComponent record={record} />
+    return <RecordPageComponent record={data} />
 }
