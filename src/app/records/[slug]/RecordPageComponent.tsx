@@ -21,7 +21,7 @@ const RecordPageComponent = ({ record }: Props) => {
     const router = useRouter();
 
     const handleEdit = () => {
-        router.push(`/records/${record.slug}/edit`);
+        router.push(`/records/${decodeURIComponent(record.slug)}/edit`);
     };
 
     return (

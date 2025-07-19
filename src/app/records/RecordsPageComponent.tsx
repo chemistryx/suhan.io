@@ -8,7 +8,7 @@ import { toDateString } from "@/utils/strings";
 import { useRouter } from "next/navigation";
 
 interface Props {
-    records: Partial<Record>[];
+    records: Pick<Record, "id" | "title" | "slug" | "created_at" | "draft">[];
 }
 
 const RecordsPageComponent = ({ records }: Props) => {
@@ -31,7 +31,7 @@ const RecordsPageComponent = ({ records }: Props) => {
                 <ul className={styles.records}>
                     {records.map((record) => (
                         <li key={record.id} className={styles.record}>
-                            <a className={styles.link} href={`/records/${record.slug}`}>
+                            <a className={styles.link} href={`/records/${decodeURIComponent(record.slug)}`}>
                                 <div className={styles.contentWrapper}>
                                     <h4 className={styles.title}>{record.title}</h4>
                                     <div className={styles.meta}>
