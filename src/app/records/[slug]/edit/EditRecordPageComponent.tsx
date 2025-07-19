@@ -48,7 +48,7 @@ const EditRecordPageComponent = ({ record }: Props) => {
                 <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
             </div>
             <div className={styles.inputWrapper}>
-                <RecordForm initialValues={record} onSubmit={handleSubmit} onDirtyChange={setIsDirty} mode="edit" />
+                <RecordForm initialValues={{ ...record, slug: decodeURIComponent(record.slug) }} onSubmit={handleSubmit} onDirtyChange={setIsDirty} mode="edit" />
             </div>
         </div>
     );
