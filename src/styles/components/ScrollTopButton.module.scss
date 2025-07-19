@@ -1,0 +1,23 @@
+.base {
+    display: flex;
+    position: fixed;
+    padding: .75rem;
+    bottom: 2rem;
+    right: 2rem;
+    border-radius: 50%;
+    background: var(--primary200);
+    border: none;
+    transition: var(--transition);
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+
+    &:hover {
+        background: var(--primary300);
+    }
+
+    &.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}

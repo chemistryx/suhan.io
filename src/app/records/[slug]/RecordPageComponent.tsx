@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import useUser from "@/hooks/useUser";
 import MarkdownViewer from "@/components/MarkdownViewer";
+import ScrollTopButton from "@/components/ScrollTopButton";
 
 interface Props {
     record: Record;
@@ -40,6 +41,7 @@ const RecordPageComponent = ({ record }: Props) => {
                 </div>
                 <MarkdownViewer content={record.content} />
             </article>
+            <ScrollTopButton />
         </>
     );
 };
