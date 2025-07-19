@@ -10,10 +10,29 @@
         display: inline-flex;
         width: 100%;
         padding: .75rem 1.5rem;
+        background: var(--input-background);
         border: 1px solid var(--primary100);
         border-radius: var(--border-radius);
         font-size: .85rem;
         font-family: inherit;
         outline: none;
+
+        &[type="checkbox"] {
+            appearance: none;
+            border: 1px solid var(--primary100);
+            border-radius: var(--border-radius);
+            width: 2rem;
+            height: 2rem;
+            padding: .5rem;
+
+            &:checked {
+                border-color: transparent;
+                background-image: url("/icons/check.svg");
+                background-size: 75% 75%;
+                background-position: 50%;
+                background-repeat: no-repeat;
+                background-color: var(--primary200);
+            }
+        }
     }
 }
