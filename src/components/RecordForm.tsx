@@ -38,7 +38,7 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
     return (
         <>
             <Input label="제목" type="text" placeholder="제목" value={formData.title} onChange={handleTitleChange} />
-            <Input label="Slug" type="text" placeholder="slug" value={formData.slug} readOnly />
+            <Input label="Slug" type="text" placeholder="slug" value={decodeURIComponent(formData.slug)} readOnly />
             <Input label="Draft" type="checkbox" checked={formData.draft} onChange={(e) => setFormData({ ...formData, draft: e.target.checked })} />
             <MarkdownEditor value={formData.content} onChange={(value) => setFormData({ ...formData, content: value ?? "" })} />
             <Button type="submit" onClick={handleSubmit}>{mode === "create" ? "등록하기" : "수정하기"}</Button>

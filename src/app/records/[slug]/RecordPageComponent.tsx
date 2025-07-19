@@ -1,7 +1,6 @@
 "use client"
 import styles from "@/styles/pages/records/RecordPage.module.scss";
 import Heading from "@/components/Heading";
-import Markdown from "react-markdown";
 import { toDateString } from "@/utils/strings";
 import { Record } from "@/types/record";
 import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
@@ -10,6 +9,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import useUser from "@/hooks/useUser";
+import MarkdownViewer from "@/components/MarkdownViewer";
 
 interface Props {
     record: Record;
@@ -38,9 +38,7 @@ const RecordPageComponent = ({ record }: Props) => {
                     }
                     <Button className={styles.list} size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
                 </div>
-                <div className={styles.contentWrapper}>
-                    <Markdown>{record.content}</Markdown>
-                </div>
+                <MarkdownViewer content={record.content} />
             </article>
         </>
     );

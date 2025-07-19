@@ -16,15 +16,4 @@
             margin-left: auto;
         }
     }
-
-    .contentWrapper {
-
-        pre,
-        code {
-            background: var(--primary50);
-            border: 1px solid var(--primary100);
-            padding: .5rem;
-            border-radius: var(--border-radius);
-        }
-    }
 }
