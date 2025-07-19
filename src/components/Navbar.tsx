@@ -1,10 +1,14 @@
+"use client"
 import styles from "@/styles/components/Navbar.module.scss";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
+    const pathname = usePathname();
+
     return (
-        <nav className={styles.base}>
+        <nav className={[styles.base, pathname.startsWith("/records/") ? styles.sticky : ""].join(" ")}>
             <div className={styles.logoWrapper}>
                 <Link className={styles.logo} href="/">
                     <Image src="/profile.png" width={38} height={38} alt="profile" />

@@ -5,6 +5,7 @@
     --font-family: "MaruBuri", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
     --border-radius: 8px;
     --line-height: 2.1;
+    --navbar-z-index: 999;
     --modal-z-index: 1000;
 
     --primary50: #f8f8f2;
@@ -32,6 +33,7 @@
     --secondary950: #252525;
 
     --input-background: #ffffff;
+    --navbar-background: rgba(255, 255, 240, 0.6);
 
     --background-start: #fffff0;
     --background-end: #f0f0f0;

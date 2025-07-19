@@ -7,6 +7,7 @@
     position: relative;
     width: 16%;
     padding-right: .5rem;
+    z-index: var(--navbar-z-index);
 
     &::after {
         content: '';
@@ -23,6 +24,14 @@
         justify-content: space-between;
         width: 100%;
         padding: unset;
+
+        &.sticky {
+            position: sticky;
+            top: 1rem;
+            background: var(--navbar-background);
+            backdrop-filter: blur(4px);
+            border-radius: var(--border-radius);
+        }
 
         &::after {
             content: none;
