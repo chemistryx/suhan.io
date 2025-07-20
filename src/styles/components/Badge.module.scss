@@ -1,0 +1,10 @@
+.base {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: .8rem;
+    padding: 0 .4rem;
+    background: var(--secondary100);
+    border-radius: var(--border-radius);
+}

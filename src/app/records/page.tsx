@@ -6,7 +6,7 @@ export default async function RecordsPage() {
     const supabase = await createClient();
     const { data: records } = await supabase
         .from(RECORDS_TABLE_NAME)
-        .select("id, title, slug, draft, created_at")
+        .select("id, title, slug, draft, tags, created_at")
         .order("created_at");
 
     return <RecordsPageComponent records={records ?? []} />

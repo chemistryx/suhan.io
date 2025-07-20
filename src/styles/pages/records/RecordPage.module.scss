@@ -3,6 +3,11 @@
     flex-direction: column;
     gap: .75rem;
 
+    .tags {
+        display: flex;
+        gap: .5rem;
+    }
+
     .actions {
         display: flex;
         justify-content: flex-end;

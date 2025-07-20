@@ -1,6 +1,6 @@
 "use client"
 import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
-import Heading from "@/components/Heading";
+import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
 import { ChevronLeft } from "lucide-react";
 import styles from "@/styles/pages/records/EditRecordPage.module.scss";
 import { useRouter } from "next/navigation";
@@ -28,6 +28,7 @@ const EditRecordPageComponent = ({ record }: Props) => {
             slug: encodeURIComponent(formData.slug),
             content: formData.content,
             draft: formData.draft,
+            tags: formData.tags
         }, { count: "exact" }).eq("slug", record.slug);
 
         if (error || count === 0) {
@@ -38,18 +39,19 @@ const EditRecordPageComponent = ({ record }: Props) => {
         }
 
         toast.success("성공적으로 게시물을 수정했습니다.");
-        router.push("/records");
+        router.push(`/records/${formData.slug}`);
     }
 
     return (
         <div className={styles.base}>
-            <Heading title="기록 수정" description="기록을 수정합니다." />
+            <Heading>
+                <HeadingTitle>기록 수정</HeadingTitle>
+                <HeadingDescription>기록을 수정합니다.</HeadingDescription>
+            </Heading>
             <div className={styles.actions}>
                 <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
             </div>
-            <div className={styles.inputWrapper}>
-                <RecordForm initialValues={{ ...record, slug: decodeURIComponent(record.slug) }} onSubmit={handleSubmit} onDirtyChange={setIsDirty} mode="edit" />
-            </div>
+            <RecordForm initialValues={{ ...record, slug: decodeURIComponent(record.slug) }} onSubmit={handleSubmit} onDirtyChange={setIsDirty} mode="edit" />
         </div>
     );
 }

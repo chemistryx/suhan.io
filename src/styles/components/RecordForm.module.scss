@@ -1,0 +1,16 @@
+.base {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+    :global(.tag_input__control) {
+        background: var(--input-background);
+        border: 1px solid var(--primary100);
+        border-radius: var(--border-radius);
+        font-size: .85rem;
+
+        :global(.tag_input__value-container) {
+            padding: .75rem 1.5rem;
+        }
+    }
+}

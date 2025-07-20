@@ -1,6 +1,6 @@
 "use client"
 import styles from "@/styles/pages/records/NewRecordPage.module.scss";
-import Heading from "@/components/Heading";
+import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { toast } from "sonner";
@@ -29,7 +29,8 @@ const NewRecordPageComponent = ({ user }: Props) => {
             slug: encodeURIComponent(data.slug),
             content: data.content,
             draft: data.draft,
-            author_id: user?.id
+            author_id: user?.id,
+            tags: data.tags
         });
 
         if (error) {
@@ -45,13 +46,14 @@ const NewRecordPageComponent = ({ user }: Props) => {
 
     return (
         <div className={styles.base}>
-            <Heading title="새 기록" description="새 기록을 작성합니다." />
+            <Heading>
+                <HeadingTitle>새 기록</HeadingTitle>
+                <HeadingDescription>새 기록을 작성합니다.</HeadingDescription>
+            </Heading>
             <div className={styles.actions}>
                 <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
             </div>
-            <div className={styles.inputWrapper}>
-                <RecordForm onSubmit={handleSubmit} onDirtyChange={setIsDirty} mode="create" />
-            </div>
+            <RecordForm onSubmit={handleSubmit} onDirtyChange={setIsDirty} mode="create" />
         </div>
     );
 }

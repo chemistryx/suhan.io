@@ -3,7 +3,8 @@
     flex-direction: column;
 
     &.divider {
-        border-block-start: 1px solid var(--primary200);
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--primary100);
     }
 
     .title {
@@ -11,6 +12,9 @@
     }
 
     .description {
+        display: flex;
+        flex-direction: column;
+        gap: .25rem;
         font-size: .95rem;
     }
 }
