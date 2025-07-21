@@ -18,6 +18,12 @@
         font-family: var(--font-family);
         --md-editor-font-family: var(--font-family);
 
+        :global(.w-md-editor-text-input) {
+            &::selection {
+                color: var(--secondary950);
+            }
+        }
+
         :global(.wmde-markdown) {
             font-family: inherit;
         }

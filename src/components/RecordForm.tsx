@@ -54,7 +54,7 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
                 isMulti
             />
             <Input label="초안 (체크 시 비공개)" type="checkbox" checked={formData.draft} onChange={(e) => setFormData({ ...formData, draft: e.target.checked })} />
-            <MarkdownEditor value={formData.content} onChange={handleContentChange} highlightEnable={false} />
+            <MarkdownEditor value={formData.content} onChange={handleContentChange} />
             <Button type="submit" onClick={handleSubmit}>{mode === "create" ? "등록하기" : "수정하기"}</Button>
         </div>
     );
