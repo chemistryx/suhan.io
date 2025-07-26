@@ -1,40 +1,35 @@
 "use client"
-import Badge from "@/components/Badge";
-import Button from "@/components/Button";
+import styles from "@/styles/pages/tags/TagPage.module.scss";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
-import useUser from "@/hooks/useUser";
-import styles from "@/styles/pages/records/RecordsPage.module.scss";
 import { Record } from "@/types/record";
 import { Tag } from "@/types/tag";
-import { toDateString } from "@/utils/strings";
 import Link from "next/link";
+import Badge from "@/components/Badge";
+import { toDateString } from "@/utils/strings";
+import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
+import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Props {
+    slug: string;
     records: (Pick<Record, "id" | "title" | "slug" | "created_at" | "draft"> & {
         tags: Pick<Tag, "id" | "name" | "slug">[];
     })[];
 }
-
-const RecordsPageComponent = ({ records }: Props) => {
-    const { user } = useUser();
+const TagPageComponent = ({ slug, records }: Props) => {
     const router = useRouter();
-
-    const handleNewRecord = () => {
-        router.push("/records/new");
-    };
 
     return (
         <div className={styles.base}>
             <Heading>
-                <HeadingTitle>기록</HeadingTitle>
-                <HeadingDescription>{records.length}개의 기록이 있습니다.</HeadingDescription>
+                <HeadingTitle>#{slug}</HeadingTitle>
+                <HeadingDescription>
+                    <span>{records.length}개의 기록이 있습니다.</span>
+                    <div className={styles.actions}>
+                        <Button className={styles.list} size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/tags")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
+                    </div>
+                </HeadingDescription>
             </Heading>
-            {user &&
-                <div className={styles.actions}>
-                    <Button onClick={handleNewRecord}>새 기록</Button>
-                </div>
-            }
             <ul className={styles.records}>
                 {records.map((record) => (
                     <li key={record.id} className={styles.record}>
@@ -57,4 +52,4 @@ const RecordsPageComponent = ({ records }: Props) => {
     );
 };
 
-export default RecordsPageComponent;
+export default TagPageComponent;

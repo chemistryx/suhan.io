@@ -7,7 +7,9 @@ import { normalize } from "@/utils/strings";
 import CreatableSelect from "react-select/creatable";
 import styles from "@/styles/components/RecordForm.module.scss";
 
-export type RecordFormData = Pick<Record, "title" | "slug" | "content" | "draft"> & { tags: string[] };
+export type RecordFormData = Pick<Record, "title" | "slug" | "content" | "draft"> & {
+    tags: string[]
+};
 
 interface Props {
     initialValues?: RecordFormData;
@@ -55,7 +57,7 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
             />
             <Input label="초안 (체크 시 비공개)" type="checkbox" checked={formData.draft} onChange={(e) => setFormData({ ...formData, draft: e.target.checked })} />
             <MarkdownEditor value={formData.content} onChange={handleContentChange} />
-            <Button type="submit" onClick={handleSubmit}>{mode === "create" ? "등록하기" : "수정하기"}</Button>
+            <Button onClick={handleSubmit}>{mode === "create" ? "등록하기" : "수정하기"}</Button>
         </div>
     );
 };

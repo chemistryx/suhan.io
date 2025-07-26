@@ -5,7 +5,6 @@ export type Record = {
     content: string;
     slug: string;
     draft: boolean;
-    tags: string[];
     created_at: string;
     updated_at: string;
 };

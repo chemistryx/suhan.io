@@ -12,9 +12,13 @@ import useUser from "@/hooks/useUser";
 import MarkdownViewer from "@/components/MarkdownViewer";
 import ScrollTopButton from "@/components/ScrollTopButton";
 import Badge from "@/components/Badge";
+import { Tag } from "@/types/tag";
+import Link from "next/link";
 
 interface Props {
-    record: Record;
+    record: Record & {
+        tags: Pick<Tag, "id" | "name" | "slug">[];
+    };
 }
 
 const RecordPageComponent = ({ record }: Props) => {
@@ -35,7 +39,9 @@ const RecordPageComponent = ({ record }: Props) => {
                     <HeadingDescription>
                         <div className={styles.tags}>
                             {record.tags.map((tag) => (
-                                <Badge key={tag}>{tag}</Badge>
+                                <Link key={tag.id} href={`/tags/${tag.slug}`}>
+                                    <Badge key={tag.id}>{tag.name}</Badge>
+                                </Link>
                             ))}
                         </div>
                         <span>{toDateString(record.created_at)}</span>

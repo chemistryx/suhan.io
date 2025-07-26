@@ -3,6 +3,15 @@
     flex-direction: column;
     gap: .75rem;
 
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+
+        .list {
+            margin-left: auto;
+        }
+    }
+
     .records {
         display: flex;
         flex-direction: column;

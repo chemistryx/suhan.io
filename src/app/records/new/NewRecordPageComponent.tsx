@@ -2,15 +2,16 @@
 import styles from "@/styles/pages/records/NewRecordPage.module.scss";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
 import { createClient } from "@/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
+import { PostgrestError, User } from "@supabase/supabase-js";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
-import { RECORDS_TABLE_NAME } from "@/constants";
+import { RECORD_TAGS_TABLE_NAME, RECORDS_TABLE_NAME, TAGS_TABLE_NAME } from "@/constants";
 import { ChevronLeft } from "lucide-react";
 import RecordForm, { RecordFormData } from "@/components/RecordForm";
 import { useState } from "react";
 import { useNavigationGuard } from "next-navigation-guard";
+import { normalize } from "@/utils/strings";
 
 interface Props {
     user: User;
@@ -24,24 +25,68 @@ const NewRecordPageComponent = ({ user }: Props) => {
 
     const handleSubmit = async (data: RecordFormData) => {
         setIsDirty(false);
-        const { error } = await supabase.from(RECORDS_TABLE_NAME).insert({
-            title: data.title,
-            slug: encodeURIComponent(data.slug),
-            content: data.content,
-            draft: data.draft,
-            author_id: user?.id,
-            tags: data.tags
-        });
 
-        if (error) {
-            toast.error(error.message);
+        try {
+            // 1. find existing tags
+            const { data: existingTags, error: existingTagsError } = await supabase
+                .from(TAGS_TABLE_NAME)
+                .select("*")
+                .in("name", data.tags);
+
+            if (existingTagsError) throw existingTagsError;
+
+            const existingTagNames = existingTags.map((tag) => tag.name);
+            const newTagNames = data.tags.filter((name) => !existingTagNames.includes(name));
+
+            // 2. insert newly added tags
+            let insertedTags = [];
+
+            if (newTagNames.length) {
+                const { data: newTags, error: newTagsError } = await supabase
+                    .from(TAGS_TABLE_NAME)
+                    .insert(newTagNames.map((name) => ({ name, slug: normalize(name) })))
+                    .select();
+
+                if (newTagsError) throw newTagsError;
+                insertedTags = newTags;
+            }
+
+            const allTags = [...existingTags, ...insertedTags];
+            const tagIds = allTags.map((tag) => tag.id);
+
+            // 3. insert record
+            const { data: record, error: recordError } = await supabase
+                .from(RECORDS_TABLE_NAME)
+                .insert({
+                    title: data.title,
+                    slug: encodeURIComponent(data.slug),
+                    content: data.content,
+                    draft: data.draft,
+                    author_id: user?.id,
+                })
+                .select()
+                .single();
+
+            if (recordError) throw recordError;
+
+            console.log(tagIds);
+
+            // 4. insert record_tags relation
+            const { error: recordTagsError } = await supabase.from(RECORD_TAGS_TABLE_NAME)
+                .insert(tagIds.map((id) => ({
+                    record_id: record.id,
+                    tag_id: id
+                })));
+
+            if (recordTagsError) throw recordTagsError;
+
+            toast.success("성공적으로 게시물을 등록했습니다.");
+            router.push("/records");
+        } catch (e) {
+            toast.error((e as PostgrestError).message || "게시물 등록 중 오류가 발생했습니다.");
+
             setIsDirty(true);
-            return;
         }
-
-
-        toast.success("성공적으로 게시물을 등록했습니다.");
-        router.push("/records");
     };
 
     return (
