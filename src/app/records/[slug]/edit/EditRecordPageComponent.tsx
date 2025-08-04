@@ -8,8 +8,10 @@ import { createClient } from "@/utils/supabase/client";
 import RecordForm, { RecordFormData } from "@/components/RecordForm";
 import { useState } from "react";
 import { useNavigationGuard } from "next-navigation-guard";
-import { RECORDS_TABLE_NAME } from "@/constants";
+import { RECORD_TAGS_TABLE_NAME, RECORDS_TABLE_NAME, TAGS_TABLE_NAME } from "@/constants";
 import { toast } from "sonner";
+import { PostgrestError } from "@supabase/supabase-js";
+import { normalize } from "@/utils/strings";
 
 interface Props {
     record: RecordFormData;
@@ -21,25 +23,76 @@ const EditRecordPageComponent = ({ record }: Props) => {
     const [isDirty, setIsDirty] = useState(false);
     useNavigationGuard({ enabled: isDirty, confirm: () => window.confirm("작성중인 내용이 있습니다. 계속하시겠습니까?") });
 
-    const handleSubmit = async (formData: RecordFormData) => {
+    const handleSubmit = async (data: RecordFormData) => {
         setIsDirty(false);
-        const { error, count } = await supabase.from(RECORDS_TABLE_NAME).update({
-            title: formData.title,
-            slug: encodeURIComponent(formData.slug),
-            content: formData.content,
-            draft: formData.draft,
-            tags: formData.tags
-        }, { count: "exact" }).eq("slug", record.slug);
 
-        if (error || count === 0) {
-            toast.error("게시물 수정 중 오류가 발생했습니다.");
-            console.error(error?.message);
+        try {
+            // 1. find existing tags
+            const { data: existingTags, error: selectExistingTagsError } = await supabase
+                .from(TAGS_TABLE_NAME)
+                .select("*")
+                .in("name", data.tags);
+
+            if (selectExistingTagsError) throw selectExistingTagsError;
+
+            const existingTagNames = existingTags.map((tag) => tag.name);
+            const newTagNames = data.tags.filter((name) => !existingTagNames.includes(name));
+
+            // 2. insert newly added tags
+            let insertedTags = [];
+
+            if (newTagNames.length) {
+                const { data: newTags, error: insertNewTagsError } = await supabase
+                    .from(TAGS_TABLE_NAME)
+                    .insert(newTagNames.map((name) => ({ name, slug: normalize(name) })))
+                    .select();
+
+                if (insertNewTagsError) throw insertNewTagsError;
+                insertedTags = newTags;
+            }
+
+            const allTags = [...existingTags, ...insertedTags];
+            const tagIds = allTags.map((tag) => tag.id);
+
+            // 3. delete existing record_tags relation
+            const { data: dd, error: deleteRecordTagsError } = await supabase
+                .from(RECORD_TAGS_TABLE_NAME)
+                .delete()
+                .eq("record_id", record.id);
+
+            console.log(dd, deleteRecordTagsError);
+
+            if (deleteRecordTagsError) throw deleteRecordTagsError;
+
+            // 4. update record
+            const { error: updateRecordError } = await supabase
+                .from(RECORDS_TABLE_NAME)
+                .update({
+                    title: data.title,
+                    slug: encodeURIComponent(data.slug),
+                    content: data.content,
+                    draft: data.draft
+                })
+                .eq("id", record.id);
+
+            if (updateRecordError) throw updateRecordError;
+
+            // 5. insert record_tags relation
+            const { error: insertRecordTagsError } = await supabase
+                .from(RECORD_TAGS_TABLE_NAME)
+                .insert(tagIds.map((id) => ({
+                    record_id: record.id,
+                    tag_id: id
+                })));
+
+            if (insertRecordTagsError) throw insertRecordTagsError;
+
+            toast.success("성공적으로 게시물을 수정했습니다.");
+            router.push(`/records/${data.slug}`);
+        } catch (e) {
+            toast.error((e as PostgrestError).message || "게시물 수정 중 오류가 발생했습니다.");
             setIsDirty(true);
-            return;
         }
-
-        toast.success("성공적으로 게시물을 수정했습니다.");
-        router.push(`/records/${formData.slug}`);
     }
 
     return (

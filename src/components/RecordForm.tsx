@@ -7,7 +7,7 @@ import { normalize } from "@/utils/strings";
 import CreatableSelect from "react-select/creatable";
 import styles from "@/styles/components/RecordForm.module.scss";
 
-export type RecordFormData = Pick<Record, "title" | "slug" | "content" | "draft"> & {
+export type RecordFormData = Pick<Record, "id" | "title" | "slug" | "content" | "draft"> & {
     tags: string[]
 };
 
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => {
-    const defaultValues: RecordFormData = { title: "", slug: "", content: "", tags: [], draft: true };
+    const defaultValues: RecordFormData = { id: -1, title: "", slug: "", content: "", tags: [], draft: true };
     const [formData, setFormData] = useState({ ...defaultValues, ...initialValues });
 
     const initialRef = useRef({ ...defaultValues, ...initialValues });

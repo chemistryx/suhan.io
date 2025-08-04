@@ -28,12 +28,12 @@ const NewRecordPageComponent = ({ user }: Props) => {
 
         try {
             // 1. find existing tags
-            const { data: existingTags, error: existingTagsError } = await supabase
+            const { data: existingTags, error: selectExistingTagsError } = await supabase
                 .from(TAGS_TABLE_NAME)
                 .select("*")
                 .in("name", data.tags);
 
-            if (existingTagsError) throw existingTagsError;
+            if (selectExistingTagsError) throw selectExistingTagsError;
 
             const existingTagNames = existingTags.map((tag) => tag.name);
             const newTagNames = data.tags.filter((name) => !existingTagNames.includes(name));
@@ -42,12 +42,12 @@ const NewRecordPageComponent = ({ user }: Props) => {
             let insertedTags = [];
 
             if (newTagNames.length) {
-                const { data: newTags, error: newTagsError } = await supabase
+                const { data: newTags, error: insertNewTagsError } = await supabase
                     .from(TAGS_TABLE_NAME)
                     .insert(newTagNames.map((name) => ({ name, slug: normalize(name) })))
                     .select();
 
-                if (newTagsError) throw newTagsError;
+                if (insertNewTagsError) throw insertNewTagsError;
                 insertedTags = newTags;
             }
 
@@ -55,7 +55,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
             const tagIds = allTags.map((tag) => tag.id);
 
             // 3. insert record
-            const { data: record, error: recordError } = await supabase
+            const { data: record, error: insertRecordError } = await supabase
                 .from(RECORDS_TABLE_NAME)
                 .insert({
                     title: data.title,
@@ -67,24 +67,22 @@ const NewRecordPageComponent = ({ user }: Props) => {
                 .select()
                 .single();
 
-            if (recordError) throw recordError;
-
-            console.log(tagIds);
+            if (insertRecordError) throw insertRecordError;
 
             // 4. insert record_tags relation
-            const { error: recordTagsError } = await supabase.from(RECORD_TAGS_TABLE_NAME)
+            const { error: insertRecordTagsError } = await supabase
+                .from(RECORD_TAGS_TABLE_NAME)
                 .insert(tagIds.map((id) => ({
                     record_id: record.id,
                     tag_id: id
                 })));
 
-            if (recordTagsError) throw recordTagsError;
+            if (insertRecordTagsError) throw insertRecordTagsError;
 
             toast.success("성공적으로 게시물을 등록했습니다.");
             router.push("/records");
         } catch (e) {
             toast.error((e as PostgrestError).message || "게시물 등록 중 오류가 발생했습니다.");
-
             setIsDirty(true);
         }
     };

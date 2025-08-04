@@ -20,7 +20,7 @@ export default async function RecordPage({ params }: Props) {
 
     if (!data || error) return notFound();
 
-    const record = { ...data, tags: data.tags.flatMap((t: { tag: Tag; }) => t.tag) };
+    const record = { ...data, tags: data.tags.flatMap((t: { tag: Tag }) => t.tag) };
 
     return <RecordPageComponent record={record} />
 }
