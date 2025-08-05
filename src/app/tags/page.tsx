@@ -10,7 +10,7 @@ export default async function TagsPage() {
         .order("created_at");
 
     const tags = data?.map((d) => {
-        const records = d.records?.flatMap((r) => r.record).filter((record) => record.draft === false);
+        const records = d.records?.flatMap((r) => r.record).filter((record) => record?.draft === false);
 
         return {
             id: d.id,
