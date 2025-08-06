@@ -1,0 +1,49 @@
+.base {
+    display: flex;
+    flex-direction: column;
+
+    .imageUploadWrapper {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+        padding: .75rem;
+        width: 240px;
+
+        .heading {
+            display: flex;
+            justify-content: space-between;
+
+            .close {
+                cursor: pointer;
+            }
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--secondary100);
+            border-radius: var(--border-radius);
+            gap: .25rem;
+            padding: .2rem;
+
+            .tab {
+                all: unset;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                white-space: nowrap;
+                border-radius: calc(var(--border-radius) - 2px);
+                font-size: .75rem;
+                font-weight: 600;
+                padding: .2rem .4rem;
+                width: 100%;
+                transition: var(--transition);
+
+                &:hover,
+                &.active {
+                    cursor: pointer;
+                    background: var(--input-background);
+                }
+            }
+        }
+    }
+}
