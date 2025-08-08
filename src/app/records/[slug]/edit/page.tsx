@@ -4,13 +4,13 @@ import { notFound } from "next/navigation";
 import EditRecordPageComponent from "./EditRecordPageComponent";
 import { NavigationGuardProvider } from "next-navigation-guard";
 import { Tag } from "@/types/tag";
+import { cache } from "react";
 
 interface Props {
     params: Promise<{ slug: string }>;
 }
 
-export default async function EditRecordPage({ params }: Props) {
-    const { slug } = await params;
+const getRecord = cache(async (slug: string) => {
     const supabase = await createClient();
 
     const { data, error } = await supabase
@@ -22,6 +22,22 @@ export default async function EditRecordPage({ params }: Props) {
     if (!data || error) return notFound();
 
     const record = { ...data, tags: data.tags.map((t: { tag: Tag }) => t.tag.name) };
+
+    return record;
+});
+
+export async function generateMetadata({ params }: Props) {
+    const { slug } = await params;
+    const record = await getRecord(slug);
+
+    return {
+        title: record.title
+    };
+}
+
+export default async function EditRecordPage({ params }: Props) {
+    const { slug } = await params;
+    const record = await getRecord(slug);
 
     return (
         <NavigationGuardProvider>

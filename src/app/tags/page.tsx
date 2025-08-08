@@ -1,6 +1,11 @@
 import { TAGS_TABLE_NAME } from "@/constants";
 import { createClient } from "@/utils/supabase/server";
 import TagsPageComponent from "./TagsPageComponent";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "태그"
+};
 
 export default async function TagsPage() {
     const supabase = await createClient();

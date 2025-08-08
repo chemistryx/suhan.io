@@ -7,6 +7,15 @@ interface Props {
     params: Promise<{ slug: string }>;
 }
 
+export async function generateMetadata({ params }: Props) {
+    const { slug } = await params;
+    const decodedSlug = decodeURIComponent(slug);
+
+    return {
+        title: "#" + decodedSlug
+    };
+}
+
 export default async function TagPage({ params }: Props) {
     const { slug } = await params;
     const supabase = await createClient();

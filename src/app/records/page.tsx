@@ -1,6 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
 import RecordsPageComponent from "./RecordsPageComponent";
 import { RECORDS_TABLE_NAME } from "@/constants";
+import { Metadata } from "next";
+
+export const metadata: Metadataa = {
+    title: "기록"
+};
 
 export default async function RecordsPage() {
     const supabase = await createClient();
