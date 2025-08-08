@@ -3,7 +3,7 @@ import RecordsPageComponent from "./RecordsPageComponent";
 import { RECORDS_TABLE_NAME } from "@/constants";
 import { Metadata } from "next";
 
-export const metadata: Metadataa = {
+export const metadata: Metadata = {
     title: "기록"
 };
 
