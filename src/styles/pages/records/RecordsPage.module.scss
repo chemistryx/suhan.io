@@ -34,11 +34,22 @@
 
             .meta {
                 display: flex;
-                gap: .5rem;
+                gap: .75rem;
 
                 .item {
+                    position: relative;
                     font-size: .85rem;
                     color: var(--secondary500);
+
+                    &:not(:first-child)::before {
+                        content: "|";
+                        position: absolute;
+                        top: 50%;
+                        left: -17.5%;
+                        color: var(--secondary500);
+                        transform: translate(-50%, -50%);
+                        user-select: none;
+                    }
                 }
             }
         }

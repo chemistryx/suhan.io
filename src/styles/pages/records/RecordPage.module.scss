@@ -3,6 +3,10 @@
     flex-direction: column;
     gap: .75rem;
 
+    .date {
+        color: var(--secondary500);
+    }
+
     .tags {
         display: flex;
         gap: .5rem;
