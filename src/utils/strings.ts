@@ -1,4 +1,4 @@
-import { format, parseISO } from "date-fns";
+import { format, formatDistanceToNow, parseISO } from "date-fns";
 import { ko } from "date-fns/locale";
 
 export function normalize(title: string) {
@@ -11,6 +11,11 @@ export function normalize(title: string) {
 }
 
 export function toDateString(date?: string) {
-    if (!date) return "unknown";
+    if (!date) return "N/A";
     return format(parseISO(date), "PPP", { locale: ko });
+}
+
+export function toDateDistanceString(date?: string) {
+    if (!date) return "N/A";
+    return formatDistanceToNow(date, { addSuffix: true, locale: ko });
 }

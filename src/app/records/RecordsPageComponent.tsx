@@ -1,12 +1,12 @@
 "use client"
 import Badge from "@/components/Badge";
-import Button from "@/components/Button";
+import Button, { ButtonColor, ButtonSize } from "@/components/Button";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
 import useUser from "@/hooks/useUser";
 import styles from "@/styles/pages/records/RecordsPage.module.scss";
 import { Record } from "@/types/record";
 import { Tag } from "@/types/tag";
-import { toDateString } from "@/utils/strings";
+import { toDateDistanceString } from "@/utils/strings";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -32,7 +32,7 @@ const RecordsPageComponent = ({ records }: Props) => {
             </Heading>
             {user &&
                 <div className={styles.actions}>
-                    <Button onClick={handleNewRecord}>새 기록</Button>
+                    <Button color={ButtonColor.secondary} size={ButtonSize.small} onClick={handleNewRecord}>새 기록</Button>
                 </div>
             }
             <ul className={styles.records}>
@@ -47,7 +47,7 @@ const RecordsPageComponent = ({ records }: Props) => {
                             ))}
                         </div>
                         <div className={styles.meta}>
-                            <time dateTime={record.created_at} className={styles.item}>{toDateString(record.created_at)}</time>
+                            <time dateTime={record.created_at} className={styles.item}>{toDateDistanceString(record.created_at)}</time>
                             {record.draft && <span className={styles.item}>Draft</span>}
                         </div>
                     </li>
