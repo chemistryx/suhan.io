@@ -25,13 +25,13 @@
         width: 100%;
         padding: unset;
 
-        &.sticky {
-            position: sticky;
-            top: 1rem;
-            background: var(--navbar-background);
-            backdrop-filter: blur(4px);
-            border-radius: var(--border-radius);
-        }
+        // &.sticky {
+        //     position: sticky;
+        //     top: 1rem;
+        //     background: var(--navbar-background);
+        //     backdrop-filter: blur(4px);
+        //     border-radius: var(--border-radius);
+        // }
 
         &::after {
             content: none;
@@ -73,7 +73,7 @@
 
                 .description {
                     font-size: .75rem;
-                    color: var(--secondary400);
+                    color: var(--secondary500);
                 }
             }
         }
@@ -97,7 +97,7 @@
             transition: var(--transition);
 
             &:hover,
-            &:active {
+            &.active {
                 background: var(--primary100);
             }
 

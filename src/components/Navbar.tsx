@@ -8,7 +8,7 @@ const Navbar = () => {
     const pathname = usePathname();
 
     return (
-        <nav className={[styles.base, pathname.startsWith("/records/") ? styles.sticky : ""].join(" ")}>
+        <nav className={styles.base}>
             <div className={styles.logoWrapper}>
                 <Link className={styles.logo} href="/">
                     <Image src="/profile.png" width={38} height={38} alt="profile" />
@@ -19,7 +19,7 @@ const Navbar = () => {
                 </Link>
             </div>
             <ul className={styles.items}>
-                <li className={styles.item}>
+                <li className={[styles.item, pathname.startsWith("/records") ? styles.active : ""].join(" ")}>
                     <Link className={styles.link} href="/records">기록</Link>
                 </li>
             </ul>
