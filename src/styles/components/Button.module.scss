@@ -4,7 +4,6 @@
     align-items: center;
     padding: .6rem 1.2rem;
     font-size: .85rem;
-    background: var(--primary200);
     border: none;
     border-radius: var(--border-radius);
     font-weight: 600;
@@ -13,6 +12,48 @@
     outline: none;
     transition: var(--transition);
     color: inherit;
+
+    &.solid {
+        &.primary {
+            background: var(--primary200);
+
+            &:hover {
+                background: var(--primary300);
+            }
+
+            &:disabled {
+                background: var(--primary100);
+            }
+        }
+
+        &.secondary {
+            background: var(--secondary200);
+
+            &:hover {
+                background: var(--secondary300);
+            }
+
+            &:disabled {
+                background: var(--secondary100);
+            }
+        }
+    }
+
+    &.outline {
+        background: transparent;
+
+        &.primary {
+            &:hover {
+                background: var(--primary100);
+            }
+        }
+
+        &.secondary {
+            &:hover {
+                background: var(--secondary100);
+            }
+        }
+    }
 
     &.sm {
         padding: .3rem .6rem;
@@ -36,20 +77,7 @@
         height: 3.5rem;
     }
 
-    &:hover {
-        background: var(--primary300);
-    }
-
     &:disabled {
-        background: var(--primary100);
         cursor: not-allowed;
-    }
-
-    &.outline {
-        background: transparent;
-
-        &:hover {
-            background: var(--primary100);
-        }
     }
 }

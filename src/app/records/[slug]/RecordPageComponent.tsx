@@ -3,7 +3,7 @@ import styles from "@/styles/pages/records/RecordPage.module.scss";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
 import { toDateString } from "@/utils/strings";
 import { Record } from "@/types/record";
-import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
+import Button, { ButtonColor, ButtonSize, ButtonStyle } from "@/components/Button";
 import RecordDeleteModal from "@/components/modals/RecordDeleteModal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -44,12 +44,12 @@ const RecordPageComponent = ({ record }: Props) => {
                                 </Link>
                             ))}
                         </div>
-                        <span>{toDateString(record.created_at)}</span>
+                        <span className={styles.date}>{toDateString(record.created_at)}</span>
                         <div className={styles.actions}>
                             {user &&
                                 <div className={styles.manage}>
-                                    <Button size={ButtonSize.small} onClick={handleEdit}>수정</Button>
-                                    <Button size={ButtonSize.small} onClick={() => setDeleteModal(true)}>삭제</Button>
+                                    <Button size={ButtonSize.small} color={ButtonColor.secondary} onClick={handleEdit}>수정</Button>
+                                    <Button size={ButtonSize.small} color={ButtonColor.secondary} onClick={() => setDeleteModal(true)}>삭제</Button>
                                 </div>
                             }
                             <Button className={styles.list} size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
