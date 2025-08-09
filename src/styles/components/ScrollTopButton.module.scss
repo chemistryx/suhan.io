@@ -11,6 +11,7 @@
     opacity: 0;
     pointer-events: none;
     cursor: pointer;
+    color: inherit;
 
     &:hover {
         background: var(--primary300);

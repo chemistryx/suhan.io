@@ -32,11 +32,8 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
         const loadTags = async () => {
             const supabase = createClient();
 
-            const { data, error } = await supabase.from(TAGS_TABLE_NAME).select("name");
-            console.log(data, error);
-            if (data) {
-                setTagOptions(data.map((d) => ({ label: d.name, value: d.name })));
-            }
+            const { data } = await supabase.from(TAGS_TABLE_NAME).select("name");
+            if (data) setTagOptions(data.map((d) => ({ label: d.name, value: d.name })));
         };
 
         loadTags();

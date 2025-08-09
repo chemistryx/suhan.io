@@ -19,20 +19,31 @@
         color: inherit;
 
         &[type="checkbox"] {
+            position: relative;
             appearance: none;
             border: 1px solid var(--primary100);
             border-radius: var(--border-radius);
             width: 1.75rem;
             height: 1.75rem;
             padding: .5rem;
+            cursor: pointer;
 
             &:checked {
-                border-color: transparent;
-                background-image: url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check-icon lucide-check\"><path d=\"M20 6 9 17l-5-5\"/></svg>");
-                background-size: 75% 75%;
-                background-position: 50%;
-                background-repeat: no-repeat;
                 background-color: var(--primary200);
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    mask-image: url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-check-icon lucide-check\"><path d=\"M20 6 9 17l-5-5\"/></svg>");
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                    top: 50%;
+                    left: 50%;
+                    width: 50%;
+                    height: 50%;
+                    transform: translate(-50%, -50%);
+                    background: var(--primary950);
+                }
             }
         }
     }

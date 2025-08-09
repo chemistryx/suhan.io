@@ -55,12 +55,10 @@ const EditRecordPageComponent = ({ record }: Props) => {
             const tagIds = allTags.map((tag) => tag.id);
 
             // 3. delete existing record_tags relation
-            const { data: dd, error: deleteRecordTagsError } = await supabase
+            const { error: deleteRecordTagsError } = await supabase
                 .from(RECORD_TAGS_TABLE_NAME)
                 .delete()
                 .eq("record_id", record.id);
-
-            console.log(dd, deleteRecordTagsError);
 
             if (deleteRecordTagsError) throw deleteRecordTagsError;
 
