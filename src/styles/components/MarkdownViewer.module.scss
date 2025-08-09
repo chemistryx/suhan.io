@@ -22,6 +22,11 @@
 
     a {
         text-decoration: underline;
+
+        &[data-footnote-ref],
+        &[data-footnote-backref] {
+            text-decoration: none;
+        }
     }
 
     code {

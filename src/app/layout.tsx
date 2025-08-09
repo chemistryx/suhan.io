@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@/styles/global.scss";
 import Navbar from "@/components/Navbar";
 import Container from "@/components/Container";
@@ -25,6 +25,13 @@ export const metadata: Metadata = {
         description: "",
         url: "/"
     }
+};
+
+export const viewport: Viewport = {
+    themeColor: [
+        { media: "(prefers-color-scheme: light)", color: "#f8f8f2" },
+        { media: "(prefers-color-scheme: dark)", color: "#1e1e1c" },
+    ],
 };
 
 export default function RootLayout({ children }: Props) {
