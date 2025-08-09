@@ -12,6 +12,7 @@
     cursor: pointer;
     outline: none;
     transition: var(--transition);
+    color: inherit;
 
     &.sm {
         padding: .3rem .6rem;
