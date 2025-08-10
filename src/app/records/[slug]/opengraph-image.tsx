@@ -8,7 +8,12 @@ import { join } from "path";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+interface Props {
+    children: React.ReactNode;
+}
+
 export default async function Image({ params }: { params: { slug: string } }) {
+    console.log("OG Image Slug:", params.slug);
     const { data, error } = await fetchRecord(params.slug);
     if (!data || error) throw new Error(error?.message);
 
@@ -20,7 +25,34 @@ export default async function Image({ params }: { params: { slug: string } }) {
     const profileData = await readFile(join(process.cwd(), "public/profile.png"));
     const profileSrc = Uint8Array.from(profileData).buffer;
 
-    const Badge = ({ children }: { children: React.ReactNode }) => {
+    const Header = ({ children }: Props) => {
+        return (
+            <div id="header" style={{
+                display: "flex",
+                flexShrink: 0,
+                alignItems: "center",
+                gap: "1rem",
+            }}>
+                {children}
+            </div>
+        );
+    };
+
+    const Content = ({ children }: Props) => {
+        return (
+            <div id="content" style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-around",
+                flex: 1,
+                gap: "1rem"
+            }}>
+                {children}
+            </div>
+        );
+    };
+
+    const Badge = ({ children }: Props) => {
         return (
             <span style={{
                 display: "flex",
@@ -33,6 +65,20 @@ export default async function Image({ params }: { params: { slug: string } }) {
             }}>
                 {children}
             </span >
+        );
+    };
+
+    const Footer = ({ children }: Props) => {
+        return (
+            <div id="footer" style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexShrink: 0,
+                fontSize: "1.5rem",
+            }}>
+                {children}
+            </div>
         );
     };
 
@@ -50,22 +96,11 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 color: "#2e251a",
                 fontFamily: "MaruBuri-Regular",
             }}>
-                <div id="header" style={{
-                    display: "flex",
-                    flexShrink: 0,
-                    alignItems: "center",
-                    gap: "1rem",
-                }}>
+                <Header>
                     {/* @ts-expect-error Satori supports arraybuffer as src, so it can be ignored */}
                     <img id="profile" src={profileSrc} alt="profile" style={{ width: 72, height: 72, borderRadius: "50%" }} />
-                </div>
-                <div id="content" style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-around",
-                    flex: 1,
-                    gap: "1rem"
-                }}>
+                </Header>
+                <Content>
                     <h1 id="title" style={{
                         display: "-webkit-box",
                         fontFamily: "MaruBuri-SemiBold",
@@ -90,17 +125,11 @@ export default async function Image({ params }: { params: { slug: string } }) {
                             <Badge key={tag.name}>{tag.name}</Badge>
                         ))}
                     </div>
-                </div>
-                <div id="footer" style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    flexShrink: 0,
-                    fontSize: "1.5rem",
-                }}>
+                </Content>
+                <Footer>
                     <span>{toDateString(record.created_at)}</span>
                     <span style={{ color: "#6d6d6d" }}>suhan.io</span>
-                </div>
+                </Footer>
             </div >
         ),
         {
