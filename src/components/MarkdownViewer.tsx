@@ -1,5 +1,4 @@
 import MDEditor from "@uiw/react-md-editor";
-import styles from "@/styles/components/MarkdownViewer.module.scss";
 
 interface Props {
     content?: string;
@@ -7,7 +6,7 @@ interface Props {
 
 const MarkdownViewer = ({ content }: Props) => {
     return (
-        <MDEditor.Markdown className={styles.base} source={content} />
+        <MDEditor.Markdown source={content} />
     );
 };
 
