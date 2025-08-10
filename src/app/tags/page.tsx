@@ -4,7 +4,10 @@ import TagsPageComponent from "./TagsPageComponent";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "태그"
+    title: "태그",
+    openGraph: {
+        title: "태그"
+    }
 };
 
 export default async function TagsPage() {
@@ -24,7 +27,6 @@ export default async function TagsPage() {
             count: records.length ?? 0,
         };
     }).filter((tag) => tag.count > 0);
-
 
     return <TagsPageComponent tags={tags ?? []} />
 }

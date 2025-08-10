@@ -5,7 +5,10 @@ import { NavigationGuardProvider } from "next-navigation-guard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "새 기록"
+    title: "새 기록",
+    openGraph: {
+        title: "새 기록"
+    }
 };
 
 export default async function NewRecordPage() {

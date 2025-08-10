@@ -11,7 +11,10 @@ export async function generateMetadata({ params }: Props) {
     const decodedSlug = decodeURIComponent(slug);
 
     return {
-        title: "#" + decodedSlug
+        title: "#" + decodedSlug,
+        openGraph: {
+            title: "#" + decodedSlug
+        }
     };
 }
 

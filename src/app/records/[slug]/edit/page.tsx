@@ -31,7 +31,10 @@ export async function generateMetadata({ params }: Props) {
     const record = await getRecord(slug);
 
     return {
-        title: record.title
+        title: record.title,
+        openGraph: {
+            title: record.title
+        }
     };
 }
 

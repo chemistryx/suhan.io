@@ -3,7 +3,10 @@ import { Metadata } from "next";
 import { fetchRecords } from "@/utils/records";
 
 export const metadata: Metadata = {
-    title: "기록"
+    title: "기록",
+    openGraph: {
+        title: "기록"
+    }
 };
 
 export default async function RecordsPage() {
