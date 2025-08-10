@@ -1,14 +1,4 @@
 .base {
-    font-family: inherit;
-    background: transparent;
-
-    --color-fg-default: var(--secondary950);
-    --color-fg-muted: var(--secondary600);
-    --color-fg-subtle: var(--secondary500);
-    --color-border-default: var(--secondary200);
-    --color-border-muted: var(--secondary100);
-    --color-canvas-default: var(--secondary50);
-    --color-canvas-subtle: var(--secondary100);
 
     h1,
     h2,
@@ -32,4 +22,16 @@
     code {
         white-space: pre-wrap !important;
     }
+}
+
+:global(.wmde-markdown) {
+    font-family: inherit;
+    background: transparent;
+    --color-fg-default: var(--secondary950);
+    --color-fg-muted: var(--secondary600);
+    --color-fg-subtle: var(--secondary500);
+    --color-border-default: var(--secondary200);
+    --color-border-muted: var(--secondary100);
+    --color-canvas-default: var(--secondary50);
+    --color-canvas-subtle: var(--secondary100);
 }
