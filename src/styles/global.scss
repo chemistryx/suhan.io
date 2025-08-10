@@ -53,6 +53,7 @@ html {
 body {
     min-height: 100vh;
     background: linear-gradient(to bottom, var(--background-start), var(--background-end));
+    background-color: var(--background-start);
     font-family: var(--font-family);
     -webkit-font-smoothing: antialiased;
     color: var(--secondary950);
