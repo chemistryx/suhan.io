@@ -28,7 +28,6 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function RecordPage({ params }: Props) {
     const { slug } = await params;
-    console.log("SSR slug:", slug);
     const record = await getRecord(slug);
 
     return <RecordPageComponent record={record} />

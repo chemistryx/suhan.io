@@ -13,8 +13,7 @@ interface Props {
 }
 
 export default async function Image({ params }: { params: { slug: string } }) {
-    console.log("OG Image Slug:", params.slug);
-    const { data, error } = await fetchRecord(params.slug);
+    const { data, error } = await fetchRecord(encodeURIComponent(decodeURIComponent(params.slug)));
     if (!data || error) throw new Error(error?.message);
 
     const record = { ...data, tags: data.tags.flatMap((t: { tag: Tag }) => t.tag) };
