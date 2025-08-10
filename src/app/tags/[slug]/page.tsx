@@ -1,7 +1,6 @@
-import { RECORDS_TABLE_NAME } from "@/constants";
-import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import TagPageComponent from "./TagPageComponent";
+import { fetchRecords } from "@/utils/records";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -18,13 +17,8 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function TagPage({ params }: Props) {
     const { slug } = await params;
-    const supabase = await createClient();
     const decodedSlug = decodeURIComponent(slug);
-
-    const { data } = await supabase
-        .from(RECORDS_TABLE_NAME)
-        .select("id, title, slug, draft, created_at, tags:record_tags(tag:tags(id, name, slug))")
-        .order("created_at", { ascending: false });
+    const { data } = await fetchRecords();
 
     const records = data?.map((d) => ({
         ...d,
