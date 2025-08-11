@@ -1,17 +1,15 @@
 "use client"
-import Badge from "@/components/Badge";
 import Button, { ButtonColor, ButtonSize } from "@/components/Button";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
+import RecordItem from "@/components/RecordItem";
 import useUser from "@/hooks/useUser";
 import styles from "@/styles/pages/records/RecordsPage.module.scss";
 import { Record } from "@/types/record";
 import { Tag } from "@/types/tag";
-import { toDateDistanceString } from "@/utils/strings";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface Props {
-    records: (Pick<Record, "id" | "title" | "description" | "slug" | "created_at" | "draft"> & {
+    records: (Pick<Record, "id" | "title" | "description" | "slug" | "created_at" | "published"> & {
         tags: Pick<Tag, "id" | "name" | "slug">[];
     })[];
 }
@@ -35,25 +33,11 @@ const RecordsPageComponent = ({ records }: Props) => {
                     <Button color={ButtonColor.secondary} size={ButtonSize.small} onClick={handleNewRecord}>새 기록</Button>
                 </div>
             }
-            <ul className={styles.records}>
+            <div className={styles.records}>
                 {records.map((record) => (
-                    <li key={record.id} className={styles.record}>
-                        <Link className={styles.title} href={`/records/${decodeURIComponent(record.slug)}`}>{record.title}</Link>
-                        <p className={styles.description}>{record.description}</p>
-                        <div className={styles.tags}>
-                            {record.tags.map((tag) => (
-                                <Link key={tag.id} href={`/tags/${tag.slug}`}>
-                                    <Badge key={tag.id}>{tag.name}</Badge>
-                                </Link>
-                            ))}
-                        </div>
-                        <div className={styles.meta}>
-                            <time dateTime={record.created_at} className={styles.item}>{toDateDistanceString(record.created_at)}</time>
-                            {record.draft && <span className={styles.item}>Draft</span>}
-                        </div>
-                    </li>
+                    <RecordItem key={record.id} record={record} />
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };

@@ -62,7 +62,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
                     description: data.description,
                     slug: encodeURIComponent(data.slug),
                     content: data.content,
-                    draft: data.draft,
+                    published: data.published,
                     author_id: user?.id,
                 })
                 .select()

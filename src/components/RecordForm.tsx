@@ -9,7 +9,7 @@ import styles from "@/styles/components/RecordForm.module.scss";
 import { createClient } from "@/utils/supabase/client";
 import { TAGS_TABLE_NAME } from "@/constants";
 
-export type RecordFormData = Pick<Record, "id" | "title" | "description" | "slug" | "content" | "draft"> & {
+export type RecordFormData = Pick<Record, "id" | "title" | "description" | "slug" | "content" | "published"> & {
     tags: string[]
 };
 
@@ -23,7 +23,7 @@ interface Props {
 type SelectOption = { label: string, value: string };
 
 const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => {
-    const defaultValues: RecordFormData = { id: -1, title: "", description: "", slug: "", content: "", tags: [], draft: true };
+    const defaultValues: RecordFormData = { id: -1, title: "", description: "", slug: "", content: "", tags: [], published: false };
     const [formData, setFormData] = useState({ ...defaultValues, ...initialValues });
     const initialRef = useRef({ ...defaultValues, ...initialValues });
     const [tagOptions, setTagOptions] = useState<SelectOption[]>([]);
@@ -43,10 +43,10 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
         const isDirty = formData.title !== initialRef.current.title ||
             formData.description !== initialRef.current.description ||
             formData.content !== initialRef.current.content ||
-            formData.draft !== initialRef.current.draft;
+            formData.published !== initialRef.current.published;
 
         onDirtyChange?.(isDirty);
-    }, [formData.title, formData.description, formData.content, formData.draft, onDirtyChange]);
+    }, [formData.title, formData.description, formData.content, formData.published, onDirtyChange]);
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
@@ -79,7 +79,7 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
                 options={tagOptions}
                 isMulti
             />
-            <Input label="초안 (체크 시 비공개)" type="checkbox" checked={formData.draft} onChange={(e) => setFormData({ ...formData, draft: e.target.checked })} />
+            <Input label="발행" type="checkbox" checked={formData.published} onChange={(e) => setFormData({ ...formData, published: e.target.checked })} />
             <MarkdownEditor value={formData.content} onChange={handleContentChange} />
             <Button onClick={handleSubmit}>{mode === "create" ? "등록하기" : "수정하기"}</Button>
         </div>
