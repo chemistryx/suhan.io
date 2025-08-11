@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface Props {
-    records: (Pick<Record, "id" | "title" | "slug" | "created_at" | "draft"> & {
+    records: (Pick<Record, "id" | "title" | "description" | "slug" | "created_at" | "draft"> & {
         tags: Pick<Tag, "id" | "name" | "slug">[];
     })[];
 }
@@ -39,6 +39,7 @@ const RecordsPageComponent = ({ records }: Props) => {
                 {records.map((record) => (
                     <li key={record.id} className={styles.record}>
                         <Link className={styles.title} href={`/records/${decodeURIComponent(record.slug)}`}>{record.title}</Link>
+                        <p className={styles.description}>{record.description}</p>
                         <div className={styles.tags}>
                             {record.tags.map((tag) => (
                                 <Link key={tag.id} href={`/tags/${tag.slug}`}>

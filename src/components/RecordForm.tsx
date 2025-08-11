@@ -9,7 +9,7 @@ import styles from "@/styles/components/RecordForm.module.scss";
 import { createClient } from "@/utils/supabase/client";
 import { TAGS_TABLE_NAME } from "@/constants";
 
-export type RecordFormData = Pick<Record, "id" | "title" | "slug" | "content" | "draft"> & {
+export type RecordFormData = Pick<Record, "id" | "title" | "description" | "slug" | "content" | "draft"> & {
     tags: string[]
 };
 
@@ -23,7 +23,7 @@ interface Props {
 type SelectOption = { label: string, value: string };
 
 const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => {
-    const defaultValues: RecordFormData = { id: -1, title: "", slug: "", content: "", tags: [], draft: true };
+    const defaultValues: RecordFormData = { id: -1, title: "", description: "", slug: "", content: "", tags: [], draft: true };
     const [formData, setFormData] = useState({ ...defaultValues, ...initialValues });
     const initialRef = useRef({ ...defaultValues, ...initialValues });
     const [tagOptions, setTagOptions] = useState<SelectOption[]>([]);
@@ -40,15 +40,22 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
     }, []);
 
     useEffect(() => {
-        const isDirty = formData.title !== initialRef.current.title || formData.content !== initialRef.current.content || formData.draft !== initialRef.current.draft;
-        onDirtyChange?.(isDirty);
+        const isDirty = formData.title !== initialRef.current.title ||
+            formData.description !== initialRef.current.description ||
+            formData.content !== initialRef.current.content ||
+            formData.draft !== initialRef.current.draft;
 
-    }, [formData.title, formData.content, formData.draft, onDirtyChange]);
+        onDirtyChange?.(isDirty);
+    }, [formData.title, formData.description, formData.content, formData.draft, onDirtyChange]);
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
 
         setFormData({ ...formData, title: newTitle, slug: normalize(newTitle) });
+    };
+
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData({ ...formData, description: e.target.value });
     };
 
     const handleContentChange = useCallback((value?: string) => {
@@ -63,6 +70,7 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
     return (
         <div className={styles.base}>
             <Input label={`제목 (${formData.slug})`} type="text" placeholder="제목" value={formData.title} onChange={handleTitleChange} />
+            <Input label="설명" type="text" placeholder="설명" value={formData.description} onChange={handleDescriptionChange} />
             <CreatableSelect
                 classNamePrefix="tag_input"
                 placeholder="태그 입력"

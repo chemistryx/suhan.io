@@ -24,7 +24,8 @@ export async function generateMetadata({ params }: Props) {
     return {
         title: record.title,
         openGraph: {
-            title: record.title
+            title: record.title,
+            description: record.description
         }
     };
 }

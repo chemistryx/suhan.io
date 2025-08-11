@@ -17,6 +17,6 @@ export const fetchRecords = cache(async () => {
 
     return await supabase
         .from(RECORDS_TABLE_NAME)
-        .select("id, title, slug, draft, created_at, tags:record_tags(tag:tags(id, name, slug))")
+        .select("id, title, description, slug, draft, created_at, tags:record_tags(tag:tags(id, name, slug))")
         .order("created_at", { ascending: false });
 });

@@ -59,6 +59,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
                 .from(RECORDS_TABLE_NAME)
                 .insert({
                     title: data.title,
+                    description: data.description,
                     slug: encodeURIComponent(data.slug),
                     content: data.content,
                     draft: data.draft,
