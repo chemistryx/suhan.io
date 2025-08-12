@@ -29,6 +29,7 @@
     :global(.wmde-markdown) {
         font-family: inherit;
         background: transparent;
+        line-height: 1.7;
         --color-fg-default: var(--secondary950);
         --color-fg-muted: var(--secondary600);
         --color-fg-subtle: var(--secondary500);
@@ -58,6 +59,14 @@
 
         code {
             white-space: pre-wrap;
+        }
+
+        pre {
+            border: 1px solid var(--secondary200);
+        }
+
+        img {
+            border-radius: var(--border-radius);
         }
     }
 }
