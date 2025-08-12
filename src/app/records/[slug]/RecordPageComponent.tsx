@@ -68,7 +68,7 @@ const RecordPageComponent = ({ record }: Props) => {
                 reactionsEnabled="1"
                 emitMetadata="0"
                 inputPosition="bottom"
-                theme="preferred_color_scheme"
+                theme="https://cdn.jsdelivr.net/gh/chemistryx/suhan.io@main/public/giscus.css"
                 lang="ko"
             />
             <ScrollTopButton />
