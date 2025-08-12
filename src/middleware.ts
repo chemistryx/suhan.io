@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/records/new"]
+    matcher: ["/records/new", "/records/:slug/edit"]
 };
 
 
