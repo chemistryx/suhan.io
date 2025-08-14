@@ -14,7 +14,6 @@ import ScrollTopButton from "@/components/ScrollTopButton";
 import Badge from "@/components/Badge";
 import { Tag } from "@/types/tag";
 import Link from "next/link";
-import Giscus from "@giscus/react";
 
 interface Props {
     record: Record & {
@@ -59,18 +58,6 @@ const RecordPageComponent = ({ record }: Props) => {
                 </Heading>
                 <MarkdownViewer content={record.content} />
             </article>
-            <Giscus
-                repo="chemistryx/suhan.io"
-                repoId="R_kgDOPLS4uQ"
-                category="Comments"
-                categoryId="DIC_kwDOPLS4uc4CuE-_"
-                mapping="pathname"
-                reactionsEnabled="1"
-                emitMetadata="0"
-                inputPosition="bottom"
-                theme="https://cdn.jsdelivr.net/gh/chemistryx/suhan.io@main/public/giscus.css"
-                lang="ko"
-            />
             <ScrollTopButton />
         </>
     );
