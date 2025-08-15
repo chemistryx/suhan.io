@@ -11,7 +11,7 @@ interface Props {
     showModal: boolean;
     setModal: (open: boolean) => void;
     commentId?: number;
-    onSuccess?: (commentId: number) => void;
+    onSuccess?: (commentId: number, password: string) => void;
 }
 
 const PasswordConfirmModal = ({ showModal, setModal, commentId, onSuccess }: Props) => {
@@ -35,7 +35,7 @@ const PasswordConfirmModal = ({ showModal, setModal, commentId, onSuccess }: Pro
                 return;
             }
 
-            onSuccess?.(commentId);
+            onSuccess?.(commentId, password);
         } catch (e) {
             toast.error((e as PostgrestError).message || "비밀번호 검증 중 오류가 발생했습니다.");
         } finally {

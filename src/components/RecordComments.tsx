@@ -1,7 +1,7 @@
 import styles from "@/styles/components/RecordComments.module.scss";
 import Input from "./Input";
 import Button from "./Button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -16,6 +16,7 @@ interface Props {
 }
 
 const RecordComments = ({ recordId }: Props) => {
+    const supabase = createClient();
     const [comments, setComments] = useState<(Pick<Comment, "id" | "record_id" | "author_name" | "content" | "created_at" | "updated_at">)[] | null>();
     const [author, setAuthor] = useState("");
     const [content, setContent] = useState("");
@@ -24,61 +25,47 @@ const RecordComments = ({ recordId }: Props) => {
     const [showPasswordConfirmModal, setPasswordConfirmModal] = useState(false);
     const [commentId, setCommentId] = useState<number>();
     const [isEditing, setEditing] = useState(false);
+    const [actionType, setActionType] = useState<"edit" | "delete">("edit");
 
-    const load = async () => {
+    const load = useCallback(async () => {
         setLoading(true);
 
         try {
             const { data, error } = await fetchComments(recordId);
-            console.log(data, error);
+            if (error) throw error;
+
             setComments(data);
 
-            const existingNames = comments?.map((c) => c.author_name);
-            const nickname = generateNickname(existingNames);
-
-            setAuthor(nickname);
+            const existingNames = data?.map((c) => c.author_name);
+            setAuthor(generateNickname(existingNames));
+        } catch (e) {
+            toast.error((e as PostgrestError).message || `댓글을 불러오는 중 오류가 발생했습니다.`);
         } finally {
             setLoading(false);
         }
-    };
+    }, [recordId]);
 
     useEffect(() => {
         load();
-    }, []);
+    }, [load]);
 
     const handleSubmit = async () => {
         if (!content || !password) return;
 
         try {
-            const supabase = createClient();
+            const rpcName = isEditing ? "update_comment" : "create_comment";
+            const rpcArgs = isEditing ? { p_comment_id: commentId, p_content: content, p_password: password } : { p_record_id: recordId, p_author_name: author, p_content: content, p_password: password };
 
-            if (isEditing) {
-                const { data, error } = await supabase.rpc("update_comment", {
-                    p_comment_id: commentId,
-                    p_content: content,
-                    p_password: password,
-                });
+            const { data, error } = await supabase.rpc(rpcName, rpcArgs);
 
-                if (!data) {
-                    toast.error("비밀번호가 일치하지 않습니다.");
-                    return;
-                }
-
-                if (error) throw error;
-
-                toast.success("성공적으로 댓글을 수정했습니다.");
-            } else {
-                const { error } = await supabase.rpc("create_comment", {
-                    p_record_id: recordId,
-                    p_author_name: author,
-                    p_content: content,
-                    p_password: password,
-                });
-
-                if (error) throw error;
-
-                toast.success("성공적으로 댓글을 등록했습니다.");
+            if (!data && isEditing) {
+                toast.error("비밀번호가 일치하지 않습니다.");
+                return;
             }
+
+            if (error) throw error;
+
+            toast.success(`성공적으로 댓글을 ${isEditing ? "수정" : "등록"}했습니다.`);
 
             setContent("");
             setPassword("");
@@ -89,19 +76,44 @@ const RecordComments = ({ recordId }: Props) => {
         }
     };
 
-    const handleEditClick = (id: number) => {
+    const handleDelete = async (id: number, password: string) => {
+        try {
+            const { data, error } = await supabase.rpc("delete_comment", {
+                p_comment_id: id,
+                p_password: password
+            });
+
+            if (!data) {
+                toast.error("비밀번호가 일치하지 않습니다.");
+                return;
+            }
+
+            if (error) throw error;
+
+            toast.success("성공적으로 댓글을 삭제했습니다.");
+            load();
+        } catch (e) {
+            toast.error((e as PostgrestError).message || `댓글 삭제 중 오류가 발생했습니다.`);
+        }
+    };
+
+    const handleActionClick = (type: "edit" | "delete", id: number) => {
         setCommentId(id);
+        setActionType(type);
         setPasswordConfirmModal(true);
     };
 
-    const handlePasswordSuccess = (id: number) => {
+    const handlePasswordSuccess = async (id: number, password: string) => {
         const target = comments?.find((comment) => comment.id === id);
+        if (!target) return;
 
-        if (target) {
+        if (actionType === "edit") {
             setAuthor(target.author_name);
             setContent(target.content);
             setCommentId(target.id);
             setEditing(true);
+        } else if (actionType === "delete") {
+            handleDelete(id, password);
         }
     };
 
@@ -127,7 +139,10 @@ const RecordComments = ({ recordId }: Props) => {
                                             <span className={styles.metaItem}>{toDateDistanceString(comment.created_at)}</span>
                                             {comment.created_at != comment.updated_at ? <span className={styles.metaItem}>수정됨</span> : null}
                                         </div>
-                                        <span className={styles.edit} onClick={() => handleEditClick(comment.id)}>수정</span>
+                                        <div className={styles.actions}>
+                                            <span className={styles.action} onClick={() => handleActionClick("edit", comment.id)}>수정</span>
+                                            <span className={styles.action} onClick={() => handleActionClick("delete", comment.id)}>삭제</span>
+                                        </div>
                                     </div>
                                     <p className={styles.content}>{comment.content}</p>
                                 </li>

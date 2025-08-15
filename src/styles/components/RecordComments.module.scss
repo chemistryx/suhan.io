@@ -47,6 +47,7 @@
                         font-size: .75rem;
 
                         &.author {
+                            color: var(--primary950);
                             font-size: .875rem;
                         }
 
@@ -62,15 +63,22 @@
                     }
                 }
 
-                .edit {
-                    font-size: .8125rem;
-                    color: var(--primary500);
-                    cursor: pointer;
+                .actions {
+                    display: flex;
+                    align-items: center;
+                    gap: .25rem;
 
-                    &:hover {
-                        text-decoration: underline;
+                    .action {
+                        font-size: .8125rem;
+                        color: var(--primary500);
+                        cursor: pointer;
+
+                        &:hover {
+                            text-decoration: underline;
+                        }
                     }
                 }
+
             }
 
             .content {

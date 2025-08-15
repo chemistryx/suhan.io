@@ -41,6 +41,7 @@ END;$function$
 CREATE OR REPLACE FUNCTION public.delete_comment(p_comment_id bigint, p_password text)
  RETURNS boolean
  LANGUAGE plpgsql
+ SECURITY DEFINER
 AS $function$DECLARE
   v_hash text;
 BEGIN
