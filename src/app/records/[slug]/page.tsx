@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import RecordPageComponent from "./RecordPageComponent";
 import { Tag } from "@/types/tag";
-import { fetchRecord } from "@/utils/records";
+import { fetchRecord } from "@/lib/records";
 
 interface Props {
     params: Promise<{ slug: string }>;

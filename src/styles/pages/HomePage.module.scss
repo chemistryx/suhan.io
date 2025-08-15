@@ -5,6 +5,10 @@
     flex-direction: column;
     gap: 1rem;
 
+    .leading {
+        line-height: 2.1;
+    }
+
     .works {
         display: flex;
         flex-direction: column;
@@ -30,6 +34,7 @@
             .card {
                 display: flex;
                 flex-direction: column;
+                gap: 1rem;
                 padding: 1rem;
                 height: 100%;
                 border: 1px solid var(--primary100);
@@ -50,6 +55,7 @@
                 .description {
                     font-size: .85rem;
                     color: var(--secondary500);
+                    line-height: 1.7;
                 }
             }
         }

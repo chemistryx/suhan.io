@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import TagPageComponent from "./TagPageComponent";
-import { fetchRecords } from "@/utils/records";
+import { fetchRecords } from "@/lib/records";
 
 interface Props {
     params: Promise<{ slug: string }>;

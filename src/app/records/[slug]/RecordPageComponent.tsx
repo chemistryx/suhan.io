@@ -9,11 +9,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import useUser from "@/hooks/useUser";
-import MarkdownViewer from "@/components/MarkdownViewer";
 import ScrollTopButton from "@/components/ScrollTopButton";
 import Badge from "@/components/Badge";
 import { Tag } from "@/types/tag";
 import Link from "next/link";
+import MDEditor from "@uiw/react-md-editor";
+import RecordComments from "@/components/RecordComments";
 
 interface Props {
     record: Record & {
@@ -33,7 +34,7 @@ const RecordPageComponent = ({ record }: Props) => {
     return (
         <>
             <RecordDeleteModal showModal={showDeleteModal} setModal={setDeleteModal} id={record.id} />
-            <article className={styles.base}>
+            <div className={styles.base}>
                 <Heading divider>
                     <HeadingTitle>{record.title}</HeadingTitle>
                     <HeadingDescription>
@@ -56,9 +57,10 @@ const RecordPageComponent = ({ record }: Props) => {
                         </div>
                     </HeadingDescription>
                 </Heading>
-                <MarkdownViewer content={record.content} />
-            </article>
-            <ScrollTopButton />
+                <MDEditor.Markdown className={styles.content} source={record.content} />
+                <RecordComments recordId={record.id} />
+                <ScrollTopButton />
+            </div>
         </>
     );
 };
