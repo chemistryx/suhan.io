@@ -6,7 +6,7 @@ export const fetchComments = async (recordId: number) => {
 
     return await supabase
         .from(COMMENTS_TABLE_NAME)
-        .select("id, record_id, author_name, content, created_at")
+        .select("id, record_id, author_name, content, created_at, updated_at")
         .eq("record_id", recordId)
         .order("created_at", { ascending: true });
 };

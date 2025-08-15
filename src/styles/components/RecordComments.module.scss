@@ -29,20 +29,47 @@
             background: var(--primary50);
             gap: .5rem;
 
-            .metaWrapper {
+            .header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 padding-bottom: .5rem;
-                border-bottom: 1px solid var(--primary100);
+                border-bottom: 1px solid var(--secondary100);
 
-                .author {
-                    font-size: .875rem;
+                .metaWrapper {
+                    display: flex;
+                    align-items: center;
+                    gap: .75rem;
+
+                    .metaItem {
+                        position: relative;
+                        color: var(--secondary400);
+                        font-size: .75rem;
+
+                        &.author {
+                            font-size: .875rem;
+                        }
+
+                        &:not(:first-child)::before {
+                            content: "|";
+                            position: absolute;
+                            top: 50%;
+                            left: -5.5px;
+                            color: inherit;
+                            transform: translate(-50%, -50%);
+                            user-select: none;
+                        }
+                    }
                 }
 
-                .time {
-                    color: var(--secondary400);
-                    font-size: .75rem;
+                .edit {
+                    font-size: .8125rem;
+                    color: var(--primary500);
+                    cursor: pointer;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
                 }
             }
 
