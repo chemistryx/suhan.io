@@ -3,12 +3,12 @@
 .base {
     display: flex;
     flex-direction: column;
+    gap: .5rem;
     transition: var(--transition);
 
     &:not(:last-child)::after {
         content: '';
         display: block;
-        margin-top: 1rem;
         width: 100%;
         height: 1px;
         background: linear-gradient(to right, transparent, var(--primary100), transparent);
@@ -47,7 +47,7 @@
                 position: absolute;
                 top: 50%;
                 left: -6px;
-                color: var(--secondary500);
+                color: inherit;
                 transform: translate(-50%, -50%);
                 user-select: none;
             }

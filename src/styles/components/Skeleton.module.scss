@@ -1,0 +1,11 @@
+.base {
+    background: var(--secondary100);
+    border-radius: var(--border-radius);
+    animation: pulse 2s cubic-bezier(.11, 0, .5, 0) infinite;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: .5;
+    }
+}
