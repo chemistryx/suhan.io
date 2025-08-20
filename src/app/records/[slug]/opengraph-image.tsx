@@ -108,6 +108,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                         WebkitBoxOrient: "vertical",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
+                        wordBreak: "keep-all",
                         lineHeight: 1.5
                     }}>
                         {record.title}
