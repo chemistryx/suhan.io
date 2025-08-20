@@ -5,6 +5,7 @@ import Container from "@/components/Container";
 import Footer from "@/components/Footer";
 import { Toaster } from "sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { META_TITLE } from "@/constants";
 
 interface Props {
     children: Readonly<React.ReactNode>;
@@ -12,15 +13,15 @@ interface Props {
 
 export const metadata: Metadata = {
     title: {
-        template: "%s | 하수한 Suhan Ha",
-        default: "하수한 Suhan Ha"
+        template: `%s | ${META_TITLE}`,
+        default: META_TITLE
     },
     description: "",
     openGraph: {
         type: "website",
         title: {
-            template: "%s | 하수한 Suhan Ha",
-            default: "하수한 Suhan Ha"
+            template: `%s | ${META_TITLE}`,
+            default: META_TITLE
         },
         description: "",
         url: "/"

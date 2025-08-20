@@ -1,6 +1,6 @@
 import RecordsPageComponent from "./RecordsPageComponent";
 import { Metadata } from "next";
-import { fetchRecords } from "@/utils/records";
+import { fetchRecords } from "@/lib/records";
 
 export const metadata: Metadata = {
     title: "기록",

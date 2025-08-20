@@ -4,10 +4,13 @@ import Link from "next/link";
 import { useState } from "react";
 import SignInModal from "./modals/SignInModal";
 import useUser from "@/hooks/useUser";
+import { AUTHOR_NAME_EN } from "@/constants";
+import { getYear } from "date-fns";
 
 const Footer = () => {
     const [showSignInModal, setSignInModal] = useState(false);
     const { user, signOut } = useUser();
+    const year = getYear(Date.now());
 
     const handleSignInOut = async () => {
         if (user) await signOut();
@@ -36,7 +39,7 @@ const Footer = () => {
                         </Link>
                     </li>
                 </ul>
-                <p className={styles.copy}>© 2025 Suhan Ha. All rights reserved.</p>
+                <p className={styles.copy}>© {year} {AUTHOR_NAME_EN}. All rights reserved.</p>
                 <span className={styles.auth} onClick={handleSignInOut}>{user ? "로그아웃" : "로그인"}</span>
             </footer>
         </>

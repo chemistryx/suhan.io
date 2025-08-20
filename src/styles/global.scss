@@ -4,7 +4,6 @@
 :root {
     --font-family: "MaruBuri", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
     --border-radius: 8px;
-    --line-height: 2.1;
     --navbar-z-index: 999;
     --modal-z-index: 1000;
     --transition: all .1s ease-in-out;
@@ -39,8 +38,7 @@
     --input-background: #ffffff;
     // --navbar-background: rgba(255, 255, 240, 0.6);
 
-    --background-start: #fffff0;
-    --background-end: #f0f0f0;
+    --background: #fffff7;
 }
 
 * {
@@ -55,8 +53,7 @@ html {
 
 body {
     min-height: 100vh;
-    background: linear-gradient(to bottom, var(--background-start), var(--background-end));
-    background-color: var(--background-start);
+    background-color: var(--background);
     font-family: var(--font-family);
     -webkit-font-smoothing: antialiased;
     color: var(--secondary950);
@@ -75,7 +72,6 @@ main {
         width: 100%;
         padding: .5rem;
         font-size: 1.1rem;
-        line-height: var(--line-height);
     }
 }
 
@@ -135,7 +131,6 @@ strong {
         --input-background: #2c2c2c;
         // --navbar-background: rgba(24, 24, 18, 0.7);
 
-        --background-start: #1e1e1c;
-        --background-end: #2a2a28;
+        --background: #1e1e1c;
     }
 }

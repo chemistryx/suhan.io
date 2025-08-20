@@ -1,5 +1,5 @@
 import { RECORDS_TABLE_NAME } from "@/constants";
-import { createClient } from "./supabase/server";
+import { createClient } from "../utils/supabase/server";
 import { cache } from "react";
 
 export const fetchRecord = cache(async (slug: string) => {

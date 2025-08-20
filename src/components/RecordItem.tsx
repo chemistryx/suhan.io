@@ -15,7 +15,7 @@ const RecordItem = ({ record }: Props) => {
     return (
         <div key={record.id} className={[styles.base, !record.published ? styles.dimmed : ""].join(" ")}>
             <Link className={styles.title} href={`/records/${decodeURIComponent(record.slug)}`}>{record.title}</Link>
-            <p className={styles.description}>{record.description}</p>
+            {record.description && <p className={styles.description}>{record.description}</p>}
             <div className={styles.tags}>
                 {record.tags.map((tag) => (
                     <Link key={tag.id} href={`/tags/${tag.slug}`}>

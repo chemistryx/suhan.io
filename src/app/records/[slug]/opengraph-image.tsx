@@ -1,5 +1,5 @@
 import { Tag } from "@/types/tag";
-import { fetchRecord } from "@/utils/records";
+import { fetchRecord } from "@/lib/records";
 import { toDateString } from "@/utils/strings";
 import { readFile } from "fs/promises";
 import { ImageResponse } from "next/og";
@@ -58,7 +58,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 alignItems: "center",
                 justifyContent: "center",
                 fontSize: "2rem",
-                padding: ".5rem 1rem",
+                padding: ".4rem .8rem",
                 backgroundColor: "#d5d5b2",
                 borderRadius: 16,
             }}>
