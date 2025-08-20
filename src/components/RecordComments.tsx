@@ -44,11 +44,11 @@ const RecordComments = ({ record }: Props) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
 
-    const canSubmit = () => {
+    const canSubmit = (() => {
         if (!form.author || !form.content) return false;
         if (isPasswordRequired && !form.password) return false;
         return true;
-    };
+    })();
 
     const loadComments = useCallback(async () => {
         setLoading(true);
@@ -148,6 +148,13 @@ const RecordComments = ({ record }: Props) => {
         loadComments();
     };
 
+    const isActionVisible = (comment: Comment) => {
+        if (!comment.author_id) return true;
+        if (user && comment.author_id === user.id) return true;
+
+        return false;
+    };
+
     return (
         <>
             <PasswordModal showModal={showPasswordModal} setModal={setPasswordModal} commentId={selectedComment?.id} onSuccess={handlePasswordSuccess} />
@@ -169,18 +176,18 @@ const RecordComments = ({ record }: Props) => {
                                         <div className={styles.metaWrapper}>
                                             <span className={[styles.metaItem, styles.author].join(" ")}>
                                                 {comment.author_name}
-                                                {comment.author_id === record.author_id && " (작성자)"}
+                                                {comment.author_id === record.author_id && <span className={styles.writer}>작성자</span>}
                                             </span>
                                             <span className={styles.metaItem}>{toDateDistanceString(comment.created_at)}</span>
                                             {comment.created_at != comment.updated_at ? <span className={styles.metaItem}>수정됨</span> : null}
                                         </div>
                                         <div className={styles.actions}>
-                                            {(!comment.author_id || (user && (comment.author_id === user.id || !comment.author_id))) &&
+                                            {isActionVisible(comment) && (
                                                 <>
                                                     <span className={styles.action} onClick={() => handleActionClick(ActionType.EDIT, comment)}>수정</span>
                                                     <span className={styles.action} onClick={() => handleActionClick(ActionType.DELETE, comment)}>삭제</span>
                                                 </>
-                                            }
+                                            )}
                                         </div>
                                     </div>
                                     <p className={styles.content}>{comment.content}</p>
