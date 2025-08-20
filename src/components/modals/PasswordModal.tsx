@@ -1,7 +1,7 @@
 import { Modal, ModalContent, ModalHeader, ModalTitle, ModalWrapper } from "@/components/Modal";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import styles from "@/styles/components/modals/PasswordConfirmModal.module.scss";
+import styles from "@/styles/components/modals/PasswordModal.module.scss";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -11,10 +11,10 @@ interface Props {
     showModal: boolean;
     setModal: (open: boolean) => void;
     commentId?: number;
-    onSuccess?: (commentId: number, password: string) => void;
+    onSuccess: (password: string) => void;
 }
 
-const PasswordConfirmModal = ({ showModal, setModal, commentId, onSuccess }: Props) => {
+const PasswordModal = ({ showModal, setModal, commentId, onSuccess }: Props) => {
     const [password, setPassword] = useState("");
 
     const handleSubmit = async () => {
@@ -23,7 +23,7 @@ const PasswordConfirmModal = ({ showModal, setModal, commentId, onSuccess }: Pro
 
             const supabase = createClient();
 
-            const { data, error } = await supabase.rpc("verify_comment", {
+            const { data, error } = await supabase.rpc("check_comment_ownership", {
                 p_comment_id: commentId,
                 p_password: password
             });
@@ -35,7 +35,7 @@ const PasswordConfirmModal = ({ showModal, setModal, commentId, onSuccess }: Pro
                 return;
             }
 
-            onSuccess?.(commentId, password);
+            onSuccess(password);
         } catch (e) {
             toast.error((e as PostgrestError).message || "비밀번호 검증 중 오류가 발생했습니다.");
         } finally {
@@ -67,4 +67,4 @@ const PasswordConfirmModal = ({ showModal, setModal, commentId, onSuccess }: Pro
     );
 };
 
-export default PasswordConfirmModal;
+export default PasswordModal;

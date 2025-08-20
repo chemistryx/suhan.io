@@ -58,7 +58,7 @@ const RecordPageComponent = ({ record }: Props) => {
                     </HeadingDescription>
                 </Heading>
                 <MDEditor.Markdown className={styles.content} source={record.content} />
-                <RecordComments recordId={record.id} />
+                <RecordComments record={record} />
                 <ScrollTopButton />
             </div>
         </>
