@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Container from "@/components/Container";
 import Footer from "@/components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 import { META_TITLE } from "@/constants";
 import Toast from "@/components/Toast";
 import localFont from "next/font/local";
@@ -66,6 +67,7 @@ export default function RootLayout({ children }: Props) {
                     <Footer />
                 </Container>
                 <SpeedInsights />
+                <Analytics />
             </body>
         </html>
     );
