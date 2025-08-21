@@ -39,25 +39,13 @@ export const viewport: Viewport = {
 const font = localFont({
     src: [
         {
-            path: "../../public/fonts/MaruBuri-ExtraLight.woff2",
-            weight: "200",
-        },
-        {
-            path: "../../public/fonts/MaruBuri-Light.woff2",
-            weight: "300",
-        },
-        {
             path: "../../public/fonts/MaruBuri-Regular.woff2",
             weight: "400",
         },
         {
             path: "../../public/fonts/MaruBuri-SemiBold.woff2",
             weight: "600",
-        },
-        {
-            path: "../../public/fonts/MaruBuri-Bold.woff2",
-            weight: "700",
-        },
+        }
     ],
     variable: "--font-family",
     fallback: ["-apple-system", "BlinkMacSystemFont", "system-ui", "Roboto", "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "sans-serif"]
