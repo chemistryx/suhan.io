@@ -29,13 +29,14 @@
                 align-items: flex-start;
                 gap: .5rem;
                 padding: 1rem;
-                border: 1px solid var(--primary100);
+                border: 1px solid var(--primary50);
                 border-radius: var(--border-radius);
                 transition: var(--transition);
 
                 &:hover {
                     transform: scale3d(1.01, 1.01, 1.01);
                     background: var(--primary100);
+                    border-color: var(--primary100);
                     cursor: pointer;
                 }
 

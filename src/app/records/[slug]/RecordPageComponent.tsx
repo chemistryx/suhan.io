@@ -15,6 +15,7 @@ import { Tag } from "@/types/tag";
 import Link from "next/link";
 import MDEditor from "@uiw/react-md-editor";
 import RecordComments from "@/components/RecordComments";
+import rehypeExternalLinks from "rehype-external-links";
 
 interface Props {
     record: Record & {
@@ -57,7 +58,11 @@ const RecordPageComponent = ({ record }: Props) => {
                         </div>
                     </HeadingDescription>
                 </Heading>
-                <MDEditor.Markdown className={styles.content} source={record.content} />
+                <MDEditor.Markdown className={styles.content} source={record.content}
+                    rehypePlugins={[
+                        [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer", "external"] }]
+                    ]}
+                />
                 <RecordComments record={record} />
                 <ScrollTopButton />
             </div>
