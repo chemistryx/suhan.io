@@ -1,0 +1,26 @@
+@use "@/styles/variables" as *;
+
+.base {
+    cursor: zoom-in;
+}
+
+.overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.625);
+    z-index: var(--modal-z-index);
+
+    >img {
+        max-width: 90%;
+        max-height: 60%;
+        border-radius: var(--border-radius);
+        overflow: hidden;
+
+        @media screen and (max-width: $viewport-lg) {
+            max-width: 95%;
+        }
+    }
+}

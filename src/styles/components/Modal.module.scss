@@ -21,15 +21,15 @@
     z-index: var(--modal-z-index);
     overflow: hidden;
 
-    @media (max-width: $viewport-lg) {
+    @media screen and (max-width: $viewport-lg) {
         min-width: 50%;
     }
 
-    @media (max-width: $viewport-md) {
+    @media screen and (max-width: $viewport-md) {
         min-width: 75%;
     }
 
-    @media (max-width: $viewport-sm) {
+    @media screen and (max-width: $viewport-sm) {
         min-width: 90%;
     }
 

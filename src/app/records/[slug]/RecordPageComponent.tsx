@@ -16,6 +16,7 @@ import Link from "next/link";
 import MDEditor from "@uiw/react-md-editor";
 import RecordComments from "@/components/RecordComments";
 import rehypeExternalLinks from "rehype-external-links";
+import LightboxImage from "@/components/LightboxImage";
 
 interface Props {
     record: Record & {
@@ -62,6 +63,9 @@ const RecordPageComponent = ({ record }: Props) => {
                     rehypePlugins={[
                         [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer", "external"] }]
                     ]}
+                    components={{
+                        img: (props) => <LightboxImage {...props} />
+                    }}
                 />
                 <RecordComments record={record} />
                 <ScrollTopButton />
