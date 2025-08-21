@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { META_TITLE } from "@/constants";
 import Toast from "@/components/Toast";
+import localFont from "next/font/local";
 
 interface Props {
     children: Readonly<React.ReactNode>;
@@ -35,9 +36,36 @@ export const viewport: Viewport = {
     ],
 };
 
+const font = localFont({
+    src: [
+        {
+            path: "../../public/fonts/MaruBuri-ExtraLight.woff2",
+            weight: "200",
+        },
+        {
+            path: "../../public/fonts/MaruBuri-Light.woff2",
+            weight: "300",
+        },
+        {
+            path: "../../public/fonts/MaruBuri-Regular.woff2",
+            weight: "400",
+        },
+        {
+            path: "../../public/fonts/MaruBuri-SemiBold.woff2",
+            weight: "600",
+        },
+        {
+            path: "../../public/fonts/MaruBuri-Bold.woff2",
+            weight: "700",
+        },
+    ],
+    variable: "--font-family",
+    fallback: ["-apple-system", "BlinkMacSystemFont", "system-ui", "Roboto", "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "sans-serif"]
+});
+
 export default function RootLayout({ children }: Props) {
     return (
-        <html lang="ko">
+        <html lang="ko" className={font.variable}>
             <body>
                 <Toast />
                 <Container>

@@ -1,8 +1,6 @@
 @use "@/styles/variables" as *;
-@use "@/styles/fonts";
 
 :root {
-    --font-family: "MaruBuri", -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
     --border-radius: 8px;
     --navbar-z-index: 999;
     --modal-z-index: 1000;
