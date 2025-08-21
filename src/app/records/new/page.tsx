@@ -6,8 +6,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "새 기록",
+    description: "새 기록을 작성합니다.",
     openGraph: {
-        title: "새 기록"
+        title: "새 기록",
+        description: "새 기록을 작성합니다."
     }
 };
 

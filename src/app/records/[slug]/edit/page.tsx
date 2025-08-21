@@ -32,8 +32,10 @@ export async function generateMetadata({ params }: Props) {
 
     return {
         title: record.title,
+        description: "기록을 수정합니다.",
         openGraph: {
-            title: record.title
+            title: record.title,
+            description: "기록을 수정합니다."
         }
     };
 }

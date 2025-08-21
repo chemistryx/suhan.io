@@ -31,37 +31,38 @@
 
             .header {
                 display: flex;
-                justify-content: space-between;
                 align-items: center;
+                gap: .5rem;
                 padding-bottom: .5rem;
                 border-bottom: 1px solid var(--secondary100);
+
+                .author {
+                    display: flex;
+                    align-items: center;
+                    gap: .25rem;
+                    color: var(--primary950);
+                    font-size: .875rem;
+
+                    .writer {
+                        display: flex;
+                        background: var(--primary200);
+                        padding: .125rem .25rem;
+                        font-size: .7rem;
+                        border-radius: var(--border-radius);
+                        font-weight: 600;
+                    }
+                }
 
                 .metaWrapper {
                     display: flex;
                     align-items: center;
+                    flex: 1;
                     gap: .75rem;
 
                     .metaItem {
                         position: relative;
                         color: var(--secondary400);
                         font-size: .75rem;
-
-                        &.author {
-                            display: flex;
-                            align-items: center;
-                            gap: .25rem;
-                            color: var(--primary950);
-                            font-size: .875rem;
-
-                            .writer {
-                                display: flex;
-                                background: var(--primary200);
-                                padding: .125rem .25rem;
-                                font-size: .7rem;
-                                border-radius: var(--border-radius);
-                                font-weight: 600;
-                            }
-                        }
 
                         &:not(:first-child)::before {
                             content: "|";

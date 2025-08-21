@@ -12,8 +12,10 @@ export async function generateMetadata({ params }: Props) {
 
     return {
         title: "#" + decodedSlug,
+        description: `#${decodedSlug}에 대한 기록을 보여줍니다.`,
         openGraph: {
-            title: "#" + decodedSlug
+            title: "#" + decodedSlug,
+            description: `#${decodedSlug}에 대한 기록을 보여줍니다.`
         }
     };
 }

@@ -5,8 +5,10 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "태그",
+    description: "태그를 저장하는 공간입니다.",
     openGraph: {
-        title: "태그"
+        title: "태그",
+        description: "태그를 저장하는 공간입니다."
     }
 };
 

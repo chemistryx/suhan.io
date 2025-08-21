@@ -4,8 +4,10 @@ import { fetchRecords } from "@/lib/records";
 
 export const metadata: Metadata = {
     title: "기록",
+    description: "기록하는 공간입니다.",
     openGraph: {
-        title: "기록"
+        title: "기록",
+        description: "기록하는 공간입니다."
     }
 };
 

@@ -173,11 +173,11 @@ const RecordComments = ({ record }: Props) => {
                             {comments.map((comment) => (
                                 <li key={comment.id} className={styles.comment}>
                                     <div className={styles.header}>
+                                        <span className={styles.author}>
+                                            {comment.author_name}
+                                            {comment.author_id === record.author_id && <span className={styles.writer}>작성자</span>}
+                                        </span>
                                         <div className={styles.metaWrapper}>
-                                            <span className={[styles.metaItem, styles.author].join(" ")}>
-                                                {comment.author_name}
-                                                {comment.author_id === record.author_id && <span className={styles.writer}>작성자</span>}
-                                            </span>
                                             <span className={styles.metaItem}>{toDateDistanceString(comment.created_at)}</span>
                                             {comment.created_at != comment.updated_at ? <span className={styles.metaItem}>수정됨</span> : null}
                                         </div>

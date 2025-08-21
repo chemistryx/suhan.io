@@ -3,9 +3,9 @@ import "@/styles/global.scss";
 import Navbar from "@/components/Navbar";
 import Container from "@/components/Container";
 import Footer from "@/components/Footer";
-import { Toaster } from "sonner";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { META_TITLE } from "@/constants";
+import Toast from "@/components/Toast";
 
 interface Props {
     children: Readonly<React.ReactNode>;
@@ -16,14 +16,14 @@ export const metadata: Metadata = {
         template: `%s | ${META_TITLE}`,
         default: META_TITLE
     },
-    description: "",
+    description: "모두가 쉽게 사용할 수 있고, 실생활에서의 불편함을 해결할 수 있는 서비스를 만드는 데 관심이 많습니다.",
     openGraph: {
         type: "website",
         title: {
             template: `%s | ${META_TITLE}`,
             default: META_TITLE
         },
-        description: "",
+        description: "모두가 쉽게 사용할 수 있고, 실생활에서의 불편함을 해결할 수 있는 서비스를 만드는 데 관심이 많습니다.",
         url: "/"
     }
 };
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: Props) {
     return (
         <html lang="ko">
             <body>
-                <Toaster position="top-center" />
+                <Toast />
                 <Container>
                     <main>
                         <Navbar />
