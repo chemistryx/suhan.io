@@ -16,6 +16,11 @@ const TableOfContents = ({ contentClassName }: Props) => {
     const hideTimeout = useRef<NodeJS.Timeout | null>(null);
     const itemsRef = useRef<HTMLUListElement>(null);
 
+    const startTimer = () => {
+        if (hideTimeout.current) clearTimeout(hideTimeout.current);
+        hideTimeout.current = setTimeout(() => setVisible(false), 2000);
+    };
+
     useEffect(() => {
         const content = document.getElementsByClassName(contentClassName)[0];
         if (!content) return;
@@ -54,15 +59,10 @@ const TableOfContents = ({ contentClassName }: Props) => {
 
             setActiveId(currentId);
 
-            if (isOpen) {
+            if (!isOpen) {
                 setVisible(true);
-                if (hideTimeout.current) clearTimeout(hideTimeout.current);
-                return;
+                startTimer();
             }
-
-            setVisible(true);
-            if (hideTimeout.current) clearTimeout(hideTimeout.current);
-            hideTimeout.current = setTimeout(() => setVisible(false), 2000);
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
@@ -75,10 +75,15 @@ const TableOfContents = ({ contentClassName }: Props) => {
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (isOpen && itemsRef.current && !itemsRef.current.contains(event.target as Node)) {
-                setOpen(false);
-            }
+            if (isOpen && itemsRef.current && !itemsRef.current.contains(event.target as Node)) setOpen(false);
         };
+
+        if (isOpen) {
+            setVisible(true);
+            if (hideTimeout.current) clearTimeout(hideTimeout.current);
+        } else {
+            startTimer();
+        }
 
         document.addEventListener("mousedown", handleClickOutside);
 

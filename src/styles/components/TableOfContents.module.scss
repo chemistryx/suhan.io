@@ -20,6 +20,7 @@
         align-items: center;
         background-color: color-mix(in srgb, var(--primary100) 50%, transparent);
         backdrop-filter: blur(5px);
+        border: 1px solid var(--primary100);
         border-radius: calc(var(--border-radius) * 1.5);
         padding: 1.8rem .6rem;
         box-shadow: var(--box-shadow-sm);
