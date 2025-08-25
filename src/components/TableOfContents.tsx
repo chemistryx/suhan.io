@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/components/TableOfContents.module.scss";
-import { ArrowLeftFromLine, ArrowRightFromLine } from "lucide-react";
+import { ArrowLeftFromLine } from "lucide-react";
 
 export type TOCItem = { id: string; text: string; depth: number };
 
@@ -12,7 +12,9 @@ const TableOfContents = ({ contentClassName }: Props) => {
     const [toc, setToc] = useState<TOCItem[]>([]);
     const [isOpen, setOpen] = useState(false);
     const [activeId, setActiveId] = useState<string>("");
-    const [isVisible, /*setVisible*/] = useState(true);
+    const [isVisible, setVisible] = useState(false);
+    const hideTimeout = useRef<NodeJS.Timeout | null>(null);
+    const itemsRef = useRef<HTMLUListElement>(null);
 
     useEffect(() => {
         const content = document.getElementsByClassName(contentClassName)[0];
@@ -51,29 +53,52 @@ const TableOfContents = ({ contentClassName }: Props) => {
             }
 
             setActiveId(currentId);
+
+            if (isOpen) {
+                setVisible(true);
+                if (hideTimeout.current) clearTimeout(hideTimeout.current);
+                return;
+            }
+
+            setVisible(true);
+            if (hideTimeout.current) clearTimeout(hideTimeout.current);
+            hideTimeout.current = setTimeout(() => setVisible(false), 2000);
         };
 
         window.addEventListener("scroll", handleScroll, { passive: true });
 
-        return () => window.removeEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            if (hideTimeout.current) clearTimeout(hideTimeout.current);
+        }
     }, [toc, isOpen]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (isOpen && itemsRef.current && !itemsRef.current.contains(event.target as Node)) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isOpen]);
 
     if (!toc.length) return;
 
     return (
         <div className={[styles.base, isVisible ? styles.visible : ""].join(" ")}>
-            <button className={styles.button} onClick={() => setOpen((prev) => !prev)}>
-                {isOpen ? <ArrowRightFromLine /> : <ArrowLeftFromLine />}
+            <button className={[styles.button, isOpen ? styles.hidden : ""].join(" ")} onClick={() => setOpen((prev) => !prev)}>
+                <ArrowLeftFromLine size={16} />
             </button>
-            {isOpen &&
-                <ul className={styles.items}>
-                    {toc.map((item) => (
-                        <li key={item.id} className={[styles.item, item.id === activeId ? styles.active : ""].join(" ")} style={{ marginLeft: (item.depth - 1) * 12 }}>
-                            <a href={`#${item.id}`}>{item.text}</a>
-                        </li>
-                    ))}
-                </ul>
-            }
+            <ul ref={itemsRef} className={[styles.items, isOpen ? styles.visible : ""].join(" ")}>
+                {toc.map((item) => (
+                    <li key={item.id} className={[styles.item, item.id === activeId ? styles.active : ""].join(" ")} style={{ marginLeft: (item.depth - 1) * 12 }}>
+                        <a href={`#${item.id}`}>{item.text}</a>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };

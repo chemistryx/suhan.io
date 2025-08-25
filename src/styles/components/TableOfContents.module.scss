@@ -1,15 +1,12 @@
 .base {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-end;
-    gap: .5rem;
+    display: block;
     position: fixed;
-    top: 30%;
+    top: 50%;
     right: 1rem;
-    transition: var(--transition);
+    transform: translateY(-50%);
     opacity: 0;
     pointer-events: none;
+    transition: var(--transition);
 
     &.visible {
         opacity: 1;
@@ -24,19 +21,30 @@
         background-color: color-mix(in srgb, var(--primary100) 50%, transparent);
         backdrop-filter: blur(5px);
         border-radius: calc(var(--border-radius) * 1.5);
-        padding: .5rem;
+        padding: 1.8rem .6rem;
         box-shadow: var(--box-shadow-sm);
         transition: var(--transition);
         cursor: pointer;
+        pointer-events: auto;
 
         &:hover {
             background-color: color-mix(in srgb, var(--primary100) 90%, transparent);
+        }
+
+        &.hidden {
+            opacity: 0;
+            transform: translateX(2rem);
+            pointer-events: none;
         }
     }
 
     .items {
         display: flex;
         flex-direction: column;
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateX(2rem) translateY(-50%);
         padding: 1rem;
         background-color: color-mix(in srgb, var(--primary100) 50%, transparent);
         backdrop-filter: blur(5px);
@@ -45,9 +53,19 @@
         box-shadow: var(--box-shadow-sm);
         line-height: 1.7;
         list-style: none;
+        opacity: 0;
+        transition: var(--transition);
+        pointer-events: none;
+
+        &.visible {
+            opacity: 1;
+            transform: translateX(0) translateY(-50%);
+            pointer-events: auto;
+        }
 
         .item {
             display: flex;
+            white-space: nowrap;
 
             &.active {
                 font-weight: 600;
