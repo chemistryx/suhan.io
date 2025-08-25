@@ -6,25 +6,21 @@ const ScrollTopButton = () => {
     const [isVisible, setVisible] = useState(false);
 
     useEffect(() => {
-        const toggleVisibility = () => {
-            if (window.scrollY > 300) {
-                setVisible(true);
-            } else {
-                setVisible(false);
-            }
+        const handleScroll = () => {
+            if (window.scrollY > 300) setVisible(true);
+            else setVisible(false);
+
         };
 
-        window.addEventListener("scroll", toggleVisibility);
+        window.addEventListener("scroll", handleScroll, { passive: true });
 
-        return () => window.removeEventListener("scroll", toggleVisibility);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    const scrollTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
     return (
-        <button className={[styles.base, isVisible ? styles.visible : ""].join(" ")} onClick={scrollToTop}>
+        <button className={[styles.base, isVisible ? styles.visible : ""].join(" ")} onClick={scrollTop}>
             <ChevronUp />
         </button>
     )

@@ -18,7 +18,7 @@ const TableOfContents = ({ contentClassName }: Props) => {
 
     const startTimer = () => {
         if (hideTimeout.current) clearTimeout(hideTimeout.current);
-        hideTimeout.current = setTimeout(() => setVisible(false), 2000);
+        hideTimeout.current = setTimeout(() => setVisible(false), 1500);
     };
 
     useEffect(() => {
