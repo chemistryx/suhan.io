@@ -17,6 +17,7 @@ import MDEditor from "@uiw/react-md-editor";
 import RecordComments from "@/components/RecordComments";
 import rehypeExternalLinks from "rehype-external-links";
 import LightboxImage from "@/components/LightboxImage";
+import TableOfContents from "@/components/TableOfContents";
 
 interface Props {
     record: Record & {
@@ -68,6 +69,7 @@ const RecordPageComponent = ({ record }: Props) => {
                     }}
                 />
                 <RecordComments record={record} />
+                <TableOfContents contentClassName={styles.content} />
                 <ScrollTopButton />
             </div>
         </>

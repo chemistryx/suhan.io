@@ -91,7 +91,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 width: "100%",
                 height: "100%",
                 padding: "3rem",
-                background: "linear-gradient(to bottom, #fffff0, #f0f0f0);",
+                background: "#fffff7",
                 color: "#2e251a",
                 fontFamily: "MaruBuri-Regular",
             }}>

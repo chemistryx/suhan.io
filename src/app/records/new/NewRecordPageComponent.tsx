@@ -20,11 +20,11 @@ interface Props {
 const NewRecordPageComponent = ({ user }: Props) => {
     const supabase = createClient();
     const router = useRouter();
-    const [isDirty, setIsDirty] = useState(false);
+    const [isDirty, setDirty] = useState(false);
     useNavigationGuard({ enabled: isDirty, confirm: () => window.confirm("작성중인 내용이 있습니다. 계속하시겠습니까?") });
 
     const handleSubmit = async (data: RecordFormData) => {
-        setIsDirty(false);
+        setDirty(false);
 
         try {
             // 1. find existing tags
@@ -84,7 +84,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
             router.push("/records");
         } catch (e) {
             toast.error((e as PostgrestError).message || "게시물 등록 중 오류가 발생했습니다.");
-            setIsDirty(true);
+            setDirty(true);
         }
     };
 
@@ -97,7 +97,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
             <div className={styles.actions}>
                 <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
             </div>
-            <RecordForm onSubmit={handleSubmit} onDirtyChange={setIsDirty} mode="create" />
+            <RecordForm onSubmit={handleSubmit} onDirtyChange={setDirty} mode="create" />
         </div>
     );
 }

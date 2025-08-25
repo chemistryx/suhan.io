@@ -2,12 +2,13 @@
     display: flex;
     position: fixed;
     padding: .75rem;
-    bottom: 2rem;
-    right: 2rem;
-    border-radius: 50%;
-    background: var(--primary200);
+    bottom: 1rem;
+    right: 1rem;
+    background-color: color-mix(in srgb, var(--primary100) 50%, transparent);
+    border: 1px solid var(--primary100);
+    backdrop-filter: blur(5px);
+    border-radius: calc(var(--border-radius) * 2.5);
     box-shadow: var(--box-shadow-sm);
-    border: none;
     transition: var(--transition);
     opacity: 0;
     pointer-events: none;
@@ -15,7 +16,7 @@
     color: inherit;
 
     &:hover {
-        background: var(--primary300);
+        background-color: color-mix(in srgb, var(--primary100) 90%, transparent);
     }
 
     &.visible {

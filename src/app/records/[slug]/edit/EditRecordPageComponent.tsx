@@ -20,11 +20,11 @@ interface Props {
 const EditRecordPageComponent = ({ record }: Props) => {
     const supabase = createClient();
     const router = useRouter();
-    const [isDirty, setIsDirty] = useState(false);
+    const [isDirty, setDirty] = useState(false);
     useNavigationGuard({ enabled: isDirty, confirm: () => window.confirm("작성중인 내용이 있습니다. 계속하시겠습니까?") });
 
     const handleSubmit = async (data: RecordFormData) => {
-        setIsDirty(false);
+        setDirty(false);
 
         try {
             // 1. find existing tags
@@ -90,7 +90,7 @@ const EditRecordPageComponent = ({ record }: Props) => {
             router.push(`/records/${data.slug}`);
         } catch (e) {
             toast.error((e as PostgrestError).message || "게시물 수정 중 오류가 발생했습니다.");
-            setIsDirty(true);
+            setDirty(true);
         }
     }
 
@@ -103,7 +103,7 @@ const EditRecordPageComponent = ({ record }: Props) => {
             <div className={styles.actions}>
                 <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
             </div>
-            <RecordForm initialValues={{ ...record, slug: decodeURIComponent(record.slug) }} onSubmit={handleSubmit} onDirtyChange={setIsDirty} mode="edit" />
+            <RecordForm initialValues={{ ...record, slug: decodeURIComponent(record.slug) }} onSubmit={handleSubmit} onDirtyChange={setDirty} mode="edit" />
         </div>
     );
 }
