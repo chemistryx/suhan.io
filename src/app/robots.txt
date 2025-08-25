@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+Disallow: /tags/
+
+Sitemap: https://suhan.io/sitemap.xml
