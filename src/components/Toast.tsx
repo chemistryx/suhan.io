@@ -9,6 +9,7 @@ const Toast = () => {
                 className: styles.base,
                 duration: 3500,
             }}
+            theme="system"
         />
     );
 };
