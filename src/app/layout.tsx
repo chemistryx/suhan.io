@@ -27,6 +27,11 @@ export const metadata: Metadata = {
         },
         description: "모두가 쉽게 사용할 수 있고, 실생활에서의 불편함을 해결할 수 있는 서비스를 만드는 데 관심이 많습니다.",
         url: "/"
+    },
+    icons: {
+        icon: [
+            { url: "/profile.png", type: "image/png" },
+        ],
     }
 };
 
