@@ -9,7 +9,7 @@ export default function HomePage() {
                 <p>새로운 기술을 접하는 것을 꺼리지 않으며, 한번 시작한 것은 끝까지 마무리하는 끈기를 지니고 있습니다.</p>
             </div>
             <div className={styles.works}>
-                <h3>최근 작업물</h3>
+                <h3 className={styles.heading}>최근 작업물</h3>
                 <div className={styles.cards}>
                     <Link href="https://github.com/chemistryx/rokaf-letter" target="_blank">
                         <div className={styles.card}>

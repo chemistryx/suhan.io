@@ -1,0 +1,69 @@
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(7px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-down {
+    from {
+        opacity: 0;
+        transform: translateY(-7px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fade-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@mixin fade-in($direction: up, $duration: 0.4s, $delay: 0s) {
+    $animation-name: null;
+
+    @if $direction ==up {
+        $animation-name: fade-in-up;
+    }
+
+    @else if $direction ==down {
+        $animation-name: fade-in-down;
+    }
+
+    @else if $direction ==left {
+        $animation-name: fade-in-left;
+    }
+
+    @else if $direction ==right {
+        $animation-name: fade-in-right;
+    }
+
+    animation: #{$animation-name} $duration cubic-bezier(0.25, 0.46, 0.45, 0.94) $delay both;
+}

@@ -1,3 +1,5 @@
+@use "@/styles/animations" as *;
+
 .base {
     display: flex;
     flex-direction: column;
@@ -13,6 +15,7 @@
 
     .title {
         font-size: 1.75rem;
+        @include fade-in(up, 0.2s);
     }
 
     .description {
@@ -20,5 +23,7 @@
         flex-direction: column;
         gap: .5rem;
         font-size: .95rem;
+        @include fade-in(up, 0.4s);
+
     }
 }

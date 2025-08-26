@@ -1,9 +1,12 @@
+@use "@/styles/animations" as *;
+
 .base {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: .5rem;
     padding-bottom: 2rem;
+    @include fade-in(up, 0.4s, 0.2s);
 
     &::before {
         content: '';

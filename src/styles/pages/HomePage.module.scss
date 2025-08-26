@@ -1,4 +1,10 @@
 @use "@/styles/variables" as *;
+@use "@/styles/animations" as *;
+
+$duration: 0.3s;
+$leading-offset: 0s;
+$heading-offset: 0.5s;
+$cards-offset: 0.7s;
 
 .base {
     display: flex;
@@ -7,12 +13,28 @@
 
     .leading {
         line-height: 2.1;
+
+        p {
+            @include fade-in(up, $duration);
+
+            &:nth-child(1) {
+                animation-delay: $leading-offset;
+            }
+
+            &:nth-child(2) {
+                animation-delay: $leading-offset + 0.2s;
+            }
+        }
     }
 
     .works {
         display: flex;
         flex-direction: column;
-        gap: .5rem;
+        gap: 1rem;
+
+        .heading {
+            @include fade-in(up, $duration, $heading-offset);
+        }
 
         .cards {
             display: grid;
@@ -29,6 +51,18 @@
 
             a {
                 text-decoration: none;
+
+                &:nth-child(1) {
+                    @include fade-in(up, $duration, $cards-offset);
+                }
+
+                &:nth-child(2) {
+                    @include fade-in(up, $duration, $cards-offset + 0.1s);
+                }
+
+                &:nth-child(3) {
+                    @include fade-in(up, $duration, $cards-offset + 0.2s);
+                }
             }
 
             .card {
