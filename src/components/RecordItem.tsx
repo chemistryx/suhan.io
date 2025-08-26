@@ -4,16 +4,18 @@ import Badge from "./Badge";
 import { toDateDistanceString } from "@/utils/strings";
 import styles from "@/styles/components/RecordItem.module.scss";
 import { Tag } from "@/types/tag";
+import { CSSProperties } from "react";
 
 interface Props {
     record: Pick<Record, "id" | "title" | "description" | "slug" | "created_at" | "published"> & {
         tags: Pick<Tag, "id" | "name" | "slug">[];
     };
+    style?: CSSProperties;
 }
 
-const RecordItem = ({ record }: Props) => {
+const RecordItem = ({ record, style }: Props) => {
     return (
-        <div key={record.id} className={[styles.base, !record.published ? styles.dimmed : ""].join(" ")}>
+        <div key={record.id} className={[styles.base, !record.published ? styles.dimmed : ""].join(" ")} style={style}>
             <Link className={styles.title} href={`/records/${decodeURIComponent(record.slug)}`}>{record.title}</Link>
             {record.description && <p className={styles.description}>{record.description}</p>}
             <div className={styles.tags}>

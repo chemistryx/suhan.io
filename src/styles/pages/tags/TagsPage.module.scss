@@ -1,4 +1,5 @@
 @use "@/styles/variables" as *;
+@use "@/styles/animations" as *;
 
 .base {
     display: flex;
@@ -21,6 +22,11 @@
 
             @media screen and (max-width: $viewport-sm) {
                 grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+
+            a {
+                @include fade-in(up, 0.2s);
+                text-decoration: none;
             }
 
             .tag {

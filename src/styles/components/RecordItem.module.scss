@@ -6,6 +6,7 @@
     flex-direction: column;
     gap: .5rem;
     transition: var(--transition);
+    @include fade-in(up, 0.2s);
 
     &:not(:last-child)::after {
         content: '';

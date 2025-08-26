@@ -1,3 +1,5 @@
+@use "@/styles/animations" as *;
+
 .base {
     display: flex;
     flex-direction: column;
@@ -27,6 +29,8 @@
     }
 
     .content {
+        @include fade-in(up, 0.2s, 0.1s);
+
         &::after {
             content: '';
             display: block;

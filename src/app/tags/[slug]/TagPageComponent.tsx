@@ -29,8 +29,8 @@ const TagPageComponent = ({ slug, records }: Props) => {
                 </HeadingDescription>
             </Heading>
             <div className={styles.records}>
-                {records.map((record) => (
-                    <RecordItem key={record.id} record={record} />
+                {records.map((record, idx) => (
+                    <RecordItem key={record.id} record={record} style={{ animationDelay: `${(idx + 1) * 0.1}s` }} />
                 ))}
             </div>
         </div>
