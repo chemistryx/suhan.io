@@ -1,4 +1,5 @@
 @use "@/styles/variables" as *;
+@use "@/styles/animations" as *;
 
 .overlay {
     position: fixed;
@@ -6,6 +7,14 @@
     z-index: var(--modal-z-index);
     margin: 0 auto;
     background-color: rgba(0, 0, 0, 0.375);
+
+    &[data-state="open"] {
+        animation: fade-in 0.1s ease-out;
+    }
+
+    &[data-state="closed"] {
+        animation: fade-out 0.1s ease-in;
+    }
 }
 
 .wrapper {
@@ -20,6 +29,14 @@
     border-radius: var(--border-radius);
     z-index: var(--modal-z-index);
     overflow: hidden;
+
+    &[data-state="open"] {
+        animation: show 0.2s ease-out;
+    }
+
+    &[data-state="closed"] {
+        animation: hide 0.1s ease-in;
+    }
 
     @media screen and (max-width: $viewport-lg) {
         min-width: 50%;
@@ -69,5 +86,29 @@
         padding: 1.125rem;
         width: 100%;
         height: 100%;
+    }
+}
+
+@keyframes show {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -47%) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes hide {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -47%) scale(0.95);
     }
 }
