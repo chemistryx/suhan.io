@@ -31,14 +31,6 @@
         width: 100%;
         padding: unset;
 
-        // &.sticky {
-        //     position: sticky;
-        //     top: 1rem;
-        //     background: var(--navbar-background);
-        //     backdrop-filter: blur(4px);
-        //     border-radius: var(--border-radius);
-        // }
-
         &::after {
             content: none;
         }

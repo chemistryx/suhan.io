@@ -32,6 +32,11 @@ export const metadata: Metadata = {
         icon: [
             { url: "/profile.png", type: "image/png" },
         ],
+    },
+    verification: {
+        other: {
+            "naver-site-verification": "8acd899e3ca013746e0a6f3590fc99709fa20b6d"
+        }
     }
 };
 
