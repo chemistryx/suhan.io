@@ -1,4 +1,3 @@
-import { SITEMAP_BASEURL } from "@/constants";
 import { fetchRecords } from "@/lib/records";
 import { MetadataRoute } from "next";
 
@@ -7,13 +6,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const staticRoutes: MetadataRoute.Sitemap = [
         {
-            url: SITEMAP_BASEURL,
+            url: process.env.NEXT_PUBLIC_BASEURL!,
             lastModified: new Date(),
             changeFrequency: "weekly",
             priority: 1.0,
         },
         {
-            url: `${SITEMAP_BASEURL}/records`,
+            url: `${process.env.NEXT_PUBLIC_BASEURL}/records`,
             lastModified: new Date(),
             changeFrequency: "weekly",
             priority: 0.9
@@ -21,7 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ];
 
     const recordRoutes: MetadataRoute.Sitemap = records?.map((record) => ({
-        url: `${SITEMAP_BASEURL}/records/${record.slug}`,
+        url: `${process.env.NEXT_PUBLIC_BASEURL}/records/${record.slug}`,
         lastModified: record.updated_at ? new Date(record.updated_at) : new Date(),
         changeFrequency: "weekly",
         priority: 0.8,
