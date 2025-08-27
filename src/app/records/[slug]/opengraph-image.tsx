@@ -1,12 +1,11 @@
 import { Tag } from "@/types/tag";
 import { fetchRecord } from "@/lib/records";
 import { toDateString } from "@/utils/strings";
-import { readFile } from "fs/promises";
 import { ImageResponse } from "next/og";
-import { join } from "path";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+export const runtime = "edge";
 
 interface Props {
     children: React.ReactNode;
@@ -18,11 +17,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
     const record = { ...data, tags: data.tags.flatMap((t: { tag: Tag }) => t.tag) };
 
-    const maruBuriRegular = await readFile(join(process.cwd(), "public/fonts/MaruBuri-Regular.otf"));
-    const maruBuriSemiBold = await readFile(join(process.cwd(), "public/fonts/MaruBuri-SemiBold.otf"));
+    const maruBuriRegular = await fetch(new URL("../../../../public/fonts/MaruBuri-Regular.otf", import.meta.url)).then((res) => res.arrayBuffer());
+    const maruBuriSemiBold = await fetch(new URL("../../../../public/fonts/MaruBuri-SemiBold.otf", import.meta.url)).then((res) => res.arrayBuffer());
 
-    const profileData = await readFile(join(process.cwd(), "public/profile.png"));
-    const profileSrc = Uint8Array.from(profileData).buffer;
+    const profileImage = await fetch(new URL("../../../../public/profile.png", import.meta.url)).then((res) => res.arrayBuffer());
 
     const Header = ({ children }: Props) => {
         return (
@@ -97,7 +95,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             }}>
                 <Header>
                     {/* @ts-expect-error Satori supports arraybuffer as src, so it can be ignored */}
-                    <img id="profile" src={profileSrc} alt="profile" style={{ width: 72, height: 72, borderRadius: "50%" }} />
+                    <img id="profile" src={profileImage} alt="profile" style={{ width: 72, height: 72, borderRadius: "50%" }} />
                 </Header>
                 <Content>
                     <h1 id="title" style={{
