@@ -18,10 +18,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
     const record = { ...data, tags: data.tags.flatMap((t: { tag: Tag }) => t.tag) };
 
-    const maruBuriRegular = await readFile(join(process.cwd(), "fonts/MaruBuri-Regular.otf"));
-    const maruBuriSemiBold = await readFile(join(process.cwd(), "fonts/MaruBuri-SemiBold.otf"));
+    const maruBuriRegular = await readFile(join(process.cwd(), "public/fonts/MaruBuri-Regular.otf"));
+    const maruBuriSemiBold = await readFile(join(process.cwd(), "public/fonts/MaruBuri-SemiBold.otf"));
 
-    const profileData = await readFile(join(process.cwd(), "/profile.png"));
+    const profileData = await readFile(join(process.cwd(), "public/profile.png"));
     const profileSrc = Uint8Array.from(profileData).buffer;
 
     const Header = ({ children }: Props) => {
