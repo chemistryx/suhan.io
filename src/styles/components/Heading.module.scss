@@ -23,7 +23,7 @@
         flex-direction: column;
         gap: .5rem;
         font-size: .95rem;
-        color: var(--secondary700);
+        color: var(--secondary600);
         @include fade-in(up, 0.4s);
     }
 }

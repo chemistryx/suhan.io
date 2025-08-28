@@ -9,7 +9,7 @@
         gap: .25rem;
 
         .description {
-            color: var(--secondary500);
+            color: var(--secondary600);
             font-size: .8125rem;
         }
     }
@@ -34,7 +34,7 @@
                 align-items: center;
                 gap: .5rem;
                 padding-bottom: .5rem;
-                border-bottom: 1px solid var(--secondary100);
+                border-bottom: 1px solid var(--primary100);
 
                 .author {
                     display: flex;
@@ -61,7 +61,7 @@
 
                     .metaItem {
                         position: relative;
-                        color: var(--secondary400);
+                        color: var(--secondary500);
                         font-size: .75rem;
 
                         &:not(:first-child)::before {

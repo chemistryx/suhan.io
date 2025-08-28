@@ -17,6 +17,7 @@
     .actions {
         display: flex;
         justify-content: flex-end;
+        color: var(--secondary950);
 
         .manage {
             display: flex;
@@ -25,7 +26,6 @@
 
         .list {
             margin-left: auto;
-            color: var(--secondary950);
         }
     }
 
