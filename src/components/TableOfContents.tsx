@@ -14,11 +14,17 @@ const TableOfContents = ({ contentClassName }: Props) => {
     const [activeId, setActiveId] = useState<string>("");
     const [isVisible, setVisible] = useState(false);
     const hideTimeout = useRef<NodeJS.Timeout | null>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const itemsRef = useRef<HTMLUListElement>(null);
 
     const startTimer = () => {
         if (hideTimeout.current) clearTimeout(hideTimeout.current);
         hideTimeout.current = setTimeout(() => setVisible(false), 1500);
+    };
+
+    const clearTimer = () => {
+        if (hideTimeout.current) clearTimeout(hideTimeout.current);
+        hideTimeout.current = null;
     };
 
     useEffect(() => {
@@ -69,7 +75,7 @@ const TableOfContents = ({ contentClassName }: Props) => {
 
         return () => {
             window.removeEventListener("scroll", handleScroll);
-            if (hideTimeout.current) clearTimeout(hideTimeout.current);
+            clearTimer();
         }
     }, [toc, isOpen]);
 
@@ -80,7 +86,7 @@ const TableOfContents = ({ contentClassName }: Props) => {
 
         if (isOpen) {
             setVisible(true);
-            if (hideTimeout.current) clearTimeout(hideTimeout.current);
+            clearTimer();
         } else {
             startTimer();
         }
@@ -90,11 +96,27 @@ const TableOfContents = ({ contentClassName }: Props) => {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [isOpen]);
 
+    useEffect(() => {
+        const node = buttonRef.current;
+        if (!node || !isVisible) return; // do not attach events when not visible
+
+        const handleMouseEnter = () => clearTimer();
+        const handleMouseLeave = () => { if (!isOpen) startTimer(); };
+
+        node.addEventListener("mouseenter", handleMouseEnter);
+        node.addEventListener("mouseleave", handleMouseLeave);
+
+        return () => {
+            node.removeEventListener("mouseenter", handleMouseEnter);
+            node.removeEventListener("mouseleave", handleMouseLeave);
+        };
+    }, [isOpen, isVisible]);
+
     if (!toc.length) return;
 
     return (
         <div className={[styles.base, isVisible ? styles.visible : ""].join(" ")}>
-            <button className={[styles.button, isOpen ? styles.hidden : ""].join(" ")} onClick={() => setOpen((prev) => !prev)}>
+            <button ref={buttonRef} className={[styles.button, isOpen || !isVisible ? styles.hidden : ""].join(" ")} onClick={() => setOpen((prev) => !prev)}>
                 <ArrowLeftFromLine size={16} />
             </button>
             <ul ref={itemsRef} className={[styles.items, isOpen ? styles.visible : ""].join(" ")}>
