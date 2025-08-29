@@ -101,7 +101,7 @@ const EditRecordPageComponent = ({ record }: Props) => {
                 <HeadingDescription>기록을 수정합니다.</HeadingDescription>
             </Heading>
             <div className={styles.actions}>
-                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
+                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push(`/records/${record.slug}`)}><ChevronLeft size={16} strokeWidth={1.5} />돌아가기</Button>
             </div>
             <RecordForm initialValues={{ ...record, slug: decodeURIComponent(record.slug) }} onSubmit={handleSubmit} onDirtyChange={setDirty} mode="edit" />
         </div>

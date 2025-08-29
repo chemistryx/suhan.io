@@ -54,12 +54,11 @@ const TableOfContents = ({ contentClassName }: Props) => {
 
             if (!headings.length) return;
 
-            const scrollY = window.scrollY;
             let currentId = headings[0]?.id || "";
 
             for (let i = 0; i < headings.length; i++) {
                 const el = headings[i];
-                if (el && el.offsetTop <= scrollY) currentId = el.id;
+                if (el && el.getBoundingClientRect().top <= 10) currentId = el.id;
                 else break;
             }
 
