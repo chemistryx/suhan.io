@@ -18,6 +18,11 @@ const LightboxImage = ({ src, alt }: ImgHTMLAttributes<HTMLImageElement>) => {
             document.body.style.overflow = "";
             document.body.style.marginRight = "";
         }
+
+        return () => {
+            document.body.style.overflow = "";
+            document.body.style.marginRight = "";
+        }
     }, [mounted]);
 
     return (
