@@ -10,6 +10,16 @@ const LightboxImage = ({ src, alt }: ImgHTMLAttributes<HTMLImageElement>) => {
         if (state === "open") setMounted(true);
     }, [state]);
 
+    useEffect(() => {
+        if (mounted) {
+            document.body.style.overflow = "hidden";
+            document.body.style.marginRight = "15px";
+        } else {
+            document.body.style.overflow = "";
+            document.body.style.marginRight = "";
+        }
+    }, [mounted]);
+
     return (
         <>
             <img className={styles.base} src={src} alt={alt} onClick={() => setState("open")} />
