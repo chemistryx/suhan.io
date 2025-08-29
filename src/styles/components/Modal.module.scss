@@ -89,27 +89,3 @@
         height: 100%;
     }
 }
-
-@keyframes show {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -47%) scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-@keyframes hide {
-    from {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-
-    to {
-        opacity: 0;
-        transform: translate(-50%, -47%) scale(0.95);
-    }
-}

@@ -1,23 +1,44 @@
 @use "@/styles/variables" as *;
+@use "@/styles/animations" as *;
 
 .base {
     cursor: zoom-in;
 }
 
 .overlay {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.625);
     z-index: var(--modal-z-index);
+    background-color: rgba(0, 0, 0, 0.625);
+    opacity: 0;
+    pointer-events: none;
+
+    &[data-state="open"] {
+        animation: fade-in 0.1s ease-out forwards;
+        pointer-events: auto;
+    }
+
+    &[data-state="closed"] {
+        animation: fade-out 0.1s ease-in forwards;
+    }
 
     >img {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         max-width: 90%;
         max-height: 60%;
         border-radius: var(--border-radius);
         overflow: hidden;
+
+        &[data-state="open"] {
+            animation: show 0.2s ease-out;
+        }
+
+        &[data-state="closed"] {
+            animation: hide 0.1s ease-in;
+        }
 
         @media screen and (max-width: $viewport-lg) {
             max-width: 95%;
