@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/components/TableOfContents.module.scss";
 import { ArrowLeftFromLine } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export type TOCItem = { id: string; text: string; depth: number };
 
@@ -16,6 +17,7 @@ const TableOfContents = ({ contentClassName }: Props) => {
     const hideTimeout = useRef<NodeJS.Timeout | null>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const itemsRef = useRef<HTMLUListElement>(null);
+    const router = useRouter();
 
     const startTimer = () => {
         if (hideTimeout.current) clearTimeout(hideTimeout.current);
@@ -120,8 +122,8 @@ const TableOfContents = ({ contentClassName }: Props) => {
             </button>
             <ul ref={itemsRef} className={[styles.items, isOpen ? styles.visible : ""].join(" ")}>
                 {toc.map((item) => (
-                    <li key={item.id} className={[styles.item, item.id === activeId ? styles.active : ""].join(" ")} style={{ marginLeft: (item.depth - 1) * 12 }}>
-                        <a href={`#${item.id}`}>{item.text}</a>
+                    <li key={item.id} className={[styles.item, item.id === activeId ? styles.active : ""].join(" ")} onClick={() => router.replace(`#${item.id}`)} style={{ marginLeft: (item.depth - 1) * 12 }}>
+                        {item.text}
                     </li>
                 ))}
             </ul>

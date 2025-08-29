@@ -67,14 +67,11 @@
         .item {
             display: flex;
             white-space: nowrap;
+            cursor: pointer;
 
             &.active {
                 font-weight: 600;
                 color: var(--primary500);
-
-                a {
-                    text-decoration-color: var(--primary500);
-                }
             }
         }
     }
