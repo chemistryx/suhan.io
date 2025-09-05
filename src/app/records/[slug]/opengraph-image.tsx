@@ -128,7 +128,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
                     <span>{toDateString(record.created_at)}</span>
                     <span style={{ color: "#6d6d6d" }}>suhan.io</span>
                 </Footer>
-            </div >
+            </div>
         ),
         {
             ...size,
