@@ -11,25 +11,25 @@ const handler = async (request: Request): Promise<Response> => {
     try {
         if (request.method !== "POST") return new Response(JSON.stringify({ status: false, message: "Method Not Allowed" }), { status: 405 });
 
-        const { recordId, commentId } = await request.json();
+        const { record } = await request.json();
 
-        const { data: record, error: recordError } = await supabase
+        const { data: recordData, error: recordError } = await supabase
             .from("records")
             .select("title, author_id")
-            .eq("id", recordId)
+            .eq("id", record.record_id)
             .single();
 
         if (recordError) throw recordError;
 
-        const { data: comment, error: commentError } = await supabase
+        const { data: commentData, error: commentError } = await supabase
             .from("comments")
-            .select()
-            .eq("id", commentId)
+            .select("author_name, content")
+            .eq("id", record.id)
             .single();
 
         if (commentError) throw commentError;
 
-        const { data: { user: user }, error: userError } = await supabase.auth.admin.getUserById(record.author_id);
+        const { data: { user: user }, error: userError } = await supabase.auth.admin.getUserById(recordData.author_id);
 
         if (userError) throw userError;
 
@@ -42,11 +42,11 @@ const handler = async (request: Request): Promise<Response> => {
             body: JSON.stringify({
                 from: "noreply@suhan.io",
                 to: [user.email],
-                subject: `[${record.title}] 새로운 댓글이 달렸습니다.`,
+                subject: `[${recordData.title}] 새로운 댓글이 달렸습니다.`,
                 html: `
                     <h3>새로운 댓글</h3>
-                    <p><strong>${comment.author_name}</strong>님이 댓글을 달았습니다.</p>
-                    <blockquote>${comment.content}</blockquote>
+                    <p><strong>${commentData.author_name}</strong>님이 댓글을 달았습니다.</p>
+                    <blockquote>${commentData.content}</blockquote>
                 `
             })
         });
