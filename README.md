@@ -29,7 +29,7 @@ $ cd suhan.io/
 ```
 ### 2. Install Dependencies
 ```bash
-npm install
+$ npm install
 ```
 ### 3. Setup Environment
 1. Create `.env.local` file in the root directory of the project.
