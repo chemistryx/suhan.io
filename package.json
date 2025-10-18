@@ -18,7 +18,7 @@
         "@uiw/react-md-editor": "^4.0.7",
         "@vercel/analytics": "^1.5.0",
         "@vercel/speed-insights": "^1.2.0",
-        "axios": "^1.10.0",
+        "axios": "^1.12.0",
         "date-fns": "^4.1.0",
         "lucide-react": "^0.525.0",
         "next": "15.5.2",
