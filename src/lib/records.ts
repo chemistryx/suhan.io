@@ -1,16 +1,20 @@
 import { RECORDS_TABLE_NAME } from "@/constants";
 import { createClient } from "../utils/supabase/server";
+import { toStoredSlug } from "@/utils/strings";
 import { cache } from "react";
 
-export const fetchRecord = cache(async (slug: string) => {
+const fetchRecordByStoredSlug = cache(async (storedSlug: string) => {
     const supabase = await createClient();
 
     return await supabase
         .from(RECORDS_TABLE_NAME)
         .select("*, tags:record_tags(tag:tags(id, name, slug))")
-        .eq("slug", slug)
+        .eq("slug", storedSlug)
         .single();
 });
+
+// Normalising outside the cache keeps both slug shapes on one cache key.
+export const fetchRecord = (slug: string) => fetchRecordByStoredSlug(toStoredSlug(slug));
 
 export const fetchRecords = cache(async () => {
     const supabase = await createClient();

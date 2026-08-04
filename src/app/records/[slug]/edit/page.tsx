@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import EditRecordPageComponent from "./EditRecordPageComponent";
 import { Tag } from "@/types/tag";
+import { toStoredSlug } from "@/utils/strings";
 import { cache } from "react";
 
 interface Props {
@@ -15,7 +16,7 @@ const getRecord = cache(async (slug: string) => {
     const { data, error } = await supabase
         .from(RECORDS_TABLE_NAME)
         .select("*, tags:record_tags(tag:tags(name))")
-        .eq("slug", slug)
+        .eq("slug", toStoredSlug(slug))
         .single();
 
     if (!data || error) return notFound();

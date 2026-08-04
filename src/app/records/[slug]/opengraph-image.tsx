@@ -12,7 +12,7 @@ interface Props {
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const { data, error } = await fetchRecord(encodeURIComponent(decodeURIComponent(slug)));
+    const { data, error } = await fetchRecord(slug);
     if (!data || error) throw new Error(error?.message);
 
     const record = { ...data, tags: data.tags.flatMap((t: { tag: Tag }) => t.tag) };
