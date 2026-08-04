@@ -5,14 +5,14 @@ import { ImageResponse } from "next/og";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const runtime = "edge";
 
 interface Props {
     children: React.ReactNode;
 }
 
-export default async function Image({ params }: { params: { slug: string } }) {
-    const { data, error } = await fetchRecord(encodeURIComponent(decodeURIComponent(params.slug)));
+export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const { data, error } = await fetchRecord(encodeURIComponent(decodeURIComponent(slug)));
     if (!data || error) throw new Error(error?.message);
 
     const record = { ...data, tags: data.tags.flatMap((t: { tag: Tag }) => t.tag) };

@@ -64,7 +64,7 @@ const font = localFont({
 
 export default function RootLayout({ children }: Props) {
     return (
-        <html lang="ko" className={font.variable}>
+        <html lang="ko" className={font.variable} data-scroll-behavior="smooth">
             <body>
                 <Toast />
                 <Container>
