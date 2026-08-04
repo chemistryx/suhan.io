@@ -2,7 +2,6 @@ import { RECORDS_TABLE_NAME } from "@/constants";
 import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import EditRecordPageComponent from "./EditRecordPageComponent";
-import { NavigationGuardProvider } from "next-navigation-guard";
 import { Tag } from "@/types/tag";
 import { cache } from "react";
 
@@ -44,9 +43,5 @@ export default async function EditRecordPage({ params }: Props) {
     const { slug } = await params;
     const record = await getRecord(slug);
 
-    return (
-        <NavigationGuardProvider>
-            <EditRecordPageComponent record={record} />
-        </NavigationGuardProvider>
-    );
+    return <EditRecordPageComponent record={record} />;
 }

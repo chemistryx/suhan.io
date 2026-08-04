@@ -10,7 +10,7 @@ import { RECORD_TAGS_TABLE_NAME, RECORDS_TABLE_NAME, TAGS_TABLE_NAME } from "@/c
 import { ChevronLeft } from "lucide-react";
 import RecordForm, { RecordFormData } from "@/components/RecordForm";
 import { useState } from "react";
-import { useNavigationGuard } from "next-navigation-guard";
+import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 import { normalize } from "@/utils/strings";
 
 interface Props {
@@ -21,7 +21,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
     const supabase = createClient();
     const router = useRouter();
     const [isDirty, setDirty] = useState(false);
-    useNavigationGuard({ enabled: isDirty, confirm: () => window.confirm("작성중인 내용이 있습니다. 계속하시겠습니까?") });
+    const { navigate } = useNavigationGuard({ enabled: isDirty, confirm: () => window.confirm("작성중인 내용이 있습니다. 계속하시겠습니까?") });
 
     const handleSubmit = async (data: RecordFormData) => {
         setDirty(false);
@@ -95,7 +95,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
                 <HeadingDescription>새 기록을 작성합니다.</HeadingDescription>
             </Heading>
             <div className={styles.actions}>
-                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
+                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => navigate("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
             </div>
             <RecordForm onSubmit={handleSubmit} onDirtyChange={setDirty} mode="create" />
         </div>

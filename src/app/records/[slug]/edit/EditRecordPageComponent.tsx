@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import RecordForm, { RecordFormData } from "@/components/RecordForm";
 import { useState } from "react";
-import { useNavigationGuard } from "next-navigation-guard";
+import { useNavigationGuard } from "@/hooks/useNavigationGuard";
 import { RECORD_TAGS_TABLE_NAME, RECORDS_TABLE_NAME, TAGS_TABLE_NAME } from "@/constants";
 import { toast } from "sonner";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -21,7 +21,7 @@ const EditRecordPageComponent = ({ record }: Props) => {
     const supabase = createClient();
     const router = useRouter();
     const [isDirty, setDirty] = useState(false);
-    useNavigationGuard({ enabled: isDirty, confirm: () => window.confirm("작성중인 내용이 있습니다. 계속하시겠습니까?") });
+    const { navigate } = useNavigationGuard({ enabled: isDirty, confirm: () => window.confirm("작성중인 내용이 있습니다. 계속하시겠습니까?") });
 
     const handleSubmit = async (data: RecordFormData) => {
         setDirty(false);
@@ -101,7 +101,7 @@ const EditRecordPageComponent = ({ record }: Props) => {
                 <HeadingDescription>기록을 수정합니다.</HeadingDescription>
             </Heading>
             <div className={styles.actions}>
-                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push(`/records/${record.slug}`)}><ChevronLeft size={16} strokeWidth={1.5} />돌아가기</Button>
+                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => navigate(`/records/${record.slug}`)}><ChevronLeft size={16} strokeWidth={1.5} />돌아가기</Button>
             </div>
             <RecordForm initialValues={{ ...record, slug: decodeURIComponent(record.slug) }} onSubmit={handleSubmit} onDirtyChange={setDirty} mode="edit" />
         </div>
