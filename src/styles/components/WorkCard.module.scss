@@ -42,6 +42,13 @@
     }
 
     .description {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        overflow: hidden;
+        /* reserve both lines so a one-line description doesn't shorten the card */
+        min-height: calc(2 * 1.7em);
         flex: 1;
         font-size: .85rem;
         color: var(--text-muted);
