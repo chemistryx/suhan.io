@@ -1,14 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 interface Options {
     /** While true, leaving the page asks for confirmation. */
     enabled: boolean;
-    /** Return true to allow the navigation, false to cancel it. */
-    confirm: () => boolean;
 }
+
+/** The navigation that was held back while the confirmation is on screen. */
+type PendingNavigation =
+    | { type: "push"; href: string }
+    | { type: "back" };
 
 /** Marks the throwaway history entry that absorbs the first Back press. */
 const SENTINEL = "__navigationGuardSentinel";
@@ -20,21 +23,24 @@ const SENTINEL = "__navigationGuardSentinel";
  * separately: beforeunload for the tab itself, a capture-phase click listener
  * for <Link>, a sentinel history entry for the Back button, and the returned
  * navigate() for router.push() calls made by this page.
+ *
+ * Confirmation is asynchronous: a modal cannot block the event loop the way
+ * window.confirm did, so every intercepted navigation is cancelled outright and
+ * replayed by confirmNavigation() once the user agrees.
  */
-export function useNavigationGuard({ enabled, confirm }: Options) {
+export function useNavigationGuard({ enabled }: Options) {
     const router = useRouter();
+    const [pending, setPending] = useState<PendingNavigation | null>(null);
     const enabledRef = useRef(enabled);
-    const confirmRef = useRef(confirm);
+    /** Set by the Back guard so confirmNavigation can replay the pop. */
+    const releaseBackRef = useRef<(() => void) | null>(null);
 
     useEffect(() => {
         enabledRef.current = enabled;
     }, [enabled]);
 
-    useEffect(() => {
-        confirmRef.current = confirm;
-    });
-
-    // Tab close, reload, and navigation to another origin.
+    // Tab close, reload, and navigation to another origin. This one stays with
+    // the browser's own dialog — a page cannot render UI over an unload.
     useEffect(() => {
         const handleBeforeUnload = (event: BeforeUnloadEvent) => {
             if (!enabledRef.current) return;
@@ -65,13 +71,11 @@ export function useNavigationGuard({ enabled, confirm }: Options) {
             // A bare hash change stays on the page.
             if (url.pathname === location.pathname && url.search === location.search) return;
 
-            // window.confirm blocks, so on approval the event simply continues to
-            // Next's handler and stays a client-side navigation.
-            if (confirmRef.current()) return;
-
             event.preventDefault();
             event.stopPropagation();
             event.stopImmediatePropagation();
+
+            setPending({ type: "push", href: url.pathname + url.search + url.hash });
         };
 
         document.addEventListener("click", handleClick, true);
@@ -96,20 +100,24 @@ export function useNavigationGuard({ enabled, confirm }: Options) {
             // the page, so it is not something to confirm.
             if (location.hash && location.pathname + location.search === guardedUrl) return;
 
-            if (confirmRef.current()) {
-                released = true;
-                window.removeEventListener("popstate", handlePopState);
-                history.back();
-                return;
-            }
-
+            // The pop already happened, so put the page back before asking.
             pushSentinel();
+            setPending({ type: "back" });
         };
 
         window.addEventListener("popstate", handlePopState);
 
+        releaseBackRef.current = () => {
+            released = true;
+            window.removeEventListener("popstate", handlePopState);
+            // The sentinel and the guarded entry both sit above where Back was
+            // headed, so skip past the pair in one go.
+            history.go(-2);
+        };
+
         return () => {
             window.removeEventListener("popstate", handlePopState);
+            releaseBackRef.current = null;
             // Drop the sentinel when the guard turns off while the page is still open.
             if (!released && history.state?.[SENTINEL]) history.back();
         };
@@ -117,9 +125,28 @@ export function useNavigationGuard({ enabled, confirm }: Options) {
 
     /** router.push() that asks first. */
     const navigate = useCallback((href: string) => {
-        if (enabledRef.current && !confirmRef.current()) return;
-        router.push(href);
+        if (!enabledRef.current) {
+            router.push(href);
+            return;
+        }
+
+        setPending({ type: "push", href });
     }, [router]);
 
-    return { navigate };
+    /** Leave the page, replaying whichever navigation was intercepted. */
+    const confirmNavigation = useCallback(() => {
+        if (!pending) return;
+
+        setPending(null);
+
+        if (pending.type === "back") releaseBackRef.current?.();
+        else router.push(pending.href);
+    }, [pending, router]);
+
+    /** Stay on the page. Back has already been undone by the sentinel. */
+    const cancelNavigation = useCallback(() => setPending(null), []);
+
+    // Derived rather than cleared in an effect, so a guard that switches off
+    // mid-flight (a save completing, say) takes its modal down with it.
+    return { navigate, isBlocked: enabled && pending !== null, confirmNavigation, cancelNavigation };
 }

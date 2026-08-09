@@ -11,6 +11,7 @@ import { ChevronLeft } from "lucide-react";
 import RecordForm, { RecordFormData } from "@/components/RecordForm";
 import { useState } from "react";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
+import NavigationGuardModal from "@/components/modals/NavigationGuardModal";
 import { normalize } from "@/utils/strings";
 
 interface Props {
@@ -21,7 +22,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
     const supabase = createClient();
     const router = useRouter();
     const [isDirty, setDirty] = useState(false);
-    const { navigate } = useNavigationGuard({ enabled: isDirty, confirm: () => window.confirm("작성중인 내용이 있습니다. 계속하시겠습니까?") });
+    const { navigate, isBlocked, confirmNavigation, cancelNavigation } = useNavigationGuard({ enabled: isDirty });
 
     const handleSubmit = async (data: RecordFormData) => {
         setDirty(false);
@@ -98,6 +99,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
                 <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => navigate("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
             </div>
             <RecordForm onSubmit={handleSubmit} onDirtyChange={setDirty} mode="create" />
+            <NavigationGuardModal showModal={isBlocked} setModal={(open) => { if (!open) cancelNavigation(); }} onConfirm={confirmNavigation} />
         </div>
     );
 }
