@@ -3,6 +3,33 @@
     flex-direction: column;
     gap: .5rem;
 
+    .publishField>div {
+        flex-direction: row;
+        align-items: center;
+        gap: .625rem;
+        padding: .5rem .75rem;
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--border-radius);
+        transition: var(--transition);
+
+        &:hover {
+            background: var(--surface-hover);
+        }
+
+        &:has(input:focus-visible) {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+        }
+
+        label {
+            order: 1;
+            font-size: .85rem;
+            cursor: pointer;
+            user-select: none;
+        }
+    }
+
     :global(.tag_input__control) {
         background: var(--surface);
         border: 1px solid var(--border-strong);

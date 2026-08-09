@@ -79,7 +79,9 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
                 options={tagOptions}
                 isMulti
             />
-            <Input label="발행" type="checkbox" checked={formData.published} onChange={(e) => setFormData({ ...formData, published: e.target.checked })} />
+            <div className={styles.publishField}>
+                <Input label="발행" type="checkbox" checked={formData.published} onChange={(e) => setFormData({ ...formData, published: e.target.checked })} />
+            </div>
             <MarkdownEditor value={formData.content} onChange={handleContentChange} />
             <Button onClick={handleSubmit}>{mode === "create" ? "등록하기" : "수정하기"}</Button>
         </div>
