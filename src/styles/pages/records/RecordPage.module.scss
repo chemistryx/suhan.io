@@ -39,7 +39,7 @@
             width: 100%;
             height: 1px;
             margin-top: .75rem;
-            background: linear-gradient(to right, transparent, var(--border-strong), transparent);
+            background: linear-gradient(to right, transparent, var(--border), transparent);
         }
 
         &:global(.wmde-markdown) {
