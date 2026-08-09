@@ -110,7 +110,7 @@ const MarkdownEditor = ({ ...props }: MDEditorProps) => {
     ];
 
     return (
-        <MDEditor className={styles.base} commands={toolbars} {...props} />
+        <MDEditor className={styles.base} height={400} commands={toolbars} {...props} />
     );
 };
 
