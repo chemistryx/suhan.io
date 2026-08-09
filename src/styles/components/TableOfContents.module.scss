@@ -3,6 +3,7 @@
     position: fixed;
     top: 50%;
     right: 1rem;
+    z-index: var(--floating-z-index);
     transform: translateY(-50%);
     opacity: 0;
     pointer-events: none;

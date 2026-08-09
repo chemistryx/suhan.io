@@ -4,6 +4,7 @@
     padding: .5rem;
     bottom: 1rem;
     right: 1rem;
+    z-index: var(--floating-z-index);
     background-color: color-mix(in srgb, var(--surface) 70%, transparent);
     border: 1px solid var(--border);
     backdrop-filter: blur(5px);
