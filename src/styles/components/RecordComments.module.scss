@@ -9,7 +9,7 @@
         gap: .25rem;
 
         .description {
-            color: var(--secondary600);
+            color: var(--text-muted);
             font-size: .8125rem;
         }
     }
@@ -24,9 +24,9 @@
             display: flex;
             flex-direction: column;
             padding: 1rem;
-            border: 1px solid var(--primary50);
+            border: 1px solid var(--border);
             border-radius: var(--border-radius);
-            background: var(--primary50);
+            background: var(--surface-hover);
             gap: .5rem;
 
             .header {
@@ -34,18 +34,19 @@
                 align-items: center;
                 gap: .5rem;
                 padding-bottom: .5rem;
-                border-bottom: 1px solid var(--primary100);
+                border-bottom: 1px solid var(--border-strong);
 
                 .author {
                     display: flex;
                     align-items: center;
                     gap: .25rem;
-                    color: var(--primary950);
+                    color: var(--text);
                     font-size: .875rem;
 
                     .writer {
                         display: flex;
-                        background: var(--primary200);
+                        background: var(--accent-soft);
+                        color: var(--accent-soft-text);
                         padding: .125rem .25rem;
                         font-size: .7rem;
                         border-radius: var(--border-radius);
@@ -61,7 +62,7 @@
 
                     .metaItem {
                         position: relative;
-                        color: var(--secondary500);
+                        color: var(--text-subtle);
                         font-size: .75rem;
 
                         &:not(:first-child)::before {
@@ -83,7 +84,7 @@
 
                     .action {
                         font-size: .8125rem;
-                        color: var(--primary500);
+                        color: var(--accent);
                         cursor: pointer;
 
                         &:hover {
@@ -105,7 +106,7 @@
         flex-direction: column;
         gap: .5rem;
         padding: 1rem;
-        background: var(--primary50);
+        background: var(--surface-hover);
         border-radius: var(--border-radius);
 
         .contentWrapper {
@@ -120,10 +121,17 @@
             .contentInput {
                 all: unset;
                 padding: .5rem;
-                background: var(--input-background);
-                border: 1px solid var(--primary100);
+                background: var(--surface);
+                border: 1px solid var(--border-strong);
                 border-radius: var(--border-radius);
                 font-size: .85rem;
+                transition: var(--transition);
+
+                &:focus-visible {
+                    outline: none;
+                    border-color: var(--accent);
+                    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+                }
             }
         }
     }

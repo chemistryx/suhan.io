@@ -18,9 +18,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: color-mix(in srgb, var(--primary100) 50%, transparent);
+        background-color: color-mix(in srgb, var(--surface) 70%, transparent);
         backdrop-filter: blur(5px);
-        border: 1px solid var(--primary100);
+        border: 1px solid var(--border);
         border-radius: calc(var(--border-radius) * 1.5);
         padding: 1.5rem .5rem;
         box-shadow: var(--box-shadow-sm);
@@ -29,7 +29,7 @@
         pointer-events: auto;
 
         &:hover {
-            background-color: color-mix(in srgb, var(--primary100) 90%, transparent);
+            background-color: var(--surface);
         }
 
         &.hidden {
@@ -47,8 +47,9 @@
         right: 0;
         transform: translateX(2rem) translateY(-50%);
         padding: 1rem;
-        background-color: color-mix(in srgb, var(--primary100) 50%, transparent);
+        background-color: color-mix(in srgb, var(--surface) 85%, transparent);
         backdrop-filter: blur(5px);
+        border: 1px solid var(--border);
         border-radius: var(--border-radius);
         font-size: .9rem;
         box-shadow: var(--box-shadow-sm);
@@ -71,7 +72,7 @@
 
             &.active {
                 font-weight: 600;
-                color: var(--primary500);
+                color: var(--accent);
             }
         }
     }

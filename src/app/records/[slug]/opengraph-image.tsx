@@ -17,8 +17,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
 
     const record = { ...data, tags: data.tags.flatMap((t: { tag: Tag }) => t.tag) };
 
-    const maruBuriRegular = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/fonts/MaruBuri-Regular.otf`).then((res) => res.arrayBuffer());
-    const maruBuriSemiBold = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/fonts/MaruBuri-SemiBold.otf`).then((res) => res.arrayBuffer());
+    const suitRegular = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/fonts/SUIT-Regular.otf`).then((res) => res.arrayBuffer());
+    const suitSemiBold = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/fonts/SUIT-SemiBold.otf`).then((res) => res.arrayBuffer());
 
     const profileImage = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/profile.png`).then((res) => res.arrayBuffer());
 
@@ -57,7 +57,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 justifyContent: "center",
                 fontSize: "2rem",
                 padding: ".4rem .8rem",
-                backgroundColor: "#d5d5b2",
+                backgroundColor: "#e9edf6",
+                color: "#2b4472",
                 borderRadius: 16,
             }}>
                 {children}
@@ -89,9 +90,9 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 width: "100%",
                 height: "100%",
                 padding: "3rem",
-                background: "#fffff7",
-                color: "#2e251a",
-                fontFamily: "MaruBuri-Regular",
+                background: "#fcfcfc",
+                color: "#17171a",
+                fontFamily: "SUIT-Regular",
             }}>
                 <Header>
                     {/* @ts-expect-error Satori supports arraybuffer as src, so it can be ignored */}
@@ -100,7 +101,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 <Content>
                     <h1 id="title" style={{
                         display: "-webkit-box",
-                        fontFamily: "MaruBuri-SemiBold",
+                        fontFamily: "SUIT-SemiBold",
                         fontSize: "3.5rem",
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: "vertical",
@@ -126,7 +127,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 </Content>
                 <Footer>
                     <span>{toDateString(record.created_at)}</span>
-                    <span style={{ color: "#6d6d6d" }}>suhan.io</span>
+                    <span style={{ color: "#8a8a92" }}>suhan.io</span>
                 </Footer>
             </div>
         ),
@@ -134,14 +135,14 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             ...size,
             fonts: [
                 {
-                    name: "MaruBuri-Regular",
-                    data: maruBuriRegular,
+                    name: "SUIT-Regular",
+                    data: suitRegular,
                     style: "normal",
                     weight: 400
                 },
                 {
-                    name: "MaruBuri-SemiBold",
-                    data: maruBuriSemiBold,
+                    name: "SUIT-SemiBold",
+                    data: suitSemiBold,
                     style: "normal",
                     weight: 600
                 }

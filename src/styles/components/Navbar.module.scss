@@ -22,7 +22,7 @@
         right: 0;
         width: 1px;
         height: 100%;
-        background: linear-gradient(to bottom, transparent, var(--primary100), transparent);
+        background: linear-gradient(to bottom, transparent, var(--border-strong), transparent);
     }
 
     @media screen and (max-width: $viewport-lg) {
@@ -44,7 +44,7 @@
         white-space: nowrap;
 
         &:hover {
-            background: var(--primary100);
+            background: var(--surface-hover);
 
         }
 
@@ -62,11 +62,13 @@
 
                 .title {
                     font-size: 1rem;
+                    font-weight: 600;
+                    letter-spacing: -.02em;
                 }
 
                 .description {
                     font-size: .75rem;
-                    color: var(--secondary500);
+                    color: var(--text-subtle);
                 }
             }
         }
@@ -88,10 +90,18 @@
         .item {
             border-radius: var(--border-radius);
             transition: var(--transition);
+            font-weight: 500;
+            color: var(--text-muted);
 
-            &:hover,
+            &:hover {
+                background: var(--surface-hover);
+                color: var(--text);
+            }
+
             &.active {
-                background: var(--primary100);
+                background: var(--surface-hover);
+                color: var(--text);
+                font-weight: 600;
             }
 
             .link {

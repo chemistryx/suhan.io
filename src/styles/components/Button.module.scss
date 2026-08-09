@@ -15,26 +15,29 @@
 
     &.solid {
         &.primary {
-            background: var(--primary200);
+            background: var(--accent);
+            color: var(--accent-contrast);
 
             &:hover {
-                background: var(--primary300);
+                background: var(--accent-hover);
             }
 
             &:disabled {
-                background: var(--primary100);
+                background: var(--accent-soft);
+                color: var(--text-subtle);
             }
         }
 
         &.secondary {
-            background: var(--secondary200);
+            background: var(--fill);
 
             &:hover {
-                background: var(--secondary300);
+                background: var(--fill-hover);
             }
 
             &:disabled {
-                background: var(--secondary100);
+                background: var(--fill-weak);
+                color: var(--text-subtle);
             }
         }
     }
@@ -42,16 +45,12 @@
     &.outline {
         background: transparent;
 
-        &.primary {
-            &:hover {
-                background: var(--primary100);
-            }
+        &:hover {
+            background: var(--surface-hover);
         }
 
-        &.secondary {
-            &:hover {
-                background: var(--secondary100);
-            }
+        &:disabled {
+            color: var(--text-subtle);
         }
     }
 

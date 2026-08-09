@@ -42,23 +42,21 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
     themeColor: [
-        { media: "(prefers-color-scheme: light)", color: "#fffff0" },
-        { media: "(prefers-color-scheme: dark)", color: "#1e1e1c" },
+        { media: "(prefers-color-scheme: light)", color: "#fcfcfc" },
+        { media: "(prefers-color-scheme: dark)", color: "#0d0d0f" },
     ],
 };
 
 const font = localFont({
     src: [
         {
-            path: "../../public/fonts/MaruBuri-Regular.woff2",
-            weight: "400",
-        },
-        {
-            path: "../../public/fonts/MaruBuri-SemiBold.woff2",
-            weight: "600",
+            path: "../../public/fonts/SUIT-Variable.woff2",
+            weight: "100 900",
+            style: "normal",
         }
     ],
     variable: "--font-family",
+    display: "swap",
     fallback: ["-apple-system", "BlinkMacSystemFont", "system-ui", "Roboto", "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "sans-serif"]
 });
 

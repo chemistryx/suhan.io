@@ -20,7 +20,7 @@
 
         .tabs {
             display: flex;
-            background: var(--secondary100);
+            background: var(--surface-hover);
             border-radius: var(--border-radius);
             gap: .25rem;
             padding: .2rem;
@@ -41,7 +41,7 @@
                 &:hover,
                 &.active {
                     cursor: pointer;
-                    background: var(--input-background);
+                    background: var(--surface);
                 }
             }
         }

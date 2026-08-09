@@ -35,14 +35,14 @@
                 align-items: flex-start;
                 gap: .5rem;
                 padding: 1rem;
-                border: 1px solid var(--primary50);
+                border: 1px solid var(--border);
                 border-radius: var(--border-radius);
                 transition: var(--transition);
 
                 &:hover {
                     transform: scale3d(1.01, 1.01, 1.01);
-                    background: var(--primary100);
-                    border-color: var(--primary100);
+                    background: var(--surface-hover);
+                    border-color: var(--border-strong);
                     cursor: pointer;
                 }
 

@@ -6,7 +6,7 @@
     gap: .75rem;
 
     .date {
-        color: var(--secondary500);
+        color: var(--text-subtle);
     }
 
     .tags {
@@ -17,7 +17,7 @@
     .actions {
         display: flex;
         justify-content: flex-end;
-        color: var(--secondary950);
+        color: var(--text);
 
         .manage {
             display: flex;
@@ -38,20 +38,22 @@
             width: 100%;
             height: 1px;
             margin-top: .75rem;
-            background: linear-gradient(to right, transparent, var(--primary100), transparent);
+            background: linear-gradient(to right, transparent, var(--border-strong), transparent);
         }
 
         &:global(.wmde-markdown) {
             font-family: inherit;
             background: transparent;
-            line-height: 1.8;
-            --color-fg-default: var(--secondary950);
-            --color-fg-muted: var(--secondary600);
-            --color-fg-subtle: var(--secondary500);
-            --color-border-default: var(--secondary200);
-            --color-border-muted: var(--secondary100);
-            --color-canvas-default: var(--secondary50);
-            --color-canvas-subtle: var(--secondary100);
+            line-height: 1.75;
+            word-break: keep-all;
+            --color-fg-default: var(--text);
+            --color-fg-muted: var(--text-muted);
+            --color-fg-subtle: var(--text-subtle);
+            --color-accent-fg: var(--accent);
+            --color-border-default: var(--border-strong);
+            --color-border-muted: var(--border);
+            --color-canvas-default: var(--surface);
+            --color-canvas-subtle: var(--surface-hover);
 
             a {
                 text-decoration: underline;
@@ -67,7 +69,7 @@
             }
 
             pre {
-                border: 1px solid var(--secondary200);
+                border: 1px solid var(--border);
             }
 
             img {

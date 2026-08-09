@@ -4,8 +4,8 @@
     gap: .5rem;
 
     :global(.tag_input__control) {
-        background: var(--input-background);
-        border: 1px solid var(--primary100);
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
         border-radius: var(--border-radius);
         font-size: .85rem;
 
@@ -20,7 +20,7 @@
 
         :global(.w-md-editor-text-input) {
             &::selection {
-                color: var(--secondary950);
+                color: var(--text);
             }
         }
 

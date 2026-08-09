@@ -9,33 +9,56 @@
     --box-shadow-md: 0px 0px 10px -7.5px rgb(0 0 0 / 70%);
     --box-shadow-lg: 0px 0px 12.5px -7.5px rgb(0 0 0 / 70%);
 
-    --primary50: #f8f8f2;
-    --primary100: #efefe2;
-    --primary200: #d5d5b2;
-    --primary300: #bfbd8a;
-    --primary400: #b0ab6f;
-    --primary500: #a3975d;
-    --primary600: #8f7f50;
-    --primary700: #786545;
-    --primary800: #64533c;
-    --primary900: #534534;
-    --primary950: #2e251a;
+    /* Ground — page and raised surfaces */
+    --bg: #fcfcfc;
+    --surface: #ffffff;
+    --surface-hover: #f2f2f3;
 
-    --secondary50: #f6f6f6;
-    --secondary100: #e7e7e7;
-    --secondary200: #d1d1d1;
-    --secondary300: #b0b0b0;
-    --secondary400: #888888;
-    --secondary500: #6d6d6d;
-    --secondary600: #5d5d5d;
-    --secondary700: #4f4f4f;
-    --secondary800: #454545;
-    --secondary900: #3d3d3d;
-    --secondary950: #252525;
+    /* Line — hairlines and dividers */
+    --border: #e6e6e8;
+    --border-strong: #d2d2d6;
 
-    --input-background: #ffffff;
+    /* Text */
+    --text: #17171a;
+    --text-muted: #5c5c63;
+    --text-subtle: #70707a;
 
-    --background: #fffff7;
+    /* Accent */
+    --accent: #2f4a7a;
+    --accent-hover: #24395f;
+    --accent-contrast: #ffffff;
+    --accent-soft: #e9edf6;
+    --accent-soft-text: #2b4472;
+
+    /* Neutral fill — secondary buttons, chips */
+    --fill: #e6e6e8;
+    --fill-hover: #d9d9dd;
+    --fill-weak: #f0f0f1;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0d0d0f;
+        --surface: #16161a;
+        --surface-hover: #1f1f24;
+
+        --border: #26262b;
+        --border-strong: #35353c;
+
+        --text: #ededf0;
+        --text-muted: #a1a1a9;
+        --text-subtle: #7c7c85;
+
+        --accent: #a5b3de;
+        --accent-hover: #b8c3e6;
+        --accent-contrast: #0d0d0f;
+        --accent-soft: #1b2136;
+        --accent-soft-text: #b3bfe4;
+
+        --fill: #26262b;
+        --fill-hover: #32323a;
+        --fill-weak: #1c1c21;
+    }
 }
 
 * {
@@ -50,10 +73,14 @@ html {
 
 body {
     min-height: 100vh;
-    background-color: var(--background);
+    background-color: var(--bg);
     font-family: var(--font-family);
+    font-size: 16px;
+
+    line-height: 1.65;
+    letter-spacing: -.01em;
     -webkit-font-smoothing: antialiased;
-    color: var(--secondary950);
+    color: var(--text);
 }
 
 main {
@@ -67,7 +94,7 @@ main {
     >.content {
         width: 100%;
         padding: .5rem;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
     }
 }
 
@@ -79,7 +106,7 @@ a {
     transition: var(--transition);
 
     &:hover {
-        text-decoration-color: var(--secondary950);
+        text-decoration-color: var(--text);
         text-underline-offset: .4rem;
     }
 }
@@ -89,43 +116,25 @@ h2,
 h3,
 h4,
 h5,
-h6,
-strong {
+h6 {
     font-weight: 600;
+    letter-spacing: -.025em;
+    line-height: 1.4;
+    word-break: keep-all;
+    text-wrap: pretty;
+}
+
+strong {
+    font-weight: 700;
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
 }
 
 ::selection {
-    background-color: var(--primary100);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --primary50: #21211d;
-        --primary100: #2e2e27;
-        --primary200: #3d3d33;
-        --primary300: #565648;
-        --primary400: #6a6a5a;
-        --primary500: #7d7d6b;
-        --primary600: #919180;
-        --primary700: #a5a593;
-        --primary800: #b9b9a6;
-        --primary900: #cdcdc0;
-        --primary950: #e0e0d4;
-
-        --secondary50: #1c1c1c;
-        --secondary100: #242424;
-        --secondary200: #2d2d2d;
-        --secondary300: #4f4f4f;
-        --secondary400: #636363;
-        --secondary500: #777777;
-        --secondary600: #8b8b8b;
-        --secondary700: #9f9f9f;
-        --secondary800: #b4b4b4;
-        --secondary900: #c8c8c8;
-        --secondary950: #dcdcdc;
-
-        --input-background: #2c2c2c;
-
-        --background: #1e1e1c;
-    }
+    background-color: var(--accent-soft);
+    color: var(--accent-soft-text);
 }

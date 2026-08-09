@@ -11,13 +11,24 @@
         display: inline-flex;
         width: 100%;
         padding: .5rem;
-        background: var(--input-background);
-        border: 1px solid var(--primary100);
+        background: var(--surface);
+        border: 1px solid var(--border-strong);
         border-radius: var(--border-radius);
         font-size: .85rem;
         font-family: inherit;
         outline: none;
         color: inherit;
+        transition: var(--transition);
+
+        &::placeholder {
+            color: var(--text-subtle);
+        }
+
+        &:focus-visible {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+        }
 
         &:disabled {
             opacity: 0.7;
@@ -27,7 +38,7 @@
         &[type="checkbox"] {
             position: relative;
             appearance: none;
-            border: 1px solid var(--primary100);
+            border: 1px solid var(--border-strong);
             border-radius: var(--border-radius);
             width: 1.75rem;
             height: 1.75rem;
@@ -35,7 +46,7 @@
             cursor: pointer;
 
             &:checked {
-                background-color: var(--primary200);
+                background-color: var(--accent);
 
                 &::before {
                     content: "";
@@ -48,7 +59,7 @@
                     width: 50%;
                     height: 50%;
                     transform: translate(-50%, -50%);
-                    background: var(--primary950);
+                    background: var(--accent-contrast);
                 }
             }
         }
