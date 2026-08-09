@@ -1,0 +1,17 @@
+@use "@/styles/variables" as *;
+
+.base {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+
+    .works {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+
+        @media screen and (max-width: $viewport-md) {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+    }
+}

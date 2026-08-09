@@ -23,6 +23,9 @@ const Navbar = () => {
                 <li className={[styles.item, pathname.startsWith("/records") ? styles.active : ""].join(" ")}>
                     <Link className={styles.link} href="/records">기록</Link>
                 </li>
+                <li className={[styles.item, pathname.startsWith("/works") ? styles.active : ""].join(" ")}>
+                    <Link className={styles.link} href="/works">작업물</Link>
+                </li>
             </ul>
         </nav>
     );
