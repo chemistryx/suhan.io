@@ -1,10 +1,12 @@
 import { Record } from "@/types/record";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
 import MarkdownEditor from "./MarkdownEditor";
 import { normalize } from "@/utils/strings";
 import CreatableSelect from "react-select/creatable";
+import { components, ClearIndicatorProps, DropdownIndicatorProps, MultiValueRemoveProps } from "react-select";
+import { ChevronDown, X } from "lucide-react";
 import styles from "@/styles/components/RecordForm.module.scss";
 import { createClient } from "@/utils/supabase/client";
 import { TAGS_TABLE_NAME } from "@/constants";
@@ -22,11 +24,32 @@ interface Props {
 
 type SelectOption = { label: string, value: string };
 
+const DropdownIndicator = (props: DropdownIndicatorProps<SelectOption, true>) => (
+    <components.DropdownIndicator {...props}>
+        <ChevronDown size={16} />
+    </components.DropdownIndicator>
+);
+
+const ClearIndicator = (props: ClearIndicatorProps<SelectOption, true>) => (
+    <components.ClearIndicator {...props}>
+        <X size={16} />
+    </components.ClearIndicator>
+);
+
+const MultiValueRemove = (props: MultiValueRemoveProps<SelectOption, true>) => (
+    <components.MultiValueRemove {...props}>
+        <X size={12} />
+    </components.MultiValueRemove>
+);
+
+const selectComponents = { DropdownIndicator, ClearIndicator, MultiValueRemove };
+
 const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => {
     const defaultValues: RecordFormData = { id: -1, title: "", description: "", slug: "", content: "", tags: [], published: false };
     const [formData, setFormData] = useState({ ...defaultValues, ...initialValues });
     const initialRef = useRef({ ...defaultValues, ...initialValues });
     const [tagOptions, setTagOptions] = useState<SelectOption[]>([]);
+    const tagsInputId = useId();
 
     useEffect(() => {
         const loadTags = async () => {
@@ -71,14 +94,21 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
         <div className={styles.base}>
             <Input label={`제목 (${formData.slug})`} type="text" placeholder="제목" value={formData.title} onChange={handleTitleChange} />
             <Input label="설명" type="text" placeholder="설명" value={formData.description} onChange={handleDescriptionChange} />
-            <CreatableSelect
-                classNamePrefix="tag_input"
-                placeholder="태그 입력"
-                value={formData.tags.map((tag) => ({ label: tag, value: tag }))}
-                onChange={(value) => setFormData({ ...formData, tags: value.map((tag) => tag.value) })}
-                options={tagOptions}
-                isMulti
-            />
+            <div className={styles.tagField}>
+                <label className={styles.label} htmlFor={tagsInputId}>태그</label>
+                <CreatableSelect
+                    inputId={tagsInputId}
+                    classNamePrefix="tag_input"
+                    placeholder="태그 입력"
+                    value={formData.tags.map((tag) => ({ label: tag, value: tag }))}
+                    onChange={(value) => setFormData({ ...formData, tags: value.map((tag) => tag.value) })}
+                    options={tagOptions}
+                    components={selectComponents}
+                    formatCreateLabel={(inputValue) => `"${inputValue}" 추가`}
+                    noOptionsMessage={() => "태그가 없습니다"}
+                    isMulti
+                />
+            </div>
             <div className={styles.publishField}>
                 <Input label="발행" type="checkbox" checked={formData.published} onChange={(e) => setFormData({ ...formData, published: e.target.checked })} />
             </div>
