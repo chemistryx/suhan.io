@@ -26,6 +26,7 @@
 
     .description {
         font-size: 0.8125rem;
+        font-weight: var(--font-weight-meta);
         color: var(--text-subtle);
 
         @media screen and (max-width: $viewport-lg) {
@@ -45,6 +46,7 @@
         .item {
             position: relative;
             font-size: .85rem;
+            font-weight: var(--font-weight-meta);
             color: var(--text-subtle);
 
             &:not(:first-child)::before {

@@ -36,6 +36,7 @@ $duration: 0.2s;
         .more {
             flex: none;
             font-size: .8rem;
+            font-weight: var(--font-weight-meta);
             color: var(--text-subtle);
             text-decoration: none;
             transition: var(--transition);

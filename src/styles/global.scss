@@ -6,6 +6,9 @@
     --navbar-z-index: 999;
     --modal-z-index: 1000;
     --transition: all .2s ease-in-out;
+    --font-weight-meta: 500;
+
+    /* Shadow */
     --box-shadow-sm: 0px 0px 7.5px -5px rgb(0 0 0 / 70%);
     --box-shadow-md: 0px 0px 10px -7.5px rgb(0 0 0 / 70%);
     --box-shadow-lg: 0px 0px 12.5px -7.5px rgb(0 0 0 / 70%);
@@ -118,7 +121,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: -.025em;
     line-height: 1.4;
     word-break: keep-all;

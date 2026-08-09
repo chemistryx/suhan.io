@@ -42,6 +42,7 @@
 
     .copy {
         font-size: .8rem;
+        font-weight: var(--font-weight-meta);
         color: var(--text-subtle);
         text-align: end;
     }
@@ -49,6 +50,7 @@
     .auth {
         color: var(--accent);
         font-size: .75rem;
+        font-weight: var(--font-weight-meta);
         cursor: pointer;
 
         &:hover {
