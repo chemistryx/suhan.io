@@ -19,7 +19,7 @@ export default function HomePage() {
                 </div>
                 <div className={styles.cards}>
                     {works.slice(0, FEATURED_COUNT).map((work, idx) => (
-                        <WorkCard key={work.slug} work={work} style={{ animationDelay: `${0.7 + idx * 0.1}s` }} />
+                        <WorkCard key={work.slug} work={work} preview style={{ animationDelay: `${0.7 + idx * 0.1}s` }} />
                     ))}
                 </div>
             </div>

@@ -9,10 +9,11 @@ import { CSSProperties } from "react";
 
 interface Props {
     work: Work;
+    preview?: boolean;
     style?: CSSProperties;
 }
 
-const WorkCard = ({ work, style }: Props) => {
+const WorkCard = ({ work, preview, style }: Props) => {
     const content = (
         <>
             <div className={styles.header}>
@@ -29,22 +30,35 @@ const WorkCard = ({ work, style }: Props) => {
                 <span className={styles.period}>{toPeriodString(work)}</span>
             </div>
             <p className={styles.description}>{work.description}</p>
-            <div className={styles.stack}>
-                {work.stack.map((item) => (
-                    <Badge key={item}>{item}</Badge>
-                ))}
-            </div>
+            {!preview &&
+                <div className={styles.stack}>
+                    {work.stack.map((item) => (
+                        <Badge key={item}>{item}</Badge>
+                    ))}
+                </div>
+            }
         </>
     );
 
+    // Every preview points at its own entry on /works, including the private
+    // ones that have nowhere else to send the reader.
+    if (preview) {
+        return (
+            <Link className={styles.base} href={`/works#${work.slug}`} style={style}>
+                {content}
+            </Link>
+        );
+    }
+
     if (!work.href) {
-        return <div className={styles.base} style={style}>{content}</div>;
+        return <div id={work.slug} className={styles.base} style={style}>{content}</div>;
     }
 
     const isExternal = /^https?:\/\//.test(work.href);
 
     return (
         <Link
+            id={work.slug}
             className={styles.base}
             href={work.href}
             target={isExternal ? "_blank" : undefined}
