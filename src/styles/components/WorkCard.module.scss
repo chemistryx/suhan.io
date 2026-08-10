@@ -34,12 +34,39 @@
         text-overflow: ellipsis;
     }
 
-    .period {
-        flex: none;
+    .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .3rem;
         font-size: .75rem;
         font-weight: var(--font-weight-meta);
         color: var(--text-subtle);
+
+        /* the separator only appears when a role sits before the period */
+        >*+*::before {
+            content: "\00b7";
+            margin-right: .3rem;
+        }
+    }
+
+    .period {
         font-variant-numeric: tabular-nums;
+    }
+
+    /* rides the title line, pushed to the far edge — the title keeps its
+       ellipsis because it is the only flexible item in the row */
+    .award {
+        display: inline-flex;
+        flex: none;
+        align-items: center;
+        gap: .25rem;
+        font-size: .75rem;
+        font-weight: 600;
+        color: var(--text);
+
+        svg {
+            flex: none;
+        }
     }
 
     .description {
@@ -48,16 +75,16 @@
         -webkit-line-clamp: 2;
         line-clamp: 2;
         overflow: hidden;
-        /* reserve both lines so a one-line description doesn't shorten the card */
-        min-height: calc(2 * 1.7em);
-        flex: 1;
         font-size: .85rem;
         color: var(--text-muted);
         line-height: 1.7;
         word-break: keep-all;
     }
 
+    /* pinned to the bottom so the chips line up across a row of cards, which
+       the grid stretches to equal height anyway */
     .stack {
+        margin-top: auto;
         display: flex;
         flex-wrap: wrap;
         gap: .375rem;

@@ -3,7 +3,9 @@ export interface Work {
     title: string;
     description: string;
     stack: string[];
+    role?: string;
+    award?: { competition: string; prize: string };
     startedAt: string;
     endedAt: string | null;
-    href: string;
+    href: string | null;
 }
