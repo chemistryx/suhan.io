@@ -1,0 +1,24 @@
+@use "@/styles/animations" as *;
+
+.content {
+    z-index: var(--modal-z-index);
+    padding: .35rem .5rem;
+    max-width: min(16rem, 60vw);
+    border-radius: calc(var(--border-radius) - 3px);
+    background: var(--text);
+    color: var(--bg);
+    font-size: .7rem;
+    font-weight: 600;
+    line-height: 1.5;
+    word-break: keep-all;
+    box-shadow: var(--box-shadow-md);
+
+    &[data-state="delayed-open"],
+    &[data-state="instant-open"] {
+        animation: fade-in .12s ease-out;
+    }
+
+    &[data-state="closed"] {
+        animation: fade-out .1s ease-in;
+    }
+}
