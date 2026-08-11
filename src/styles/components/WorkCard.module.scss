@@ -27,12 +27,24 @@
         gap: .5rem;
     }
 
+    .titleWrapper {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        gap: .25rem;
+    }
+
     .title {
         min-width: 0;
         font-size: 1rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .external {
+        flex: none;
+        color: var(--text-subtle);
     }
 
     .meta {

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Trophy } from "@carbon/icons-react";
+import { Launch, Trophy } from "@carbon/icons-react";
 import Badge from "./Badge";
 import Tooltip from "./Tooltip";
 import { Work } from "@/types/work";
@@ -14,10 +14,16 @@ interface Props {
 }
 
 const WorkCard = ({ work, preview, style }: Props) => {
+    // previews always stay on the site, so only a full card can leave it
+    const isExternal = !preview && !!work.href && /^https?:\/\//.test(work.href);
+
     const content = (
         <>
             <div className={styles.header}>
-                <h4 className={styles.title}>{work.title}</h4>
+                <div className={styles.titleWrapper}>
+                    <h4 className={styles.title}>{work.title}</h4>
+                    {isExternal && <Launch className={styles.external} size={12} aria-label="새 탭에서 열림" />}
+                </div>
                 {work.award &&
                     <Tooltip className={styles.award} content={work.award.competition}>
                         <Trophy size={14} />
@@ -54,14 +60,13 @@ const WorkCard = ({ work, preview, style }: Props) => {
         return <div id={work.slug} className={styles.base} style={style}>{content}</div>;
     }
 
-    const isExternal = /^https?:\/\//.test(work.href);
-
     return (
         <Link
             id={work.slug}
             className={styles.base}
             href={work.href}
             target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
             style={style}
         >
             {content}
