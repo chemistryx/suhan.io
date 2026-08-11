@@ -1,7 +1,7 @@
 "use client"
 import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "@carbon/icons-react";
 import styles from "@/styles/pages/records/EditRecordPage.module.scss";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
@@ -102,7 +102,7 @@ const EditRecordPageComponent = ({ record }: Props) => {
                 <HeadingDescription>기록을 수정합니다.</HeadingDescription>
             </Heading>
             <div className={styles.actions}>
-                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => navigate(`/records/${record.slug}`)}><ChevronLeft size={16} strokeWidth={1.5} />돌아가기</Button>
+                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => navigate(`/records/${record.slug}`)}><ChevronLeft size={16} />돌아가기</Button>
             </div>
             <RecordForm initialValues={{ ...record, slug: decodeURIComponent(record.slug) }} onSubmit={handleSubmit} onDirtyChange={setDirty} mode="edit" />
             <NavigationGuardModal showModal={isBlocked} setModal={(open) => { if (!open) cancelNavigation(); }} onConfirm={confirmNavigation} />

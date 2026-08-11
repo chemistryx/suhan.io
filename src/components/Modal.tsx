@@ -2,7 +2,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import React, { createContext, useContext } from "react";
 import styles from "@/styles/components/Modal.module.scss";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { X } from "lucide-react";
+import { Close } from "@carbon/icons-react";
 
 const DismissibleContext = createContext(true);
 const useDismissible = () => useContext(DismissibleContext);
@@ -55,7 +55,7 @@ const ModalHeader = ({ children, ...props }: React.ComponentProps<"div">) => {
             {children}
             {dismissible &&
                 <DialogPrimitive.Close className={styles.close}>
-                    <X strokeWidth={1.5} />
+                    <Close size={24} />
                 </DialogPrimitive.Close>
             }
         </div>

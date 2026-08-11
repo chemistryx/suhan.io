@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Trophy } from "lucide-react";
+import { Trophy } from "@carbon/icons-react";
 import Badge from "./Badge";
 import Tooltip from "./Tooltip";
 import { Work } from "@/types/work";
@@ -20,7 +20,7 @@ const WorkCard = ({ work, preview, style }: Props) => {
                 <h4 className={styles.title}>{work.title}</h4>
                 {work.award &&
                     <Tooltip className={styles.award} content={work.award.competition}>
-                        <Trophy size={12} />
+                        <Trophy size={14} />
                         {work.award.prize}
                     </Tooltip>
                 }

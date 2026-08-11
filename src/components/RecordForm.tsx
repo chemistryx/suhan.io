@@ -6,7 +6,7 @@ import MarkdownEditor from "./MarkdownEditor";
 import { normalize } from "@/utils/strings";
 import CreatableSelect from "react-select/creatable";
 import { components, ClearIndicatorProps, DropdownIndicatorProps, MultiValueRemoveProps } from "react-select";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, Close } from "@carbon/icons-react";
 import styles from "@/styles/components/RecordForm.module.scss";
 import { createClient } from "@/utils/supabase/client";
 import { TAGS_TABLE_NAME } from "@/constants";
@@ -32,13 +32,13 @@ const DropdownIndicator = (props: DropdownIndicatorProps<SelectOption, true>) =>
 
 const ClearIndicator = (props: ClearIndicatorProps<SelectOption, true>) => (
     <components.ClearIndicator {...props}>
-        <X size={16} />
+        <Close size={16} />
     </components.ClearIndicator>
 );
 
 const MultiValueRemove = (props: MultiValueRemoveProps<SelectOption, true>) => (
     <components.MultiValueRemove {...props}>
-        <X size={12} />
+        <Close size={12} />
     </components.MultiValueRemove>
 );
 

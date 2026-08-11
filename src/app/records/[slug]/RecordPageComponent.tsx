@@ -7,7 +7,7 @@ import Button, { ButtonColor, ButtonSize, ButtonStyle } from "@/components/Butto
 import RecordDeleteModal from "@/components/modals/RecordDeleteModal";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "@carbon/icons-react";
 import useUser from "@/hooks/useUser";
 import ScrollTopButton from "@/components/ScrollTopButton";
 import Badge from "@/components/Badge";
@@ -58,7 +58,7 @@ const RecordPageComponent = ({ record, adjacent }: Props) => {
                                     <Button size={ButtonSize.small} color={ButtonColor.secondary} onClick={() => setDeleteModal(true)}>삭제</Button>
                                 </div>
                             }
-                            <Button className={styles.list} size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
+                            <Button className={styles.list} size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/records")}><ChevronLeft size={16} />목록</Button>
                         </div>
                     </HeadingDescription>
                 </Heading>

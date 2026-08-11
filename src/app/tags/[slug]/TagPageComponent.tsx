@@ -4,7 +4,7 @@ import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading"
 import { Record } from "@/types/record";
 import { Tag } from "@/types/tag";
 import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "@carbon/icons-react";
 import { useRouter } from "next/navigation";
 import RecordItem from "@/components/RecordItem";
 
@@ -24,7 +24,7 @@ const TagPageComponent = ({ slug, records }: Props) => {
                 <HeadingDescription>
                     <span>{records.length}개의 기록이 있습니다.</span>
                     <div className={styles.actions}>
-                        <Button className={styles.list} size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/tags")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
+                        <Button className={styles.list} size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => router.push("/tags")}><ChevronLeft size={16} />목록</Button>
                     </div>
                 </HeadingDescription>
             </Heading>

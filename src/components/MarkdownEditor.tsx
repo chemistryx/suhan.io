@@ -1,7 +1,7 @@
 import MDEditor, { commands, ICommand, ICommandChildHandle, MDEditorProps } from "@uiw/react-md-editor";
 import React, { useRef, useState } from "react";
 import styles from "@/styles/components/MarkdownEditor.module.scss";
-import { X } from "lucide-react";
+import { Close } from "@carbon/icons-react";
 import Button, { ButtonSize } from "./Button";
 import Input from "./Input";
 import { createClient } from "@/utils/supabase/client";
@@ -56,7 +56,7 @@ const ImageUploadComponent = ({ close, textApi }: CommandChildHandleProps) => {
         <div className={styles.imageUploadWrapper}>
             <div className={styles.heading}>
                 <h4>이미지 삽입</h4>
-                <X className={styles.close} size={16} onClick={() => close()} />
+                <Close className={styles.close} size={16} onClick={() => close()} />
             </div>
             <div className={styles.tabs}>
                 <button className={[styles.tab, mode === "url" ? styles.active : ""].join(" ")} onClick={() => setMode("url")}>URL</button>

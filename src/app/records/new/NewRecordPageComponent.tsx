@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
 import { RECORD_TAGS_TABLE_NAME, RECORDS_TABLE_NAME, TAGS_TABLE_NAME } from "@/constants";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "@carbon/icons-react";
 import RecordForm, { RecordFormData } from "@/components/RecordForm";
 import { useState } from "react";
 import { useNavigationGuard } from "@/hooks/useNavigationGuard";
@@ -96,7 +96,7 @@ const NewRecordPageComponent = ({ user }: Props) => {
                 <HeadingDescription>새 기록을 작성합니다.</HeadingDescription>
             </Heading>
             <div className={styles.actions}>
-                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => navigate("/records")}><ChevronLeft size={16} strokeWidth={1.5} />목록</Button>
+                <Button size={ButtonSize.small} style={ButtonStyle.outline} onClick={() => navigate("/records")}><ChevronLeft size={16} />목록</Button>
             </div>
             <RecordForm onSubmit={handleSubmit} onDirtyChange={setDirty} mode="create" />
             <NavigationGuardModal showModal={isBlocked} setModal={(open) => { if (!open) cancelNavigation(); }} onConfirm={confirmNavigation} />

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/components/TableOfContents.module.scss";
-import { ArrowLeftFromLine } from "lucide-react";
+import { TableOfContents as TableOfContentsIcon } from "@carbon/icons-react";
 import { useRouter } from "next/navigation";
 
 export type TOCItem = { id: string; text: string; depth: number };
@@ -118,7 +118,7 @@ const TableOfContents = ({ contentClassName }: Props) => {
     return (
         <div className={[styles.base, isVisible ? styles.visible : ""].join(" ")}>
             <button ref={buttonRef} className={[styles.button, isOpen || !isVisible ? styles.hidden : ""].join(" ")} onClick={() => setOpen((prev) => !prev)}>
-                <ArrowLeftFromLine size={16} />
+                <TableOfContentsIcon size={16} />
             </button>
             <ul ref={itemsRef} className={[styles.items, isOpen ? styles.visible : ""].join(" ")}>
                 {toc.map((item) => (

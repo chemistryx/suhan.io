@@ -1,4 +1,4 @@
-import { ChevronUp } from "lucide-react";
+import { ChevronUp } from "@carbon/icons-react";
 import { useEffect, useState } from "react";
 import styles from "@/styles/components/ScrollTopButton.module.scss";
 
@@ -21,7 +21,7 @@ const ScrollTopButton = () => {
 
     return (
         <button className={[styles.base, isVisible ? styles.visible : ""].join(" ")} onClick={scrollTop}>
-            <ChevronUp />
+            <ChevronUp size={24} />
         </button>
     )
 }

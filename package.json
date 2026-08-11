@@ -9,6 +9,7 @@
         "lint": "eslint"
     },
     "dependencies": {
+        "@carbon/icons-react": "^11.85.0",
         "@radix-ui/react-dialog": "^1.1.14",
         "@radix-ui/react-portal": "^1.1.9",
         "@radix-ui/react-slot": "^1.2.3",
@@ -21,7 +22,6 @@
         "@vercel/speed-insights": "^1.2.0",
         "axios": "^1.12.0",
         "date-fns": "^4.1.0",
-        "lucide-react": "^0.525.0",
         "next": "^16.3.0",
         "react": "^19.2.8",
         "react-dom": "^19.2.8",
