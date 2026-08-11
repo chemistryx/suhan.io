@@ -1,3 +1,8 @@
+export type AdjacentRecords = {
+    previous: Pick<Record, "id" | "title" | "slug"> | null;
+    next: Pick<Record, "id" | "title" | "slug"> | null;
+};
+
 export type Record = {
     id: number;
     author_id: string;

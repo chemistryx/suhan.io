@@ -2,7 +2,7 @@
 import styles from "@/styles/pages/records/RecordPage.module.scss";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
 import { toDateString } from "@/utils/strings";
-import { Record } from "@/types/record";
+import { AdjacentRecords, Record } from "@/types/record";
 import Button, { ButtonColor, ButtonSize, ButtonStyle } from "@/components/Button";
 import RecordDeleteModal from "@/components/modals/RecordDeleteModal";
 import { useState } from "react";
@@ -18,14 +18,16 @@ import RecordComments from "@/components/RecordComments";
 import rehypeExternalLinks from "rehype-external-links";
 import LightboxImage from "@/components/LightboxImage";
 import TableOfContents from "@/components/TableOfContents";
+import RecordNavigation from "@/components/RecordNavigation";
 
 interface Props {
     record: Record & {
         tags: Pick<Tag, "id" | "name" | "slug">[];
     };
+    adjacent: AdjacentRecords;
 }
 
-const RecordPageComponent = ({ record }: Props) => {
+const RecordPageComponent = ({ record, adjacent }: Props) => {
     const { user } = useUser();
     const [showDeleteModal, setDeleteModal] = useState(false);
     const router = useRouter();
@@ -68,6 +70,7 @@ const RecordPageComponent = ({ record }: Props) => {
                         img: (props) => <LightboxImage {...props} />
                     }}
                 />
+                <RecordNavigation {...adjacent} />
                 <RecordComments record={record} />
                 <TableOfContents contentClassName={styles.content} />
                 <ScrollTopButton />

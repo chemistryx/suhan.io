@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import RecordPageComponent from "./RecordPageComponent";
 import { Tag } from "@/types/tag";
-import { fetchRecord } from "@/lib/records";
+import { fetchAdjacentRecords, fetchRecord } from "@/lib/records";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -34,6 +34,7 @@ export async function generateMetadata({ params }: Props) {
 export default async function RecordPage({ params }: Props) {
     const { slug } = await params;
     const record = await getRecord(slug);
+    const adjacent = await fetchAdjacentRecords(record.created_at);
 
-    return <RecordPageComponent record={record} />
+    return <RecordPageComponent record={record} adjacent={adjacent} />
 }
