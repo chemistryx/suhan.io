@@ -22,6 +22,15 @@ const entries: Work[] = [
         href: "https://github.com/sejong-oss/meoknaeng"
     },
     {
+        slug: "icarus",
+        title: "Icarus",
+        description: "노드 그래프로 작성한 전략을 과거 데이터로 검증하고 실거래 봇으로 실행하는 알고리즘 암호화폐 자동매매 플랫폼입니다.",
+        stack: ["NestJS", "Next.js", "Redis", "InfluxDB", "Docker"],
+        startedAt: "2023-02-01",
+        endedAt: null,
+        href: null
+    },
+    {
         slug: "agentic-judge",
         title: "agentic-judge",
         description: "코드를 직접 짜는 대신 AI 에이전트를 지휘하는 능력을 채점하는 코딩 문제은행입니다.",
@@ -30,6 +39,16 @@ const entries: Work[] = [
         startedAt: "2026-06-24",
         endedAt: "2026-06-25",
         href: "https://github.com/parapara-till-prize/agentic-judge"
+    },
+    {
+        slug: "meetlink",
+        title: "MeetLink",
+        description: "참여자들의 일정과 출발지를 모아 대중교통 이동 시간이 공평한 지점을 찾아주는 모임 시간·장소 추천 서비스입니다.",
+        stack: ["Spring Boot", "PostgreSQL", "MOTIS", "React"],
+        role: "Backend",
+        startedAt: "2026-01-28",
+        endedAt: "2026-04-28",
+        href: "https://github.com/greedy-team/meetlink-be"
     },
     {
         slug: "sw4booth",
