@@ -30,10 +30,19 @@
         text-decoration: none;
         transition: var(--transition);
 
-        &:hover {
+        &:not(.empty):hover {
             background: var(--surface-hover);
             border-color: var(--border-strong);
             text-decoration-color: transparent;
+        }
+
+        &.empty {
+            color: var(--text-subtle);
+            cursor: default;
+
+            .icon {
+                opacity: .4;
+            }
         }
 
         .icon {
@@ -76,17 +85,9 @@
         }
     }
 
-    .placeholder {
-        flex: 1 1 0;
-    }
-
     @media screen and (max-width: $viewport-md) {
         .links {
             flex-direction: column;
-        }
-
-        .placeholder {
-            display: none;
         }
     }
 }
