@@ -2,6 +2,7 @@
 import Button, { ButtonColor, ButtonSize } from "@/components/Button";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
 import RecordItem from "@/components/RecordItem";
+import { toStaggerDelay } from "@/utils/animations";
 import useUser from "@/hooks/useUser";
 import styles from "@/styles/pages/records/RecordsPage.module.scss";
 import { Record } from "@/types/record";
@@ -35,7 +36,7 @@ const RecordsPageComponent = ({ records }: Props) => {
             }
             <div className={styles.records}>
                 {records.map((record, idx) => (
-                    <RecordItem key={record.id} record={record} style={{ animationDelay: `${(idx + 1) * 0.1}s` }} />
+                    <RecordItem key={record.id} record={record} style={{ animationDelay: toStaggerDelay(idx) }} />
                 ))}
             </div>
         </div>

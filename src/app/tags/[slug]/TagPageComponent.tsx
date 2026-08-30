@@ -7,6 +7,7 @@ import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
 import { ChevronLeft } from "@carbon/icons-react";
 import { useRouter } from "next/navigation";
 import RecordItem from "@/components/RecordItem";
+import { toStaggerDelay } from "@/utils/animations";
 
 interface Props {
     slug: string;
@@ -30,7 +31,7 @@ const TagPageComponent = ({ slug, records }: Props) => {
             </Heading>
             <div className={styles.records}>
                 {records.map((record, idx) => (
-                    <RecordItem key={record.id} record={record} style={{ animationDelay: `${(idx + 1) * 0.1}s` }} />
+                    <RecordItem key={record.id} record={record} style={{ animationDelay: toStaggerDelay(idx) }} />
                 ))}
             </div>
         </div>

@@ -1,6 +1,7 @@
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
 import WorkCard from "@/components/WorkCard";
 import { works } from "@/data/works";
+import { toStaggerDelay } from "@/utils/animations";
 import styles from "@/styles/pages/WorksPage.module.scss";
 import { Metadata } from "next";
 
@@ -24,7 +25,7 @@ export default function WorksPage() {
             </Heading>
             <div className={styles.works}>
                 {works.map((work, idx) => (
-                    <WorkCard key={work.slug} work={work} style={{ animationDelay: `${(idx + 1) * 0.05}s` }} />
+                    <WorkCard key={work.slug} work={work} style={{ animationDelay: toStaggerDelay(idx, 0.05) }} />
                 ))}
             </div>
         </div>
