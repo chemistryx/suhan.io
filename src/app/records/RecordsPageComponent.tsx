@@ -17,10 +17,9 @@ interface Props {
     categories: { slug: string, name: string, count: number }[];
     total: number;
     selected: string | null;
-    selectedName?: string;
 }
 
-const RecordsPageComponent = ({ records, categories, total, selected, selectedName }: Props) => {
+const RecordsPageComponent = ({ records, categories, total, selected }: Props) => {
     const { user } = useUser();
     const router = useRouter();
 
@@ -34,9 +33,7 @@ const RecordsPageComponent = ({ records, categories, total, selected, selectedNa
         <div className={styles.base}>
             <Heading>
                 <HeadingTitle>기록</HeadingTitle>
-                <HeadingDescription>
-                    {selectedName ? `${selectedName} · ` : ""}{records.length}개의 기록이 있습니다.
-                </HeadingDescription>
+                <HeadingDescription>{records.length}개의 기록이 있습니다.</HeadingDescription>
             </Heading>
             {/* Below $viewport-lg the navbar is a single row with no space for a
                 nested list, so the categories move next to the list they filter. */}

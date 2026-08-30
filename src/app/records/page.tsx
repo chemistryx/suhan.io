@@ -37,7 +37,6 @@ export default async function RecordsPage({ searchParams }: Props) {
             categories={[...categories]}
             total={total}
             selected={selected}
-            selectedName={categoryName(selected ?? undefined)}
         />
     );
 }
