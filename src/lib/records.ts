@@ -43,12 +43,14 @@ export const fetchAdjacentRecords = cache(async (createdAt: string) => {
     return { previous: previous.data, next: next.data };
 });
 
+// RLS already hides other people's drafts, so created_at alone is enough: a
+// visitor's list is unchanged, and the author's own drafts sit in date order
+// instead of pinned below everything — the order fetchAdjacentRecords walks.
 export const fetchRecords = cache(async () => {
     const supabase = await createClient();
 
     return await supabase
         .from(RECORDS_TABLE_NAME)
         .select("id, title, description, slug, published, created_at, updated_at, tags:record_tags(tag:tags(id, name, slug))")
-        .order("published", { ascending: false })
         .order("created_at", { ascending: false });
 });
