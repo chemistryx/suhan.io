@@ -2,7 +2,7 @@ import { RECORDS_TABLE_NAME } from "@/constants";
 import { createClient } from "../utils/supabase/server";
 import { toStoredSlug } from "@/utils/strings";
 import { cache } from "react";
-import { RECORD_CATEGORIES, RecordCategory } from "@/constants";
+import { CATEGORIES_TABLE_NAME } from "@/constants";
 
 const fetchRecordByStoredSlug = cache(async (storedSlug: string) => {
     const supabase = await createClient();
@@ -52,32 +52,31 @@ export const fetchRecords = cache(async () => {
 
     return await supabase
         .from(RECORDS_TABLE_NAME)
-        .select("id, title, description, slug, category, published, created_at, updated_at, tags:record_tags(tag:tags(id, name, slug))")
+        .select("id, title, description, slug, category_id, published, created_at, updated_at, tags:record_tags(tag:tags(id, name, slug))")
         .order("created_at", { ascending: false });
 });
 
 /**
- * Counts for the sidebar. The select policy on records is
- * "published = true OR author_id = auth.uid()", so an anonymous visitor is
- * counted published records only and the author sees their drafts included —
- * no branch on the session needed here.
+ * Names come from the categories table and counts from the records the viewer
+ * can actually see: the select policy on records is
+ * "published = true OR author_id = auth.uid()", so drafts are counted for their
+ * author and for nobody else. Order follows created_at, as the tag list does.
  */
 export const fetchCategoryCounts = cache(async () => {
     const supabase = await createClient();
 
-    const { data } = await supabase.from(RECORDS_TABLE_NAME).select("category");
+    const [{ data: categories }, { data: records }] = await Promise.all([
+        supabase.from(CATEGORIES_TABLE_NAME).select("id, name, slug").order("created_at"),
+        supabase.from(RECORDS_TABLE_NAME).select("category_id")
+    ]);
 
-    const counts = new Map<string, number>();
-    for (const { category } of data ?? []) {
-        if (category) counts.set(category, (counts.get(category) ?? 0) + 1);
+    const counts = new Map<number, number>();
+    for (const { category_id } of records ?? []) {
+        if (category_id) counts.set(category_id, (counts.get(category_id) ?? 0) + 1);
     }
 
     return {
-        total: data?.length ?? 0,
-        categories: RECORD_CATEGORIES.map((c) => ({ ...c, count: counts.get(c.slug) ?? 0 }))
+        total: records?.length ?? 0,
+        categories: (categories ?? []).map((c) => ({ ...c, count: counts.get(c.id) ?? 0 }))
     };
 });
-
-export function isRecordCategory(value?: string): value is RecordCategory {
-    return RECORD_CATEGORIES.some((c) => c.slug === value);
-}

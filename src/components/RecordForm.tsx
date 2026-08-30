@@ -10,9 +10,9 @@ import { components, ClearIndicatorProps, DropdownIndicatorProps, MultiValueRemo
 import { ChevronDown, Close } from "@carbon/icons-react";
 import styles from "@/styles/components/RecordForm.module.scss";
 import { createClient } from "@/utils/supabase/client";
-import { RECORD_CATEGORIES, RecordCategory, TAGS_TABLE_NAME } from "@/constants";
+import { CATEGORIES_TABLE_NAME, TAGS_TABLE_NAME } from "@/constants";
 
-export type RecordFormData = Pick<Record, "id" | "title" | "description" | "slug" | "content" | "category" | "published"> & {
+export type RecordFormData = Pick<Record, "id" | "title" | "description" | "slug" | "content" | "category_id" | "published"> & {
     tags: string[]
 };
 
@@ -24,14 +24,15 @@ interface Props {
 }
 
 type SelectOption = { label: string, value: string };
+type CategoryOption = { label: string, value: number };
 
-const DropdownIndicator = <IsMulti extends boolean>(props: DropdownIndicatorProps<SelectOption, IsMulti>) => (
+const DropdownIndicator = <Option, IsMulti extends boolean>(props: DropdownIndicatorProps<Option, IsMulti>) => (
     <components.DropdownIndicator {...props}>
         <ChevronDown size={16} />
     </components.DropdownIndicator>
 );
 
-const ClearIndicator = <IsMulti extends boolean>(props: ClearIndicatorProps<SelectOption, IsMulti>) => (
+const ClearIndicator = <Option, IsMulti extends boolean>(props: ClearIndicatorProps<Option, IsMulti>) => (
     <components.ClearIndicator {...props}>
         <Close size={16} />
     </components.ClearIndicator>
@@ -46,13 +47,12 @@ const MultiValueRemove = (props: MultiValueRemoveProps<SelectOption, true>) => (
 const selectComponents = { DropdownIndicator, ClearIndicator, MultiValueRemove };
 const categoryComponents = { DropdownIndicator, ClearIndicator };
 
-const categoryOptions: SelectOption[] = RECORD_CATEGORIES.map((c) => ({ label: c.name, value: c.slug }));
-
 const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => {
-    const defaultValues: RecordFormData = { id: -1, title: "", description: "", slug: "", content: "", tags: [], category: null, published: false };
+    const defaultValues: RecordFormData = { id: -1, title: "", description: "", slug: "", content: "", tags: [], category_id: null, published: false };
     const [formData, setFormData] = useState({ ...defaultValues, ...initialValues });
     const initialRef = useRef({ ...defaultValues, ...initialValues });
     const [tagOptions, setTagOptions] = useState<SelectOption[]>([]);
+    const [categoryOptions, setCategoryOptions] = useState<CategoryOption[]>([]);
     const tagsInputId = useId();
     const categoryInputId = useId();
 
@@ -67,15 +67,28 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
         loadTags();
     }, []);
 
+    // Categories are picked, never created here — the list is curated in the
+    // database so the sidebar stays short.
+    useEffect(() => {
+        const loadCategories = async () => {
+            const supabase = createClient();
+
+            const { data } = await supabase.from(CATEGORIES_TABLE_NAME).select("id, name").order("created_at");
+            if (data) setCategoryOptions(data.map((d) => ({ label: d.name, value: d.id })));
+        };
+
+        loadCategories();
+    }, []);
+
     useEffect(() => {
         const isDirty = formData.title !== initialRef.current.title ||
             formData.description !== initialRef.current.description ||
             formData.content !== initialRef.current.content ||
-            formData.category !== initialRef.current.category ||
+            formData.category_id !== initialRef.current.category_id ||
             formData.published !== initialRef.current.published;
 
         onDirtyChange?.(isDirty);
-    }, [formData.title, formData.description, formData.content, formData.category, formData.published, onDirtyChange]);
+    }, [formData.title, formData.description, formData.content, formData.category_id, formData.published, onDirtyChange]);
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newTitle = e.target.value;
@@ -117,12 +130,12 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
             </div>
             <div className={styles.tagField}>
                 <label className={styles.label} htmlFor={categoryInputId}>카테고리</label>
-                <Select<SelectOption, false>
+                <Select<CategoryOption, false>
                     inputId={categoryInputId}
                     classNamePrefix="tag_input"
                     placeholder="카테고리 선택"
-                    value={categoryOptions.find((option) => option.value === formData.category) ?? null}
-                    onChange={(option) => setFormData({ ...formData, category: (option?.value as RecordCategory) ?? null })}
+                    value={categoryOptions.find((option) => option.value === formData.category_id) ?? null}
+                    onChange={(option) => setFormData({ ...formData, category_id: option?.value ?? null })}
                     options={categoryOptions}
                     components={categoryComponents}
                     noOptionsMessage={() => "카테고리가 없습니다"}

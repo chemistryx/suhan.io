@@ -1,6 +1,6 @@
 import RecordsPageComponent from "./RecordsPageComponent";
 import { Metadata } from "next";
-import { fetchCategoryCounts, fetchRecords, isRecordCategory } from "@/lib/records";
+import { fetchCategoryCounts, fetchRecords } from "@/lib/records";
 
 interface Props {
     searchParams: Promise<{ category?: string }>;
@@ -19,22 +19,21 @@ export const metadata: Metadata = {
 
 export default async function RecordsPage({ searchParams }: Props) {
     const { category } = await searchParams;
+    const [{ data }, { total, categories }] = await Promise.all([fetchRecords(), fetchCategoryCounts()]);
 
     // An unknown slug falls back to the unfiltered list rather than an empty one.
-    const selected = isRecordCategory(category) ? category : null;
-
-    const [{ data }, { total, categories }] = await Promise.all([fetchRecords(), fetchCategoryCounts()]);
+    const selectedCategory = categories.find((c) => c.slug === category);
 
     const records = data
         ?.map((d) => ({ ...d, tags: d.tags.flatMap((t) => t.tag) }))
-        .filter((d) => !selected || d.category === selected);
+        .filter((d) => !selectedCategory || d.category_id === selectedCategory.id);
 
     return (
         <RecordsPageComponent
             records={records ?? []}
-            categories={[...categories]}
+            categories={categories}
             total={total}
-            selected={selected}
+            selected={selectedCategory?.slug ?? ""}
         />
     );
 }

@@ -16,7 +16,7 @@ interface Props {
     })[];
     categories: { slug: string, name: string, count: number }[];
     total: number;
-    selected: string | null;
+    selected: string;
 }
 
 const RecordsPageComponent = ({ records, categories, total, selected }: Props) => {
@@ -27,7 +27,7 @@ const RecordsPageComponent = ({ records, categories, total, selected }: Props) =
         router.push("/records/new");
     };
 
-    const chips = [{ slug: null, name: "전체", count: total }, ...categories];
+    const chips = [{ slug: "", name: "전체", count: total }, ...categories];
 
     return (
         <div className={styles.base}>
@@ -40,7 +40,7 @@ const RecordsPageComponent = ({ records, categories, total, selected }: Props) =
             <div className={styles.categories}>
                 {chips.map((chip) => (
                     <Link
-                        key={chip.slug ?? "all"}
+                        key={chip.slug || "all"}
                         className={[
                             styles.chip,
                             selected === chip.slug ? styles.active : "",

@@ -1,77 +1,81 @@
 "use client"
-import { RECORD_CATEGORIES, RECORDS_TABLE_NAME } from "@/constants";
+import { CATEGORIES_TABLE_NAME, RECORDS_TABLE_NAME } from "@/constants";
 import styles from "@/styles/components/Navbar.module.scss";
+import { Category } from "@/types/category";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-// "전체" carries no slug, so a bare /records is what clears the filter.
-type Item = { slug: string | null, name: string };
-
-const items: Item[] = [{ slug: null, name: "전체" }, ...RECORD_CATEGORIES];
+type Item = Pick<Category, "slug" | "name"> & { count: number };
 
 /**
- * Counts are loaded here rather than handed down from the layout: reading them
- * on the server needs the request's cookies, which would opt every route —
- * including the otherwise static / and /works — into dynamic rendering. The
- * names paint immediately and only the numbers arrive late.
+ * Loaded here rather than handed down from the layout: reading this on the
+ * server needs the request's cookies, which would opt every route — including
+ * the otherwise static / and /works — into dynamic rendering.
  *
  * The select policy on records is "published = true OR author_id = auth.uid()",
  * so drafts are counted for their author and for nobody else.
  */
-const useCategoryCounts = () => {
-    const [counts, setCounts] = useState<Map<string | null, number> | null>(null);
+const useCategories = () => {
+    const [items, setItems] = useState<Item[] | null>(null);
 
     useEffect(() => {
         let active = true;
 
-        const loadCounts = async () => {
+        const loadCategories = async () => {
             const supabase = createClient();
-            const { data } = await supabase.from(RECORDS_TABLE_NAME).select("category");
-            if (!active || !data) return;
 
-            const next = new Map<string | null, number>([[null, data.length]]);
-            for (const { category } of data) {
-                if (category) next.set(category, (next.get(category) ?? 0) + 1);
+            const [{ data: categories }, { data: records }] = await Promise.all([
+                supabase.from(CATEGORIES_TABLE_NAME).select("id, name, slug").order("created_at"),
+                supabase.from(RECORDS_TABLE_NAME).select("category_id")
+            ]);
+
+            if (!active || !categories || !records) return;
+
+            const counts = new Map<number, number>();
+            for (const { category_id } of records) {
+                if (category_id) counts.set(category_id, (counts.get(category_id) ?? 0) + 1);
             }
 
-            setCounts(next);
+            setItems([
+                // "전체" carries no slug, so a bare /records is what clears the filter.
+                { slug: "", name: "전체", count: records.length },
+                ...categories.map((c) => ({ slug: c.slug, name: c.name, count: counts.get(c.id) ?? 0 }))
+            ]);
         };
 
-        loadCounts();
+        loadCategories();
 
         return () => { active = false; };
     }, []);
 
-    return counts;
+    return items;
 };
 
 const CategoryNav = () => {
-    const selected = useSearchParams().get("category");
-    const counts = useCategoryCounts();
+    const selected = useSearchParams().get("category") ?? "";
+    const items = useCategories();
+
+    if (!items) return null;
 
     return (
         <ul className={styles.categories}>
-            {items.map((item) => {
-                const count = counts?.get(item.slug);
-
-                return (
-                    <li
-                        key={item.slug ?? "all"}
-                        className={[
-                            styles.category,
-                            selected === item.slug ? styles.active : "",
-                            count === 0 ? styles.empty : ""
-                        ].join(" ")}
-                    >
-                        <Link className={styles.link} href={item.slug ? `/records?category=${item.slug}` : "/records"}>
-                            <span className={styles.name}>{item.name}</span>
-                            <span className={styles.count}>{count ?? ""}</span>
-                        </Link>
-                    </li>
-                );
-            })}
+            {items.map((item) => (
+                <li
+                    key={item.slug || "all"}
+                    className={[
+                        styles.category,
+                        selected === item.slug ? styles.active : "",
+                        item.count === 0 ? styles.empty : ""
+                    ].join(" ")}
+                >
+                    <Link className={styles.link} href={item.slug ? `/records?category=${item.slug}` : "/records"}>
+                        <span className={styles.name}>{item.name}</span>
+                        <span className={styles.count}>{item.count}</span>
+                    </Link>
+                </li>
+            ))}
         </ul>
     );
 };
