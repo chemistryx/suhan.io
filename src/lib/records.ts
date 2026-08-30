@@ -9,7 +9,7 @@ const fetchRecordByStoredSlug = cache(async (storedSlug: string) => {
 
     return await supabase
         .from(RECORDS_TABLE_NAME)
-        .select("*, tags:record_tags(tag:tags(id, name, slug))")
+        .select("*, category:categories(name, slug), tags:record_tags(tag:tags(id, name, slug))")
         .eq("slug", storedSlug)
         .single();
 });

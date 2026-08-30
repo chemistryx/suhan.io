@@ -12,6 +12,7 @@ import useUser from "@/hooks/useUser";
 import ScrollTopButton from "@/components/ScrollTopButton";
 import Badge from "@/components/Badge";
 import { Tag } from "@/types/tag";
+import { Category } from "@/types/category";
 import Link from "next/link";
 import MDEditor from "@uiw/react-md-editor";
 import RecordComments from "@/components/RecordComments";
@@ -23,6 +24,7 @@ import RecordNavigation from "@/components/RecordNavigation";
 interface Props {
     record: Record & {
         tags: Pick<Tag, "id" | "name" | "slug">[];
+        category: Pick<Category, "name" | "slug"> | null;
     };
     adjacent: AdjacentRecords;
 }
@@ -50,7 +52,12 @@ const RecordPageComponent = ({ record, adjacent }: Props) => {
                                 </Link>
                             ))}
                         </div>
-                        <span className={styles.date}>{toDateString(record.created_at)}</span>
+                        <div className={styles.meta}>
+                            {record.category &&
+                                <Link className={[styles.item, styles.category].join(" ")} href={`/records?category=${record.category.slug}`}>{record.category.name}</Link>
+                            }
+                            <span className={styles.item}>{toDateString(record.created_at)}</span>
+                        </div>
                         <div className={styles.actions}>
                             {user &&
                                 <div className={styles.manage}>
