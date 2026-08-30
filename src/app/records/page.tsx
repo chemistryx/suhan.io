@@ -1,23 +1,21 @@
 import RecordsPageComponent from "./RecordsPageComponent";
 import { Metadata } from "next";
 import { fetchCategoryCounts, fetchRecords, isRecordCategory } from "@/lib/records";
-import { RECORD_CATEGORIES } from "@/constants";
 
 interface Props {
     searchParams: Promise<{ category?: string }>;
 }
 
-const categoryName = (slug?: string) => RECORD_CATEGORIES.find((c) => c.slug === slug)?.name;
-
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-    const { category } = await searchParams;
-    const name = categoryName(category);
-
-    const title = name ? `기록 · ${name}` : "기록";
-    const description = name ? `${name}에 대한 기록을 보여줍니다.` : "기록하는 공간입니다.";
-
-    return { title, description, openGraph: { title, description } };
-}
+// The filter is a view of one page, not a page of its own, so the metadata
+// stays the same whichever category is selected.
+export const metadata: Metadata = {
+    title: "기록",
+    description: "기록하는 공간입니다.",
+    openGraph: {
+        title: "기록",
+        description: "기록하는 공간입니다."
+    }
+};
 
 export default async function RecordsPage({ searchParams }: Props) {
     const { category } = await searchParams;
