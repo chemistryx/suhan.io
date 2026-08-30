@@ -6,7 +6,7 @@
     flex-direction: column;
     gap: 1.5rem;
     position: relative;
-    width: 16%;
+    width: 20%;
     padding-right: .5rem;
     z-index: var(--navbar-z-index);
     @include fade-in(left, 0.4s);
@@ -86,6 +86,67 @@
             align-items: center;
             padding: unset;
             border: none;
+        }
+
+
+        // Selection one level down is a rail, not a filled block: the filled
+        // background stays the "page you can navigate to" signal, and it also
+        // collides with .item:hover, which uses the same colour.
+        .categories {
+            display: flex;
+            flex-direction: column;
+            list-style: none;
+            margin-top: .25rem;
+
+            @media screen and (max-width: $viewport-lg) {
+                display: none;
+            }
+
+            .category {
+                border-radius: 0 var(--border-radius) var(--border-radius) 0;
+                transition: var(--transition);
+
+                &:hover {
+                    background: var(--surface-hover);
+                }
+
+                &.empty {
+                    opacity: .45;
+                }
+
+                .link {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: .375rem;
+                    padding: .1875rem .6rem .1875rem .875rem;
+                    border-left: 2px solid var(--border);
+                    font-size: .85rem;
+                    font-weight: 500;
+                    color: var(--text-subtle);
+                    text-decoration: none;
+                    transition: var(--transition);
+                }
+
+                &.active .link {
+                    border-left-color: var(--accent);
+                    color: var(--text);
+                    font-weight: 600;
+                }
+
+                .name {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                .count {
+                    font-size: .7rem;
+                    font-weight: var(--font-weight-meta);
+                    font-variant-numeric: tabular-nums;
+                    color: var(--text-subtle);
+                }
+            }
         }
 
         .item {

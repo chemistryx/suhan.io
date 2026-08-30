@@ -2,6 +2,7 @@ import { RECORDS_TABLE_NAME } from "@/constants";
 import { createClient } from "../utils/supabase/server";
 import { toStoredSlug } from "@/utils/strings";
 import { cache } from "react";
+import { RECORD_CATEGORIES, RecordCategory } from "@/constants";
 
 const fetchRecordByStoredSlug = cache(async (storedSlug: string) => {
     const supabase = await createClient();
@@ -51,6 +52,32 @@ export const fetchRecords = cache(async () => {
 
     return await supabase
         .from(RECORDS_TABLE_NAME)
-        .select("id, title, description, slug, published, created_at, updated_at, tags:record_tags(tag:tags(id, name, slug))")
+        .select("id, title, description, slug, category, published, created_at, updated_at, tags:record_tags(tag:tags(id, name, slug))")
         .order("created_at", { ascending: false });
 });
+
+/**
+ * Counts for the sidebar. The select policy on records is
+ * "published = true OR author_id = auth.uid()", so an anonymous visitor is
+ * counted published records only and the author sees their drafts included —
+ * no branch on the session needed here.
+ */
+export const fetchCategoryCounts = cache(async () => {
+    const supabase = await createClient();
+
+    const { data } = await supabase.from(RECORDS_TABLE_NAME).select("category");
+
+    const counts = new Map<string, number>();
+    for (const { category } of data ?? []) {
+        if (category) counts.set(category, (counts.get(category) ?? 0) + 1);
+    }
+
+    return {
+        total: data?.length ?? 0,
+        categories: RECORD_CATEGORIES.map((c) => ({ ...c, count: counts.get(c.slug) ?? 0 }))
+    };
+});
+
+export function isRecordCategory(value?: string): value is RecordCategory {
+    return RECORD_CATEGORIES.some((c) => c.slug === value);
+}

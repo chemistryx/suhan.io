@@ -1,9 +1,61 @@
+@use "@/styles/variables" as *;
 @use "@/styles/animations" as *;
 
 .base {
     display: flex;
     flex-direction: column;
     gap: .75rem;
+
+    // The sidebar carries the categories on wide screens; these take over once
+    // the navbar collapses into a row.
+    .categories {
+        display: none;
+        gap: .5rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+        @include fade-in(up, 0.4s);
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media screen and (max-width: $viewport-lg) {
+            display: flex;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            height: 2rem;
+            padding: .3rem .6rem;
+            border-radius: var(--border-radius);
+            font-size: .85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+
+            &:hover {
+                background: var(--surface-hover);
+                color: var(--text);
+            }
+
+            // Deliberately not --accent-soft: that belongs to tag badges, which
+            // are content. These are a control.
+            &.active {
+                background: var(--fill);
+                color: var(--text);
+                font-weight: 600;
+            }
+
+            &.empty {
+                opacity: .45;
+            }
+        }
+    }
 
     .records {
         display: flex;

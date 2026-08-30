@@ -71,6 +71,7 @@ const EditRecordPageComponent = ({ record }: Props) => {
                     description: data.description,
                     slug: encodeURIComponent(data.slug),
                     content: data.content,
+                    category: data.category,
                     published: data.published
                 })
                 .eq("id", record.id);
