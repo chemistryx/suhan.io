@@ -27,7 +27,9 @@ const RecordsPageComponent = ({ records, categories, total, selected }: Props) =
         router.push("/records/new");
     };
 
-    const chips = [{ slug: "", name: "전체", count: total }, ...categories];
+    // Matches the sidebar: empty categories are shown to the author only.
+    const chips = [{ slug: "", name: "전체", count: total }, ...categories]
+        .filter((chip) => user || !chip.slug || chip.count > 0);
 
     return (
         <div className={styles.base}>

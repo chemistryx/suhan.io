@@ -2,6 +2,7 @@
 import { CATEGORIES_TABLE_NAME, RECORDS_TABLE_NAME } from "@/constants";
 import styles from "@/styles/components/Navbar.module.scss";
 import { Category } from "@/types/category";
+import useUser from "@/hooks/useUser";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -56,12 +57,17 @@ const useCategories = () => {
 const CategoryNav = () => {
     const selected = useSearchParams().get("category") ?? "";
     const items = useCategories();
+    const { user } = useUser();
 
     if (!items) return null;
 
+    // An empty category is a note to the author about what they have not
+    // written yet; to a visitor it is a dead end. "전체" always stays.
+    const visible = items.filter((item) => user || !item.slug || item.count > 0);
+
     return (
         <ul className={styles.categories}>
-            {items.map((item) => (
+            {visible.map((item) => (
                 <li
                     key={item.slug || "all"}
                     className={[
