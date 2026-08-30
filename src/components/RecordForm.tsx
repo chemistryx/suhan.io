@@ -2,10 +2,10 @@ import { Record } from "@/types/record";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import Button from "./Button";
 import Input from "./Input";
+import Select from "./Select";
 import MarkdownEditor from "./MarkdownEditor";
 import { normalize } from "@/utils/strings";
 import CreatableSelect from "react-select/creatable";
-import Select from "react-select";
 import { components, ClearIndicatorProps, DropdownIndicatorProps, MultiValueRemoveProps } from "react-select";
 import { ChevronDown, Close } from "@carbon/icons-react";
 import styles from "@/styles/components/RecordForm.module.scss";
@@ -24,15 +24,14 @@ interface Props {
 }
 
 type SelectOption = { label: string, value: string };
-type CategoryOption = { label: string, value: number };
 
-const DropdownIndicator = <Option, IsMulti extends boolean>(props: DropdownIndicatorProps<Option, IsMulti>) => (
+const DropdownIndicator = (props: DropdownIndicatorProps<SelectOption, true>) => (
     <components.DropdownIndicator {...props}>
         <ChevronDown size={16} />
     </components.DropdownIndicator>
 );
 
-const ClearIndicator = <Option, IsMulti extends boolean>(props: ClearIndicatorProps<Option, IsMulti>) => (
+const ClearIndicator = (props: ClearIndicatorProps<SelectOption, true>) => (
     <components.ClearIndicator {...props}>
         <Close size={16} />
     </components.ClearIndicator>
@@ -45,16 +44,14 @@ const MultiValueRemove = (props: MultiValueRemoveProps<SelectOption, true>) => (
 );
 
 const selectComponents = { DropdownIndicator, ClearIndicator, MultiValueRemove };
-const categoryComponents = { DropdownIndicator, ClearIndicator };
 
 const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => {
     const defaultValues: RecordFormData = { id: -1, title: "", description: "", slug: "", content: "", tags: [], category_id: null, published: false };
     const [formData, setFormData] = useState({ ...defaultValues, ...initialValues });
     const initialRef = useRef({ ...defaultValues, ...initialValues });
     const [tagOptions, setTagOptions] = useState<SelectOption[]>([]);
-    const [categoryOptions, setCategoryOptions] = useState<CategoryOption[]>([]);
+    const [categoryOptions, setCategoryOptions] = useState<SelectOption[]>([]);
     const tagsInputId = useId();
-    const categoryInputId = useId();
 
     useEffect(() => {
         const loadTags = async () => {
@@ -74,7 +71,7 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
             const supabase = createClient();
 
             const { data } = await supabase.from(CATEGORIES_TABLE_NAME).select("id, name").order("created_at");
-            if (data) setCategoryOptions(data.map((d) => ({ label: d.name, value: d.id })));
+            if (data) setCategoryOptions(data.map((d) => ({ label: d.name, value: String(d.id) })));
         };
 
         loadCategories();
@@ -128,20 +125,13 @@ const RecordForm = ({ initialValues, onSubmit, onDirtyChange, mode }: Props) => 
                     isMulti
                 />
             </div>
-            <div className={styles.tagField}>
-                <label className={styles.label} htmlFor={categoryInputId}>카테고리</label>
-                <Select<CategoryOption, false>
-                    inputId={categoryInputId}
-                    classNamePrefix="tag_input"
-                    placeholder="카테고리 선택"
-                    value={categoryOptions.find((option) => option.value === formData.category_id) ?? null}
-                    onChange={(option) => setFormData({ ...formData, category_id: option?.value ?? null })}
-                    options={categoryOptions}
-                    components={categoryComponents}
-                    noOptionsMessage={() => "카테고리가 없습니다"}
-                    isClearable
-                />
-            </div>
+            <Select
+                label="카테고리"
+                placeholder="카테고리 선택"
+                options={categoryOptions}
+                value={formData.category_id?.toString() ?? ""}
+                onChange={(e) => setFormData({ ...formData, category_id: e.target.value ? Number(e.target.value) : null })}
+            />
             <div className={styles.publishField}>
                 <Input label="발행" type="checkbox" checked={formData.published} onChange={(e) => setFormData({ ...formData, published: e.target.checked })} />
             </div>
