@@ -1,5 +1,5 @@
 import MDEditor, { commands, ICommand, ICommandChildHandle, MDEditorProps } from "@uiw/react-md-editor";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "@/styles/components/MarkdownEditor.module.scss";
 import { Close } from "@carbon/icons-react";
 import Button, { ButtonSize } from "./Button";
@@ -75,6 +75,32 @@ const ImageUploadComponent = ({ close, textApi }: CommandChildHandleProps) => {
 };
 
 const MarkdownEditor = ({ ...props }: MDEditorProps) => {
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    // HACK: @uiw/react-md-editor는 Enter로 목록을 이어쓸지 `/^\d+.\s/`로 판정하는데,
+    // `.`이 이스케이프되지 않아 "1년 전에"처럼 숫자 뒤에 아무 글자나 와도 목록으로 본다.
+    // 진짜 순서 목록이 아닐 때만 캡처 단계에서 라이브러리 keydown 핸들러를 막는다.
+    // Related PR: https://github.com/uiwjs/react-md-editor/pull/711
+    useEffect(() => {
+        const wrapper = wrapperRef.current;
+        if (!wrapper) return;
+
+        const suppressFalseOrderedList = (e: KeyboardEvent) => {
+            if (e.key !== "Enter" || e.shiftKey) return;
+
+            const target = e.target as HTMLElement | null;
+            if (!(target instanceof HTMLTextAreaElement)) return;
+
+            const currentLine = target.value.slice(0, target.selectionStart).split("\n").pop() ?? "";
+            if (/^\d+.\s/.test(currentLine) && !/^\d+\.\s/.test(currentLine)) {
+                e.stopPropagation();
+            }
+        };
+
+        wrapper.addEventListener("keydown", suppressFalseOrderedList, true);
+        return () => wrapper.removeEventListener("keydown", suppressFalseOrderedList, true);
+    }, []);
+
     const imageUploadCommand: ICommand = {
         name: "image-upload",
         groupName: "image-upload",
@@ -110,7 +136,9 @@ const MarkdownEditor = ({ ...props }: MDEditorProps) => {
     ];
 
     return (
-        <MDEditor className={styles.base} height={400} commands={toolbars} {...props} />
+        <div ref={wrapperRef} style={{ display: "contents" }}>
+            <MDEditor className={styles.base} height={400} commands={toolbars} {...props} />
+        </div>
     );
 };
 
