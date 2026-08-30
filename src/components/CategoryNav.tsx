@@ -4,11 +4,18 @@ import styles from "@/styles/components/Navbar.module.scss";
 import { Category } from "@/types/category";
 import useUser from "@/hooks/useUser";
 import { createClient } from "@/utils/supabase/client";
+import { toStoredSlug } from "@/utils/strings";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Item = Pick<Category, "slug" | "name"> & { count: number };
+
+type Data = {
+    items: Item[];
+    // stored record slug -> the category slug it belongs to
+    categoryOf: Map<string, string>;
+};
 
 /**
  * Loaded here rather than handed down from the layout: reading this on the
@@ -25,7 +32,7 @@ type Item = Pick<Category, "slug" | "name"> & { count: number };
  * ?category= changes what the list shows, never the counts.
  */
 const useCategories = () => {
-    const [items, setItems] = useState<Item[] | null>(null);
+    const [data, setData] = useState<Data | null>(null);
     const pathname = usePathname();
 
     useEffect(() => {
@@ -36,21 +43,32 @@ const useCategories = () => {
 
             const [{ data: categories }, { data: records }] = await Promise.all([
                 supabase.from(CATEGORIES_TABLE_NAME).select("id, name, slug").order("created_at"),
-                supabase.from(RECORDS_TABLE_NAME).select("category_id")
+                supabase.from(RECORDS_TABLE_NAME).select("slug, category_id")
             ]);
 
             if (!active || !categories || !records) return;
 
+            const slugOfId = new Map(categories.map((c) => [c.id as number, c.slug as string]));
             const counts = new Map<number, number>();
-            for (const { category_id } of records) {
-                if (category_id) counts.set(category_id, (counts.get(category_id) ?? 0) + 1);
+            const categoryOf = new Map<string, string>();
+
+            for (const { slug, category_id } of records) {
+                if (!category_id) continue;
+
+                counts.set(category_id, (counts.get(category_id) ?? 0) + 1);
+
+                const categorySlug = slugOfId.get(category_id);
+                if (categorySlug) categoryOf.set(toStoredSlug(slug), categorySlug);
             }
 
-            setItems([
-                // "전체" carries no slug, so a bare /records is what clears the filter.
-                { slug: "", name: "전체", count: records.length },
-                ...categories.map((c) => ({ slug: c.slug, name: c.name, count: counts.get(c.id) ?? 0 }))
-            ]);
+            setData({
+                items: [
+                    // "전체" carries no slug, so a bare /records is what clears the filter.
+                    { slug: "", name: "전체", count: records.length },
+                    ...categories.map((c) => ({ slug: c.slug, name: c.name, count: counts.get(c.id) ?? 0 }))
+                ],
+                categoryOf
+            });
         };
 
         loadCategories();
@@ -58,15 +76,32 @@ const useCategories = () => {
         return () => { active = false; };
     }, [pathname]);
 
-    return items;
+    return data;
+};
+
+// "/records/<slug>" and "/records/<slug>/edit" — anything else (the list, /new)
+// has no record to speak for.
+const recordSlugOf = (pathname: string) => {
+    const [, section, slug] = pathname.split("/");
+
+    return section === "records" && slug && slug !== "new" ? toStoredSlug(slug) : undefined;
 };
 
 const CategoryNav = () => {
-    const selected = useSearchParams().get("category") ?? "";
-    const items = useCategories();
+    const filter = useSearchParams().get("category");
+    const pathname = usePathname();
+    const data = useCategories();
     const { user } = useUser();
 
-    if (!items) return null;
+    if (!data) return null;
+
+    const { items, categoryOf } = data;
+
+    // On a record, fall back to the category that record belongs to. Reading one
+    // from a filtered list would otherwise clear the rail, and this also lights
+    // it up for a record reached from 전체 or from a link someone shared.
+    const recordSlug = recordSlugOf(pathname);
+    const selected = filter ?? (recordSlug ? categoryOf.get(recordSlug) ?? "" : "");
 
     // An empty category is a note to the author about what they have not
     // written yet; to a visitor it is a dead end. "전체" always stays.
