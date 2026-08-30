@@ -5,7 +5,7 @@ import { Category } from "@/types/category";
 import useUser from "@/hooks/useUser";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Item = Pick<Category, "slug" | "name"> & { count: number };
@@ -17,9 +17,16 @@ type Item = Pick<Category, "slug" | "name"> & { count: number };
  *
  * The select policy on records is "published = true OR author_id = auth.uid()",
  * so drafts are counted for their author and for nobody else.
+ *
+ * Refetched whenever the path changes. This component lives in the root layout
+ * and so survives every navigation inside /records, including the one back from
+ * the editor — without this the counts would keep whatever they read on first
+ * mount until a hard reload. Filtering is left out of the trigger on purpose:
+ * ?category= changes what the list shows, never the counts.
  */
 const useCategories = () => {
     const [items, setItems] = useState<Item[] | null>(null);
+    const pathname = usePathname();
 
     useEffect(() => {
         let active = true;
@@ -49,7 +56,7 @@ const useCategories = () => {
         loadCategories();
 
         return () => { active = false; };
-    }, []);
+    }, [pathname]);
 
     return items;
 };
