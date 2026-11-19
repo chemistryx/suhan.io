@@ -35,7 +35,10 @@ $ npm install
 1. Create `.env.local` file in the root directory of the project.
 2. Copy the contents from `.env.sample` to `.env.local` and fill in your own information.
 
-### 4. Run Locally
+### 4. Configure Site
+Edit `src/site.config.ts` and the intro in `src/app/page.tsx`, replace `public/profile.png`, and update `src/data/works.ts`.
+
+### 5. Run Locally
 ```bash
 $ npm run dev
 ```

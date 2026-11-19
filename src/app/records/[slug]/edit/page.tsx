@@ -1,30 +1,17 @@
-import { RECORDS_TABLE_NAME } from "@/constants";
-import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import EditRecordPageComponent from "./EditRecordPageComponent";
-import { Tag } from "@/types/tag";
-import { toStoredSlug } from "@/utils/strings";
-import { cache } from "react";
+import { fetchRecordDoc, fetchTagNames } from "@/lib/records";
+import { isAuthor } from "@/lib/viewer";
 
 interface Props {
     params: Promise<{ slug: string }>;
 }
 
-const getRecord = cache(async (slug: string) => {
-    const supabase = await createClient();
+const getRecord = async (slug: string) => {
+    if (!(await isAuthor())) return notFound();
 
-    const { data, error } = await supabase
-        .from(RECORDS_TABLE_NAME)
-        .select("*, tags:record_tags(tag:tags(name))")
-        .eq("slug", toStoredSlug(slug))
-        .single();
-
-    if (!data || error) return notFound();
-
-    const record = { ...data, tags: data.tags.map((t: { tag: Tag }) => t.tag.name) };
-
-    return record;
-});
+    return (await fetchRecordDoc(slug)) ?? notFound();
+};
 
 export async function generateMetadata({ params }: Props) {
     const { slug } = await params;
@@ -42,7 +29,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function EditRecordPage({ params }: Props) {
     const { slug } = await params;
-    const record = await getRecord(slug);
+    const [record, tagOptions] = await Promise.all([getRecord(slug), fetchTagNames()]);
 
-    return <EditRecordPageComponent record={record} />;
+    return <EditRecordPageComponent record={record} tagOptions={tagOptions} />;
 }

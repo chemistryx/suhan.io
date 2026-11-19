@@ -1,7 +1,5 @@
 import { notFound } from "next/navigation";
 import RecordPageComponent from "./RecordPageComponent";
-import { Tag } from "@/types/tag";
-import { Category } from "@/types/category";
 import { fetchAdjacentRecords, fetchRecord } from "@/lib/records";
 
 interface Props {
@@ -9,21 +7,9 @@ interface Props {
 }
 
 const getRecord = async (slug: string) => {
-    const { data, error } = await fetchRecord(slug);
+    const record = await fetchRecord(slug);
 
-    if (!data || error) return notFound();
-
-    // PostgREST returns the to-one embed as an object; flat() normalises the
-    // shape supabase-js infers for it without generated types.
-    const category = [data.category].flat()[0] as Pick<Category, "name" | "slug"> | undefined;
-
-    const record = {
-        ...data,
-        category: category ?? null,
-        tags: data.tags.flatMap((t: { tag: Tag }) => t.tag)
-    };
-
-    return record;
+    return record ?? notFound();
 };
 
 export async function generateMetadata({ params }: Props) {

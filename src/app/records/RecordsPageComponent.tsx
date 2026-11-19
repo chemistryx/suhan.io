@@ -4,16 +4,13 @@ import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading"
 import RecordItem from "@/components/RecordItem";
 import useUser from "@/hooks/useUser";
 import styles from "@/styles/pages/records/RecordsPage.module.scss";
-import { Record } from "@/types/record";
-import { Tag } from "@/types/tag";
+import { RecordSummary } from "@/types/record";
 import { toStaggerDelay } from "@/utils/animations";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 interface Props {
-    records: (Pick<Record, "id" | "title" | "description" | "slug" | "created_at" | "published"> & {
-        tags: Pick<Tag, "id" | "name" | "slug">[];
-    })[];
+    records: RecordSummary[];
     categories: { slug: string, name: string, count: number }[];
     total: number;
     selected: string;
@@ -61,7 +58,7 @@ const RecordsPageComponent = ({ records, categories, total, selected }: Props) =
             }
             <div className={styles.records}>
                 {records.map((record, idx) => (
-                    <RecordItem key={record.id} record={record} style={{ animationDelay: toStaggerDelay(idx) }} />
+                    <RecordItem key={record.slug} record={record} style={{ animationDelay: toStaggerDelay(idx) }} />
                 ))}
             </div>
         </div>

@@ -35,7 +35,10 @@ $ npm install
 1. 프로젝트 루트 경로에 `.env.local` 파일을 생성합니다.
 2. `.env.sample`의 내용을 복사하여 `.env.local`에 붙여넣고, 본인의 정보로 채웁니다.
 
-### 4. 로컬 실행
+### 4. 사이트 설정
+`src/site.config.ts`와 `src/app/page.tsx`의 소개 문구를 수정하고, `public/profile.png`와 `src/data/works.ts`를 교체합니다.
+
+### 5. 로컬 실행
 ```bash
 $ npm run dev
 ```

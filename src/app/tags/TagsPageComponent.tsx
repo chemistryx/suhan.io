@@ -6,9 +6,7 @@ import Link from "next/link";
 import { toStaggerDelay } from "@/utils/animations";
 
 interface Props {
-    tags: (Pick<Tag, "id" | "name" | "slug"> & {
-        count: number;
-    })[];
+    tags: (Tag & { count: number })[];
 }
 
 const TagsPageComponent = ({ tags }: Props) => {
@@ -21,8 +19,8 @@ const TagsPageComponent = ({ tags }: Props) => {
             <div className={styles.tagsWrapper}>
                 <ul className={styles.tags}>
                     {tags.map((tag, idx) => (
-                        <Link key={tag.id} href={`/tags/${tag.slug}`} style={{ animationDelay: toStaggerDelay(idx) }}>
-                            <li key={tag.id} className={styles.tag}>
+                        <Link key={tag.slug} href={`/tags/${tag.slug}`} style={{ animationDelay: toStaggerDelay(idx) }}>
+                            <li className={styles.tag}>
                                 <Badge>{tag.name}</Badge>
                                 <span className={styles.description}>{tag.count}개의 기록이 있습니다.</span>
                             </li>

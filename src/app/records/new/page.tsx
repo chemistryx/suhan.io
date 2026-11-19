@@ -1,7 +1,8 @@
-import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import NewRecordPageComponent from "./NewRecordPageComponent";
 import { Metadata } from "next";
+import { isAuthor } from "@/lib/viewer";
+import { fetchTagNames } from "@/lib/records";
 
 export const metadata: Metadata = {
     title: "새 기록",
@@ -13,10 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function NewRecordPage() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    if (!(await isAuthor())) notFound(); // fallback; the proxy already turns visitors away
 
-    if (!user) notFound(); // fallback
-
-    return <NewRecordPageComponent user={user} />;
+    return <NewRecordPageComponent tagOptions={await fetchTagNames()} />;
 }

@@ -1,8 +1,7 @@
 "use client"
 import styles from "@/styles/pages/tags/TagPage.module.scss";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
-import { Record } from "@/types/record";
-import { Tag } from "@/types/tag";
+import { RecordSummary } from "@/types/record";
 import Button, { ButtonSize, ButtonStyle } from "@/components/Button";
 import { ChevronLeft } from "@carbon/icons-react";
 import { useRouter } from "next/navigation";
@@ -11,9 +10,7 @@ import { toStaggerDelay } from "@/utils/animations";
 
 interface Props {
     slug: string;
-    records: (Pick<Record, "id" | "title" | "description" | "slug" | "created_at" | "published"> & {
-        tags: Pick<Tag, "id" | "name" | "slug">[];
-    })[];
+    records: RecordSummary[];
 }
 const TagPageComponent = ({ slug, records }: Props) => {
     const router = useRouter();
@@ -31,7 +28,7 @@ const TagPageComponent = ({ slug, records }: Props) => {
             </Heading>
             <div className={styles.records}>
                 {records.map((record, idx) => (
-                    <RecordItem key={record.id} record={record} style={{ animationDelay: toStaggerDelay(idx) }} />
+                    <RecordItem key={record.slug} record={record} style={{ animationDelay: toStaggerDelay(idx) }} />
                 ))}
             </div>
         </div>

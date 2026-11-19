@@ -6,7 +6,7 @@ const entries: Work[] = [
         slug: "suhan.io",
         title: "suhan.io",
         description: "마크다운 글 작성과 태그, 댓글, 동적 OG 이미지 생성을 지원하는 개인 블로그입니다.",
-        stack: ["Next.js", "TypeScript", "Supabase"],
+        stack: ["Next.js", "TypeScript", "Cloudflare"],
         startedAt: "2025-07-12",
         endedAt: null,
         href: "https://github.com/chemistryx/suhan.io"

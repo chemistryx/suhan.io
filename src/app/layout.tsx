@@ -5,7 +5,7 @@ import Container from "@/components/Container";
 import Footer from "@/components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
-import { META_TITLE } from "@/constants";
+import { siteConfig, siteTitle } from "@/site.config";
 import Toast from "@/components/Toast";
 import localFont from "next/font/local";
 
@@ -15,28 +15,27 @@ interface Props {
 
 export const metadata: Metadata = {
     title: {
-        template: `%s | ${META_TITLE}`,
-        default: META_TITLE
+        template: `%s | ${siteTitle}`,
+        default: siteTitle
     },
-    description: "모두가 쉽게 사용할 수 있고, 실생활에서의 불편함을 해결할 수 있는 서비스를 만드는 데 관심이 많습니다.",
+    description: siteConfig.description,
     openGraph: {
         type: "website",
         title: {
-            template: `%s | ${META_TITLE}`,
-            default: META_TITLE
+            template: `%s | ${siteTitle}`,
+            default: siteTitle
         },
-        description: "모두가 쉽게 사용할 수 있고, 실생활에서의 불편함을 해결할 수 있는 서비스를 만드는 데 관심이 많습니다.",
+        description: siteConfig.description,
         url: "/"
     },
     icons: {
         icon: [
-            { url: "/profile.png", type: "image/png" },
+            { url: siteConfig.profileImage, type: "image/png" },
         ],
     },
     verification: {
-        other: {
-            "naver-site-verification": "8acd899e3ca013746e0a6f3590fc99709fa20b6d"
-        }
+        google: process.env.GOOGLE_SITE_VERIFICATION,
+        other: process.env.NAVER_SITE_VERIFICATION ? { "naver-site-verification": process.env.NAVER_SITE_VERIFICATION } : undefined
     }
 };
 

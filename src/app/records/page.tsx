@@ -19,18 +19,14 @@ export const metadata: Metadata = {
 
 export default async function RecordsPage({ searchParams }: Props) {
     const { category } = await searchParams;
-    const [{ data }, { total, categories }] = await Promise.all([fetchRecords(), fetchCategoryCounts()]);
+    const [records, { total, categories }] = await Promise.all([fetchRecords(), fetchCategoryCounts()]);
 
     // An unknown slug falls back to the unfiltered list rather than an empty one.
     const selectedCategory = categories.find((c) => c.slug === category);
 
-    const records = data
-        ?.map((d) => ({ ...d, tags: d.tags.flatMap((t) => t.tag) }))
-        .filter((d) => !selectedCategory || d.category_id === selectedCategory.id);
-
     return (
         <RecordsPageComponent
-            records={records ?? []}
+            records={selectedCategory ? records.filter((r) => r.category?.slug === selectedCategory.slug) : records}
             categories={categories}
             total={total}
             selected={selectedCategory?.slug ?? ""}

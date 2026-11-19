@@ -11,8 +11,6 @@ import { ChevronLeft } from "@carbon/icons-react";
 import useUser from "@/hooks/useUser";
 import ScrollTopButton from "@/components/ScrollTopButton";
 import Badge from "@/components/Badge";
-import { Tag } from "@/types/tag";
-import { Category } from "@/types/category";
 import Link from "next/link";
 import MDEditor from "@uiw/react-md-editor";
 import RecordComments from "@/components/RecordComments";
@@ -22,10 +20,7 @@ import TableOfContents from "@/components/TableOfContents";
 import RecordNavigation from "@/components/RecordNavigation";
 
 interface Props {
-    record: Record & {
-        tags: Pick<Tag, "id" | "name" | "slug">[];
-        category: Pick<Category, "name" | "slug"> | null;
-    };
+    record: Record;
     adjacent: AdjacentRecords;
 }
 
@@ -35,20 +30,20 @@ const RecordPageComponent = ({ record, adjacent }: Props) => {
     const router = useRouter();
 
     const handleEdit = () => {
-        router.push(`/records/${decodeURIComponent(record.slug)}/edit`);
+        router.push(`/records/${record.slug}/edit`);
     };
 
     return (
         <>
-            <RecordDeleteModal showModal={showDeleteModal} setModal={setDeleteModal} id={record.id} />
+            <RecordDeleteModal showModal={showDeleteModal} setModal={setDeleteModal} slug={record.slug} />
             <div className={styles.base}>
                 <Heading divider>
                     <HeadingTitle>{record.title}</HeadingTitle>
                     <HeadingDescription>
                         <div className={styles.tags}>
                             {record.tags.map((tag) => (
-                                <Link key={tag.id} href={`/tags/${tag.slug}`}>
-                                    <Badge key={tag.id}>{tag.name}</Badge>
+                                <Link key={tag.slug} href={`/tags/${tag.slug}`}>
+                                    <Badge>{tag.name}</Badge>
                                 </Link>
                             ))}
                         </div>

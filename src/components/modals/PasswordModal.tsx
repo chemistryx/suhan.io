@@ -4,8 +4,6 @@ import Input from "@/components/Input";
 import styles from "@/styles/components/modals/PasswordModal.module.scss";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { PostgrestError } from "@supabase/supabase-js";
-import { createClient } from "@/utils/supabase/client";
 
 interface Props {
     showModal: boolean;
@@ -21,23 +19,17 @@ const PasswordModal = ({ showModal, setModal, commentId, onSuccess }: Props) => 
         try {
             if (!commentId || !password) return;
 
-            const supabase = createClient();
-
-            const { data, error } = await supabase.rpc("check_comment_ownership", {
-                p_comment_id: commentId,
-                p_password: password
+            const res = await fetch(`/api/comments/${commentId}/verify`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password })
             });
-
-            if (error) throw error;
-
-            if (!data) {
-                toast.error("비밀번호가 일치하지 않습니다.");
-                return;
-            }
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error);
 
             onSuccess(password);
         } catch (e) {
-            toast.error((e as PostgrestError).message || "비밀번호 검증 중 오류가 발생했습니다.");
+            toast.error((e as Error).message || "비밀번호 확인 중 오류가 발생했습니다.");
         } finally {
             setModal(false);
         }

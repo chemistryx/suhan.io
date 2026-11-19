@@ -30,7 +30,7 @@ const NavigationItem = ({ direction, record }: ItemProps) => {
     if (!record) return <div className={[className, styles.empty].join(" ")}>{body}</div>;
 
     return (
-        <Link className={className} href={`/records/${decodeURIComponent(record.slug)}`} rel={isNext ? "next" : "prev"}>
+        <Link className={className} href={`/records/${record.slug}`} rel={isNext ? "next" : "prev"}>
             {body}
         </Link>
     );

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import TagPageComponent from "./TagPageComponent";
 import { fetchRecords } from "@/lib/records";
+import { toSlug } from "@/utils/strings";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -8,7 +9,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
     const { slug } = await params;
-    const decodedSlug = decodeURIComponent(slug);
+    const decodedSlug = toSlug(slug);
 
     return {
         title: "#" + decodedSlug,
@@ -22,15 +23,10 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function TagPage({ params }: Props) {
     const { slug } = await params;
-    const decodedSlug = decodeURIComponent(slug);
-    const { data } = await fetchRecords();
+    const decodedSlug = toSlug(slug);
+    const records = (await fetchRecords()).filter((record) => record.tags.some((t) => t.slug === decodedSlug));
 
-    const records = data?.map((d) => ({
-        ...d,
-        tags: d.tags.flatMap((t) => t.tag)
-    })).filter((record) => record.tags.some((t) => t.slug === decodedSlug));
-
-    if (!records?.length) return notFound();
+    if (!records.length) return notFound();
 
     return <TagPageComponent slug={decodedSlug} records={records} />
 }

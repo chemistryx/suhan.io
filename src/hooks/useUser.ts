@@ -1,41 +1,55 @@
 "use client"
-import { createClient } from "@/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+export type User = { login: string };
+
+// Shared by every component on the page, so the session is fetched once.
+let session: Promise<User | null> | null = null;
+
+const loadSession = () => {
+    session ??= fetch("/api/auth/session")
+        .then((res) => res.json())
+        .then((data) => data.user as User | null)
+        .catch(() => null);
+
+    return session;
+};
+
 const useUser = () => {
-    const supabase = createClient();
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
+    const pathname = usePathname();
+
+    // A full navigation: the login route answers with a redirect to GitHub.
+    const signIn = () => {
+        window.location.assign(new URL(`/api/auth/login?next=${encodeURIComponent(pathname)}`, window.location.origin));
+    };
 
     const signOut = async () => {
-        const { error } = await supabase.auth.signOut();
+        const res = await fetch("/api/auth/session", { method: "DELETE" });
 
-        if (error) {
-            toast.error(error.message);
+        if (!res.ok) {
+            toast.error("로그아웃 중 오류가 발생했습니다.");
             return;
         }
 
+        session = Promise.resolve(null);
+        setUser(null);
         toast.success("성공적으로 로그아웃했습니다.");
         router.push("/");
+        router.refresh();
     };
 
     useEffect(() => {
-        const getUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
-        };
+        let active = true;
+        loadSession().then((u) => { if (active) setUser(u); });
 
-        getUser();
-
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => setUser(session?.user ?? null));
-
-        return () => subscription.unsubscribe();
+        return () => { active = false; };
     }, []);
 
-    return { user, signOut };
+    return { user, signIn, signOut };
 };
 
 export default useUser;

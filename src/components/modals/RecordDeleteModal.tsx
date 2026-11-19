@@ -1,27 +1,24 @@
 import { Modal, ModalContent, ModalHeader, ModalTitle, ModalWrapper } from "@/components/Modal";
 import styles from "@/styles/components/modals/RecordDeleteModal.module.scss";
-import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
 import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
-import { RECORDS_TABLE_NAME } from "@/constants";
+import { deleteRecord } from "@/app/records/actions";
 
 interface Props {
     showModal: boolean;
     setModal: (open: boolean) => void;
-    id: number;
+    slug: string;
 }
 
-const RecordDeleteModal = ({ showModal, setModal, id }: Props) => {
-    const supabase = createClient();
+const RecordDeleteModal = ({ showModal, setModal, slug }: Props) => {
     const router = useRouter();
 
     const handleDelete = async () => {
-        const { error, count } = await supabase.from(RECORDS_TABLE_NAME).delete({ count: "exact" }).eq("id", id);
+        const result = await deleteRecord(slug);
 
-        if (error || count === 0) {
-            toast.error("게시물 삭제 중 오류가 발생했습니다.");
-            console.error(error?.message);
+        if (!result.ok) {
+            toast.error(result.error);
             return;
         }
 

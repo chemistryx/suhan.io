@@ -4,10 +4,7 @@ import styles from "@/styles/components/MarkdownEditor.module.scss";
 import { Close } from "@carbon/icons-react";
 import Button, { ButtonSize } from "./Button";
 import Input from "./Input";
-import { createClient } from "@/utils/supabase/client";
-import { IMAGES_BUCKET_NAME } from "@/constants";
 import { toast } from "sonner";
-import { normalize } from "@/utils/strings";
 
 type CommandChildHandleProps = Parameters<NonNullable<ICommandChildHandle["children"]>>[0];
 
@@ -22,26 +19,30 @@ const ImageUploadComponent = ({ close, textApi }: CommandChildHandleProps) => {
         let altText = "";
 
         if (mode === "upload" && file) {
-            // upload to supabase bucket
-            // TODO: fix korean letters not being supported
-            const path = `uploads/${Date.now()}-${normalize(file.name)}`;
+            const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
+            const hash = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("").slice(0, 12);
 
-            const supabase = createClient();
-            const { data: uploadData, error } = await supabase.storage
-                .from(IMAGES_BUCKET_NAME)
-                .upload(path, file);
+            const res = await fetch("/api/uploads", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ type: file.type, size: file.size, hash })
+            });
+            const data = await res.json().catch(() => ({}));
 
-            if (error) {
-                toast.error(error.message);
+            if (!res.ok) {
+                toast.error(data.error ?? "이미지 업로드 중 오류가 발생했습니다.");
                 return;
             }
 
-            const { data: publicUrlData } = supabase.storage
-                .from(IMAGES_BUCKET_NAME)
-                .getPublicUrl(uploadData.path);
+            const put = await fetch(data.uploadUrl, { method: "PUT", headers: data.headers, body: file }).catch(() => null);
 
-            imageUrl = publicUrlData.publicUrl;
-            altText = file.name;
+            if (!put?.ok) {
+                toast.error("이미지 업로드 중 오류가 발생했습니다.");
+                return;
+            }
+
+            imageUrl = data.url;
+            altText = file.name.replace(/\.[^.]+$/, "");
         } else if (mode === "url" && url) {
             altText = decodeURIComponent(new URL(url).pathname.split("/").pop() || "");
         }

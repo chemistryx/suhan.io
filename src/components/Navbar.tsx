@@ -1,5 +1,5 @@
 "use client"
-import { AUTHOR_NAME_EN, AUTHOR_NAME_KO } from "@/constants";
+import { siteConfig } from "@/site.config";
 import styles from "@/styles/components/Navbar.module.scss";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,10 +15,10 @@ const Navbar = () => {
         <nav className={styles.base}>
             <div className={styles.logoWrapper}>
                 <Link className={styles.logo} href="/">
-                    <Image src="/profile.png" width={38} height={38} alt="profile" />
+                    <Image src={siteConfig.profileImage} width={38} height={38} alt="profile" />
                     <div className={styles.textWrapper}>
-                        <h2 className={styles.title}>{AUTHOR_NAME_KO}</h2>
-                        <p className={styles.description}>{AUTHOR_NAME_EN}</p>
+                        <h2 className={styles.title}>{siteConfig.author.name}</h2>
+                        <p className={styles.description}>{siteConfig.author.alternateName}</p>
                     </div>
                 </Link>
             </div>

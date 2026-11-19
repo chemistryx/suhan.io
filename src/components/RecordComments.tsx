@@ -2,17 +2,14 @@ import styles from "@/styles/components/RecordComments.module.scss";
 import Input from "./Input";
 import Button from "./Button";
 import { useCallback, useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
 import { toast } from "sonner";
-import { PostgrestError } from "@supabase/supabase-js";
-import { fetchComments } from "@/lib/comments";
 import { Comment } from "@/types/comment";
 import { generateNickname, toDateDistanceString } from "@/utils/strings";
 import Skeleton from "./Skeleton";
 import PasswordModal from "./modals/PasswordModal";
 import useUser from "@/hooks/useUser";
 import { Record } from "@/types/record";
-import { AUTHOR_NAME_KO } from "@/constants";
+import { siteConfig } from "@/site.config";
 import CommentDeleteModal from "./modals/CommentDeleteModal";
 
 interface Props {
@@ -28,7 +25,6 @@ type CommentForm = {
 };
 
 const RecordComments = ({ record }: Props) => {
-    const supabase = createClient();
     const { user } = useUser();
     const [comments, setComments] = useState<Comment[]>([]);
     const [form, setForm] = useState<CommentForm>({ author: "", content: "", password: "" });
@@ -54,12 +50,13 @@ const RecordComments = ({ record }: Props) => {
         setLoading(true);
 
         try {
-            const { data, error } = await fetchComments(record.id);
-            if (error) throw error;
+            const res = await fetch(`/api/comments?recordId=${record.id}`);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error);
 
-            setComments(data);
+            setComments(data.comments);
         } catch (e) {
-            toast.error((e as PostgrestError).message || `댓글을 불러오는 중 오류가 발생했습니다.`);
+            toast.error((e as Error).message || "댓글을 불러오는 중 오류가 발생했습니다.");
         } finally {
             setLoading(false);
         }
@@ -72,7 +69,7 @@ const RecordComments = ({ record }: Props) => {
 
     useEffect(() => {
         if (user) {
-            updateForm("author", AUTHOR_NAME_KO);
+            updateForm("author", siteConfig.author.name);
             setPasswordRequired(false); // do not require password by default if user available (create mode) 
         } else {
             const existingNames = comments.map((c) => c.author_name);
@@ -88,27 +85,30 @@ const RecordComments = ({ record }: Props) => {
     };
 
     const handleSubmit = async () => {
+        const isEdit = actionType === ActionType.EDIT;
+        const password = isPasswordRequired ? form.password : undefined;
+
         try {
-            const rpcName = actionType === ActionType.EDIT ? "update_comment" : "create_comment";
-            const rpcArgs = actionType === ActionType.EDIT
-                ? { p_comment_id: selectedComment?.id, p_content: form.content, p_password: isPasswordRequired ? form.password : null }
-                : { p_record_id: record.id, p_author_name: form.author, p_content: form.content, p_password: isPasswordRequired ? form.password : null };
+            const res = isEdit
+                ? await fetch(`/api/comments/${selectedComment?.id}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ content: form.content, password: actionPassword || password })
+                })
+                : await fetch("/api/comments", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ recordId: record.id, authorName: form.author, content: form.content, password })
+                });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error);
 
-            const { data, error } = await supabase.rpc(rpcName, rpcArgs);
-
-            if (!data && actionType === ActionType.EDIT) {
-                toast.error("비밀번호가 일치하지 않습니다.");
-                return;
-            }
-
-            if (error) throw error;
-
-            toast.success(`성공적으로 댓글을 ${actionType === ActionType.EDIT ? "수정" : "등록"}했습니다.`);
+            toast.success(`성공적으로 댓글을 ${isEdit ? "수정" : "등록"}했습니다.`);
 
             invalidateForm();
             loadComments();
         } catch (e) {
-            toast.error((e as PostgrestError).message || `댓글 ${actionType === ActionType.EDIT ? "수정" : "등록"} 중 오류가 발생했습니다.`);
+            toast.error((e as Error).message || `댓글 ${isEdit ? "수정" : "등록"} 중 오류가 발생했습니다.`);
         }
     };
 
@@ -117,7 +117,8 @@ const RecordComments = ({ record }: Props) => {
         setActionType(type);
         setSelectedComment(comment);
 
-        if (user && comment.author_id === user.id) {
+        // The author edits their own comments and deletes any without a password.
+        if (user) {
             if (type === ActionType.EDIT) {
                 updateForm("author", comment.author_name);
                 updateForm("content", comment.content);
@@ -148,12 +149,8 @@ const RecordComments = ({ record }: Props) => {
         loadComments();
     };
 
-    const isActionVisible = (comment: Comment) => {
-        if (!comment.author_id) return true;
-        if (user && comment.author_id === user.id) return true;
-
-        return false;
-    };
+    const canEdit = (comment: Comment) => (user ? comment.is_author : !comment.is_author);
+    const canDelete = (comment: Comment) => Boolean(user) || !comment.is_author;
 
     return (
         <>
@@ -175,19 +172,15 @@ const RecordComments = ({ record }: Props) => {
                                     <div className={styles.header}>
                                         <span className={styles.author}>
                                             {comment.author_name}
-                                            {comment.author_id === record.author_id && <span className={styles.writer}>작성자</span>}
+                                            {comment.is_author && <span className={styles.writer}>작성자</span>}
                                         </span>
                                         <div className={styles.metaWrapper}>
                                             <span className={styles.metaItem}>{toDateDistanceString(comment.created_at)}</span>
                                             {comment.created_at != comment.updated_at ? <span className={styles.metaItem}>수정됨</span> : null}
                                         </div>
                                         <div className={styles.actions}>
-                                            {isActionVisible(comment) && (
-                                                <>
-                                                    <span className={styles.action} onClick={() => handleActionClick(ActionType.EDIT, comment)}>수정</span>
-                                                    <span className={styles.action} onClick={() => handleActionClick(ActionType.DELETE, comment)}>삭제</span>
-                                                </>
-                                            )}
+                                            {canEdit(comment) && <span className={styles.action} onClick={() => handleActionClick(ActionType.EDIT, comment)}>수정</span>}
+                                            {canDelete(comment) && <span className={styles.action} onClick={() => handleActionClick(ActionType.DELETE, comment)}>삭제</span>}
                                         </div>
                                     </div>
                                     <p className={styles.content}>{comment.content}</p>

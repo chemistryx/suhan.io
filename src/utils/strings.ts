@@ -10,17 +10,12 @@ export function normalize(title: string) {
         .replace(/-+$/, "");               // remove trailing hyphen
 }
 
-/**
- * Record slugs are stored percent-encoded, but a route param arrives already
- * decoded in some entry points and still encoded in others, so normalise to the
- * stored form before looking one up. Idempotent for both shapes.
- */
-export function toStoredSlug(slug: string) {
+// Route params may or may not be percent-encoded; normalize to readable NFC.
+export function toSlug(slug: string) {
     try {
-        return encodeURIComponent(decodeURIComponent(slug));
+        return decodeURIComponent(slug).normalize("NFC");
     } catch {
-        // Malformed escape: treat the value as literal text.
-        return encodeURIComponent(slug);
+        return slug.normalize("NFC");
     }
 }
 

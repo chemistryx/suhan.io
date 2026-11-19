@@ -1,7 +1,7 @@
-import { Tag } from "@/types/tag";
 import { fetchRecord } from "@/lib/records";
 import { toDateString } from "@/utils/strings";
 import { ImageResponse } from "next/og";
+import { siteConfig } from "@/site.config";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -12,15 +12,13 @@ interface Props {
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
-    const { data, error } = await fetchRecord(slug);
-    if (!data || error) throw new Error(error?.message);
-
-    const record = { ...data, tags: data.tags.flatMap((t: { tag: Tag }) => t.tag) };
+    const record = await fetchRecord(slug);
+    if (!record) throw new Error(`no record for ${slug}`);
 
     const suitRegular = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/fonts/SUIT-Regular.otf`).then((res) => res.arrayBuffer());
     const suitSemiBold = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/fonts/SUIT-SemiBold.otf`).then((res) => res.arrayBuffer());
 
-    const profileImage = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}/profile.png`).then((res) => res.arrayBuffer());
+    const profileImage = await fetch(`${process.env.NEXT_PUBLIC_BASEURL}${siteConfig.profileImage}`).then((res) => res.arrayBuffer());
 
     const Header = ({ children }: Props) => {
         return (
@@ -120,14 +118,14 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                         maxHeight: "8.5em",
                         overflow: "hidden"
                     }}>
-                        {record.tags.map((tag: Tag) => (
+                        {record.tags.map((tag) => (
                             <Badge key={tag.name}>{tag.name}</Badge>
                         ))}
                     </div>
                 </Content>
                 <Footer>
                     <span>{toDateString(record.created_at)}</span>
-                    <span style={{ color: "#8a8a92" }}>suhan.io</span>
+                    <span style={{ color: "#8a8a92" }}>{siteConfig.ogLabel}</span>
                 </Footer>
             </div>
         ),
