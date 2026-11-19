@@ -51,7 +51,9 @@ const signIn = async (request: NextRequest, code: string, next: string) => {
     const author = process.env.AUTHOR_GITHUB_LOGIN || process.env.CONTENT_REPO?.split("/")[0];
     if (!author || typeof login !== "string" || login.toLowerCase() !== author.toLowerCase()) return fail(request, `not the author: ${login}`);
 
-    const response = NextResponse.redirect(new URL(next, request.url));
+    const target = new URL(next, request.url);
+    target.searchParams.set("auth", "success");
+    const response = NextResponse.redirect(target);
     response.cookies.delete({ name: STATE_COOKIE, path: "/api/auth" });
     response.cookies.set(SESSION_COOKIE, await createSession(login), {
         httpOnly: true,

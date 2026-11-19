@@ -13,12 +13,14 @@ const Footer = () => {
     const year = getYear(Date.now());
     const { github, email } = siteConfig.links;
 
-    // The auth routes redirect here with ?auth=failed; show it once and drop the param.
+    // The auth routes redirect back with ?auth=success|failed; show it once and drop the param.
     useEffect(() => {
         const url = new URL(window.location.href);
-        if (url.searchParams.get("auth") !== "failed") return;
+        const result = url.searchParams.get("auth");
+        if (result === "success") toast.success("성공적으로 로그인했습니다.");
+        else if (result === "failed") toast.error("로그인에 실패했습니다.");
+        else return;
 
-        toast.error("로그인에 실패했습니다.");
         url.searchParams.delete("auth");
         window.history.replaceState(null, "", url);
     }, []);
