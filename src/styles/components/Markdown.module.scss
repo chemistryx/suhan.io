@@ -1,0 +1,10 @@
+// Heading link icon, hidden until its heading is hovered.
+.anchorIcon {
+    color: var(--color-fg-default);
+    vertical-align: middle;
+    visibility: hidden;
+}
+
+:is(h1, h2, h3, h4, h5, h6):hover .anchorIcon {
+    visibility: visible;
+}
