@@ -16,6 +16,7 @@ const contentRepo = () => {
 };
 
 const BRANCH = "main";
+const CACHE_WARN_BYTES = 1.5 * 1024 * 1024;
 
 // (de)serialisation
 
@@ -111,6 +112,10 @@ const readFromGitHub = async (): Promise<Snapshot> => {
             if (!e.object?.text || e.object.isTruncated) throw new Error(`${e.name}: could not read the whole file`);
             return parseRecord(e.name, e.object.text);
         });
+
+    // Vercel's data cache skips items over 2 MB, which would send every request to GitHub.
+    const bytes = Buffer.byteLength(JSON.stringify(records));
+    if (bytes > CACHE_WARN_BYTES) console.warn(`records: cached payload is ${Math.round(bytes / 1024)} KB, close to the 2 MB cache limit`);
 
     return { records, version: oid };
 };
