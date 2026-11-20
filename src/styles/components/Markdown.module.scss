@@ -1,10 +1,25 @@
+// Hover-only controls fade like the rest of the site.
+.base:global(.wmde-markdown) {
+    pre :global(.copied) {
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    pre:hover :global(.copied) {
+        opacity: 1;
+    }
+}
+
 // Heading link icon, hidden until its heading is hovered.
 .anchorIcon {
     color: var(--color-fg-default);
     vertical-align: middle;
     visibility: hidden;
+    opacity: 0;
+    transition: var(--transition);
 }
 
 :is(h1, h2, h3, h4, h5, h6):hover .anchorIcon {
     visibility: visible;
+    opacity: 1;
 }

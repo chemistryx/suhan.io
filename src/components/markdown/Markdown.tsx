@@ -22,7 +22,7 @@ interface Props {
 
 // Rendered on the server; only the copy buttons and images ship as client code.
 const Markdown = ({ source, className }: Props) => (
-    <div className={["wmde-markdown", "wmde-markdown-color", className].filter(Boolean).join(" ")}>
+    <div className={["wmde-markdown", "wmde-markdown-color", styles.base, className].filter(Boolean).join(" ")}>
         <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[
