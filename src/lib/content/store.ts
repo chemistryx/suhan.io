@@ -121,21 +121,29 @@ const readFromGitHub = async (): Promise<Snapshot> => {
 };
 
 // expectedHeadOid rejects the commit if the branch moved since the read.
+/** The branch moved since the snapshot was read; read again and retry. */
+export class StaleSnapshotError extends Error {}
+
 const commitToGitHub = async (version: string, headline: string, additions: { path: string; contents: string }[], deletions: string[]) => {
-    await github(
-        `mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }`,
-        {
-            input: {
-                branch: { repositoryNameWithOwner: contentRepo().repo, branchName: BRANCH },
-                message: { headline },
-                expectedHeadOid: version,
-                fileChanges: {
-                    additions: additions.map((a) => ({ path: a.path, contents: Buffer.from(a.contents).toString("base64") })),
-                    deletions: deletions.map((path) => ({ path }))
+    try {
+        await github(
+            `mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }`,
+            {
+                input: {
+                    branch: { repositoryNameWithOwner: contentRepo().repo, branchName: BRANCH },
+                    message: { headline },
+                    expectedHeadOid: version,
+                    fileChanges: {
+                        additions: additions.map((a) => ({ path: a.path, contents: Buffer.from(a.contents).toString("base64") })),
+                        deletions: deletions.map((path) => ({ path }))
+                    }
                 }
             }
-        }
-    );
+        );
+    } catch (e) {
+        if (String(e).includes("STALE_DATA")) throw new StaleSnapshotError(String(e));
+        throw e;
+    }
 };
 
 // public API
@@ -158,7 +166,10 @@ const checked = ({ records, version }: Snapshot): Snapshot => {
 /** All records, drafts included. */
 export const loadRecords = async (): Promise<RecordDoc[]> => checked(await cachedGitHubRead()).records;
 
-/** Uncached read for writes. */
+/** Cached state with its commit, for writes; a stale one fails the commit with StaleSnapshotError. */
+export const loadSnapshot = async (): Promise<Snapshot> => checked(await cachedGitHubRead());
+
+/** Uncached read. */
 export const readSnapshot = async (): Promise<Snapshot> => checked(await readFromGitHub());
 
 /** Writes a record, renaming its file if the slug changed. */
