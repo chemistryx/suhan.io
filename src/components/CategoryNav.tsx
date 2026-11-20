@@ -87,7 +87,7 @@ const CategoryNav = () => {
                         item.count === 0 ? styles.empty : ""
                     ].join(" ")}
                 >
-                    <Link className={styles.link} href={item.slug ? `/records?category=${item.slug}` : "/records"}>
+                    <Link className={styles.link} href={item.slug ? `/records?category=${item.slug}` : "/records"} data-umami-event="category-filter" data-umami-event-category={item.slug || "all"}>
                         <span className={styles.name}>{item.name}</span>
                         <span className={styles.count}>{item.count}</span>
                     </Link>

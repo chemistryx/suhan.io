@@ -1,7 +1,7 @@
 import styles from "@/styles/components/RecordComments.module.scss";
 import Input from "./Input";
 import Button from "./Button";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Comment } from "@/types/comment";
 import { generateNickname, toDateDistanceString } from "@/utils/strings";
@@ -12,6 +12,7 @@ import { Record } from "@/types/record";
 import { siteConfig } from "@/site.config";
 import CommentDeleteModal from "./modals/CommentDeleteModal";
 import Turnstile from "./Turnstile";
+import { track } from "@/lib/analytics";
 
 interface Props {
     record: Record;
@@ -86,6 +87,14 @@ const RecordComments = ({ record }: Props) => {
         return () => { active = false; };
     }, [record.id, applyComments]);
 
+    // Started writing, counted once per page, to compare with comment-submit.
+    const startedRef = useRef(false);
+    const handleContentFocus = () => {
+        if (startedRef.current || actionType !== ActionType.CREATE) return;
+        startedRef.current = true;
+        track("comment-start", { slug: record.slug });
+    };
+
     const invalidateForm = () => {
         setForm({ author: "", content: "", password: "" });
         setActionPassword("");
@@ -111,11 +120,13 @@ const RecordComments = ({ record }: Props) => {
             if (!res.ok) throw new Error(data.error);
 
             toast.success(`성공적으로 댓글을 ${isEdit ? "수정" : "등록"}했습니다.`);
+            if (!isEdit) track("comment-submit", { slug: record.slug });
 
             invalidateForm();
             loadComments();
         } catch (e) {
             toast.error((e as Error).message || `댓글 ${isEdit ? "수정" : "등록"} 중 오류가 발생했습니다.`);
+            if (!isEdit) track("comment-error", { slug: record.slug, reason: (e as Error).message || "unknown" });
         } finally {
             if (!isEdit) {
                 setTurnstileToken(null);
@@ -202,7 +213,7 @@ const RecordComments = ({ record }: Props) => {
                     <Input label="이름" type="text" value={authorName} disabled />
                     <div className={styles.contentWrapper}>
                         <label className={styles.contentLabel}>내용</label>
-                        <textarea className={styles.contentInput} value={form.content} onChange={(e) => updateForm("content", e.target.value)} rows={5} />
+                        <textarea className={styles.contentInput} value={form.content} onChange={(e) => updateForm("content", e.target.value)} onFocus={handleContentFocus} rows={5} />
                     </div>
                     {isPasswordRequired && (
                         <Input label="비밀번호" type="password" value={form.password} onChange={(e) => updateForm("password", e.target.value)} />

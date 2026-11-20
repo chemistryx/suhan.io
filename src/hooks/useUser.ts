@@ -2,6 +2,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { setTrackingDisabled } from "@/lib/analytics";
 
 export type User = { login: string };
 
@@ -12,6 +13,10 @@ const loadSession = () => {
     session ??= fetch("/api/auth/session")
         .then((res) => res.json())
         .then((data) => data.user as User | null)
+        .then((user) => {
+            setTrackingDisabled(Boolean(user));
+            return user;
+        })
         .catch(() => null);
 
     return session;
@@ -36,6 +41,7 @@ const useUser = () => {
         }
 
         session = Promise.resolve(null);
+        setTrackingDisabled(false);
         setUser(null);
         toast.success("성공적으로 로그아웃했습니다.");
         router.push("/");

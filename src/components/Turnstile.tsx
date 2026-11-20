@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useRef } from "react";
+import { track } from "@/lib/analytics";
 
 type TurnstileApi = {
     render: (el: HTMLElement, options: object) => string;
@@ -52,7 +53,7 @@ const Turnstile = ({ onToken }: Props) => {
                     size: "flexible",
                     callback: (token: string) => onToken(token),
                     "expired-callback": () => onToken(null),
-                    "error-callback": () => onToken(null)
+                    "error-callback": (code: string) => { track("turnstile-error", { code: String(code) }); onToken(null); }
                 });
             })
             .catch(() => onToken(null));

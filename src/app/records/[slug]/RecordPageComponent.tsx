@@ -5,7 +5,8 @@ import { toDateString } from "@/utils/strings";
 import { AdjacentRecords, Record } from "@/types/record";
 import Button, { ButtonColor, ButtonSize, ButtonStyle } from "@/components/Button";
 import RecordDeleteModal from "@/components/modals/RecordDeleteModal";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { track } from "@/lib/analytics";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "@carbon/icons-react";
 import useUser from "@/hooks/useUser";
@@ -27,6 +28,22 @@ interface Props {
 const RecordPageComponent = ({ record, adjacent }: Props) => {
     const { user } = useUser();
     const [showDeleteModal, setDeleteModal] = useState(false);
+    const endRef = useRef<HTMLDivElement>(null);
+
+    // Reaching the end of the body counts as reading it, once per visit.
+    useEffect(() => {
+        const end = endRef.current;
+        if (!end) return;
+
+        const observer = new IntersectionObserver(([entry]) => {
+            if (!entry.isIntersecting) return;
+            track("read-complete", { slug: record.slug });
+            observer.disconnect();
+        });
+
+        observer.observe(end);
+        return () => observer.disconnect();
+    }, [record.slug]);
     const router = useRouter();
 
     const handleEdit = () => {
@@ -42,14 +59,14 @@ const RecordPageComponent = ({ record, adjacent }: Props) => {
                     <HeadingDescription>
                         <div className={styles.tags}>
                             {record.tags.map((tag) => (
-                                <Link key={tag.slug} href={`/tags/${tag.slug}`}>
+                                <Link key={tag.slug} href={`/tags/${tag.slug}`} data-umami-event="tag-click" data-umami-event-tag={tag.slug}>
                                     <Badge>{tag.name}</Badge>
                                 </Link>
                             ))}
                         </div>
                         <div className={styles.meta}>
                             {record.category &&
-                                <Link className={[styles.item, styles.category].join(" ")} href={`/records?category=${record.category.slug}`}>{record.category.name}</Link>
+                                <Link className={[styles.item, styles.category].join(" ")} href={`/records?category=${record.category.slug}`} data-umami-event="category-filter" data-umami-event-category={record.category.slug}>{record.category.name}</Link>
                             }
                             <span className={styles.item}>{toDateString(record.created_at)}</span>
                         </div>
@@ -72,6 +89,7 @@ const RecordPageComponent = ({ record, adjacent }: Props) => {
                         img: (props) => <LightboxImage {...props} />
                     }}
                 />
+                <div ref={endRef} />
                 <RecordNavigation {...adjacent} />
                 <RecordComments record={record} />
                 <TableOfContents contentClassName={styles.content} />

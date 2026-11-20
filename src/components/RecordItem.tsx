@@ -17,7 +17,7 @@ const RecordItem = ({ record, style }: Props) => {
             {record.description && <p className={styles.description}>{record.description}</p>}
             <div className={styles.tags}>
                 {record.tags.map((tag) => (
-                    <Link key={tag.slug} href={`/tags/${tag.slug}`}>
+                    <Link key={tag.slug} href={`/tags/${tag.slug}`} data-umami-event="tag-click" data-umami-event-tag={tag.slug}>
                         <Badge>{tag.name}</Badge>
                     </Link>
                 ))}

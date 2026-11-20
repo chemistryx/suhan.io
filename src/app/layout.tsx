@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Container from "@/components/Container";
 import Footer from "@/components/Footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Analytics } from "@vercel/analytics/next";
+import Analytics from "@/components/Analytics";
 import { siteConfig, siteTitle } from "@/site.config";
 import Toast from "@/components/Toast";
 import localFont from "next/font/local";

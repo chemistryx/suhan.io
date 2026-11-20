@@ -3,9 +3,16 @@ import Button from "@/components/Button";
 import { Heading, HeadingDescription, HeadingTitle } from "@/components/Heading";
 import { useRouter } from "next/navigation";
 import styles from "@/styles/pages/NotFoundPage.module.scss";
+import { useEffect } from "react";
+import { track } from "@/lib/analytics";
 
 export default function NotFoundPage() {
     const router = useRouter();
+
+    // Old or mistyped URLs; the referrer shows where the broken link lives.
+    useEffect(() => {
+        track("404", { path: window.location.pathname, referrer: document.referrer || "direct" });
+    }, []);
 
     return (
         <div className={styles.base}>

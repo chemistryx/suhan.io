@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/components/TableOfContents.module.scss";
 import { TableOfContents as TableOfContentsIcon } from "@carbon/icons-react";
 import { useRouter } from "next/navigation";
+import { track } from "@/lib/analytics";
 
 export type TOCItem = { id: string; text: string; depth: number };
 
@@ -120,7 +121,7 @@ const TableOfContents = ({ contentClassName }: Props) => {
             </button>
             <ul ref={itemsRef} className={[styles.items, isOpen ? styles.visible : ""].join(" ")}>
                 {toc.map((item) => (
-                    <li key={item.id} className={[styles.item, item.id === activeId ? styles.active : ""].join(" ")} onClick={() => router.replace(`#${item.id}`)} style={{ marginLeft: (item.depth - 1) * 12 }}>
+                    <li key={item.id} className={[styles.item, item.id === activeId ? styles.active : ""].join(" ")} onClick={() => { track("toc-click"); router.replace(`#${item.id}`); }} style={{ marginLeft: (item.depth - 1) * 12 }}>
                         {item.text}
                     </li>
                 ))}

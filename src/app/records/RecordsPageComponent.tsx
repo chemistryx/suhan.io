@@ -46,6 +46,8 @@ const RecordsPageComponent = ({ records, categories, total, selected }: Props) =
                             chip.count === 0 ? styles.empty : ""
                         ].join(" ")}
                         href={chip.slug ? `/records?category=${chip.slug}` : "/records"}
+                        data-umami-event="category-filter"
+                        data-umami-event-category={chip.slug || "all"}
                     >
                         {chip.name}
                     </Link>

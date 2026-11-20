@@ -19,7 +19,7 @@ const TagsPageComponent = ({ tags }: Props) => {
             <div className={styles.tagsWrapper}>
                 <ul className={styles.tags}>
                     {tags.map((tag, idx) => (
-                        <Link key={tag.slug} href={`/tags/${tag.slug}`} style={{ animationDelay: toStaggerDelay(idx) }}>
+                        <Link key={tag.slug} href={`/tags/${tag.slug}`} data-umami-event="tag-click" data-umami-event-tag={tag.slug} style={{ animationDelay: toStaggerDelay(idx) }}>
                             <li className={styles.tag}>
                                 <Badge>{tag.name}</Badge>
                                 <span className={styles.description}>{tag.count}개의 기록이 있습니다.</span>

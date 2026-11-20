@@ -50,7 +50,7 @@ const WorkCard = ({ work, preview, style }: Props) => {
     // ones that have nowhere else to send the reader.
     if (preview) {
         return (
-            <Link className={styles.base} href={`/works#${work.slug}`} style={style}>
+            <Link className={styles.base} href={`/works#${work.slug}`} style={style} data-umami-event="work-preview-click" data-umami-event-work={work.slug}>
                 {content}
             </Link>
         );
