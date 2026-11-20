@@ -11,6 +11,7 @@ import useUser from "@/hooks/useUser";
 import { Record } from "@/types/record";
 import { siteConfig } from "@/site.config";
 import CommentDeleteModal from "./modals/CommentDeleteModal";
+import Turnstile from "./Turnstile";
 
 interface Props {
     record: Record;
@@ -45,6 +46,10 @@ const RecordComments = ({ record }: Props) => {
     const [showDeleteModal, setDeleteModal] = useState(false);
     const [isLoading, setLoading] = useState(true);
     const [nickname, setNickname] = useState("");
+    // A token is single-use, so the widget is remounted after each new comment.
+    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+    const [turnstileKey, setTurnstileKey] = useState(0);
+    const needsTurnstile = !user && actionType === ActionType.CREATE && Boolean(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
 
     // Edits keep the comment's own name; new comments are the author's or a generated nickname.
     const authorName = form.author || (user ? siteConfig.author.name : nickname);
@@ -58,6 +63,7 @@ const RecordComments = ({ record }: Props) => {
     const canSubmit = (() => {
         if (!authorName || !form.content) return false;
         if (isPasswordRequired && !form.password) return false;
+        if (needsTurnstile && !turnstileToken) return false;
         return true;
     })();
 
@@ -99,7 +105,7 @@ const RecordComments = ({ record }: Props) => {
                 : await fetch("/api/comments", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ recordId: record.id, authorName, content: form.content, password: user ? undefined : form.password })
+                    body: JSON.stringify({ recordId: record.id, authorName, content: form.content, password: user ? undefined : form.password, turnstileToken })
                 });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) throw new Error(data.error);
@@ -110,6 +116,11 @@ const RecordComments = ({ record }: Props) => {
             loadComments();
         } catch (e) {
             toast.error((e as Error).message || `댓글 ${isEdit ? "수정" : "등록"} 중 오류가 발생했습니다.`);
+        } finally {
+            if (!isEdit) {
+                setTurnstileToken(null);
+                setTurnstileKey((k) => k + 1);
+            }
         }
     };
 
@@ -196,6 +207,7 @@ const RecordComments = ({ record }: Props) => {
                     {isPasswordRequired && (
                         <Input label="비밀번호" type="password" value={form.password} onChange={(e) => updateForm("password", e.target.value)} />
                     )}
+                    {needsTurnstile && <Turnstile key={turnstileKey} onToken={setTurnstileToken} />}
                     <Button onClick={handleSubmit} disabled={!canSubmit}>댓글 {actionType === ActionType.EDIT ? "수정" : "등록"}</Button>
                 </div>
             </div>

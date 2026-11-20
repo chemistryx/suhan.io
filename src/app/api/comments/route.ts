@@ -6,6 +6,7 @@ import { findVisibleRecord } from "@/lib/records";
 import { notifyNewComment } from "@/lib/mail/comment-notification";
 import { isAuthor } from "@/lib/viewer";
 import { siteConfig } from "@/site.config";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 const MAX_NAME = 30;
 const MAX_CONTENT = 2000;
@@ -23,13 +24,18 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-    const { recordId, authorName, content, password } = await request.json().catch(() => ({}));
+    const { recordId, authorName, content, password, turnstileToken } = await request.json().catch(() => ({}));
 
     const text = typeof content === "string" ? content.trim() : "";
     if (!text || text.length > MAX_CONTENT) return errorResponse(`내용은 1~${MAX_CONTENT}자로 입력해주세요.`, 400);
 
     try {
         const author = await isAuthor();
+        // Visitors pass a Turnstile check; the signed-in author does not.
+        if (!author && !(await verifyTurnstile(turnstileToken, request.headers.get("x-forwarded-for")?.split(",")[0]))) {
+            return errorResponse("보안 확인에 실패했습니다. 다시 시도해주세요.", 400);
+        }
+
         const record = await findVisibleRecord(Number(recordId));
         if (!record) return errorResponse("기록을 찾을 수 없습니다.", 404);
 
