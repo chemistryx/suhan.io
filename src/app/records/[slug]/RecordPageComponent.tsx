@@ -5,7 +5,7 @@ import { toDateString } from "@/utils/strings";
 import { AdjacentRecords, Record } from "@/types/record";
 import Button, { ButtonColor, ButtonSize, ButtonStyle } from "@/components/Button";
 import RecordDeleteModal from "@/components/modals/RecordDeleteModal";
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "@carbon/icons-react";
@@ -13,19 +13,18 @@ import useUser from "@/hooks/useUser";
 import ScrollTopButton from "@/components/ScrollTopButton";
 import Badge from "@/components/Badge";
 import Link from "next/link";
-import MDEditor from "@uiw/react-md-editor";
 import RecordComments from "@/components/RecordComments";
-import rehypeExternalLinks from "rehype-external-links";
-import LightboxImage from "@/components/LightboxImage";
 import TableOfContents from "@/components/TableOfContents";
 import RecordNavigation from "@/components/RecordNavigation";
 
 interface Props {
     record: Record;
     adjacent: AdjacentRecords;
+    // the body, rendered on the server
+    content: ReactNode;
 }
 
-const RecordPageComponent = ({ record, adjacent }: Props) => {
+const RecordPageComponent = ({ record, adjacent, content }: Props) => {
     const { user } = useUser();
     const [showDeleteModal, setDeleteModal] = useState(false);
     const endRef = useRef<HTMLDivElement>(null);
@@ -81,14 +80,7 @@ const RecordPageComponent = ({ record, adjacent }: Props) => {
                         </div>
                     </HeadingDescription>
                 </Heading>
-                <MDEditor.Markdown className={styles.content} source={record.content}
-                    rehypePlugins={[
-                        [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer", "external"] }]
-                    ]}
-                    components={{
-                        img: (props) => <LightboxImage {...props} />
-                    }}
-                />
+                {content}
                 <div ref={endRef} />
                 <RecordNavigation {...adjacent} />
                 <RecordComments record={record} />

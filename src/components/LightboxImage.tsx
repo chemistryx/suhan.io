@@ -1,3 +1,4 @@
+"use client"
 import { ImgHTMLAttributes, useEffect, useState } from "react";
 import styles from "@/styles/components/LightboxImage.module.scss";
 import { Portal } from "@radix-ui/react-portal";

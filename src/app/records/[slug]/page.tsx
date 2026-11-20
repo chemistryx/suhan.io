@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import RecordPageComponent from "./RecordPageComponent";
 import { fetchAdjacentRecords, fetchRecord } from "@/lib/records";
+import Markdown from "@/components/markdown/Markdown";
+import styles from "@/styles/pages/records/RecordPage.module.scss";
 
 interface Props {
     params: Promise<{ slug: string }>;
@@ -31,5 +33,11 @@ export default async function RecordPage({ params }: Props) {
     const record = await getRecord(slug);
     const adjacent = await fetchAdjacentRecords(record.created_at);
 
-    return <RecordPageComponent record={record} adjacent={adjacent} />
+    return (
+        <RecordPageComponent
+            record={record}
+            adjacent={adjacent}
+            content={<Markdown source={record.content} className={styles.content} />}
+        />
+    );
 }
