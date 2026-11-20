@@ -17,7 +17,8 @@ interface Props {
     initialValues?: RecordFormData;
     // every tag name already in use, offered as suggestions
     tagOptions: string[];
-    onSubmit: (data: RecordFormData) => void;
+    // resolves true once saved; the form then stays busy while the page navigates away
+    onSubmit: (data: RecordFormData) => Promise<boolean>;
     onDirtyChange?: (isDirty: boolean) => void;
     mode: "create" | "edit";
 }
@@ -80,9 +81,15 @@ const RecordForm = ({ initialValues, tagOptions, onSubmit, onDirtyChange, mode }
         setFormData((prev) => prev.content === value ? prev : { ...prev, content: value ?? "" });
     }, []);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [isSubmitting, setSubmitting] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        onSubmit(formData);
+        if (isSubmitting) return;
+
+        setSubmitting(true);
+        const saved = await onSubmit(formData).catch(() => false);
+        if (!saved) setSubmitting(false);
     };
 
     return (
@@ -115,7 +122,7 @@ const RecordForm = ({ initialValues, tagOptions, onSubmit, onDirtyChange, mode }
                 <Input label="발행" type="checkbox" checked={formData.published} onChange={(e) => setFormData({ ...formData, published: e.target.checked })} />
             </div>
             <MarkdownEditor value={formData.content} onChange={handleContentChange} />
-            <Button onClick={handleSubmit}>{mode === "create" ? "등록하기" : "수정하기"}</Button>
+            <Button onClick={handleSubmit} disabled={isSubmitting}>{isSubmitting ? "저장 중..." : mode === "create" ? "등록하기" : "수정하기"}</Button>
         </div>
     );
 };

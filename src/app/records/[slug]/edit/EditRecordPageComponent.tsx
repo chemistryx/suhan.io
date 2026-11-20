@@ -30,11 +30,12 @@ const EditRecordPageComponent = ({ record, tagOptions }: Props) => {
         if (!result.ok) {
             toast.error(result.error);
             setDirty(true);
-            return;
+            return false;
         }
 
         toast.success("성공적으로 게시물을 수정했습니다.");
         router.push(`/records/${result.slug}`);
+        return true;
     };
 
     const { title, description, content, category, tags, published } = record;

@@ -28,11 +28,12 @@ const NewRecordPageComponent = ({ tagOptions }: Props) => {
         if (!result.ok) {
             toast.error(result.error);
             setDirty(true);
-            return;
+            return false;
         }
 
         toast.success("성공적으로 게시물을 등록했습니다.");
         router.push("/records");
+        return true;
     };
 
     return (
