@@ -3,7 +3,6 @@ import "@/styles/global.scss";
 import Navbar from "@/components/Navbar";
 import Container from "@/components/Container";
 import Footer from "@/components/Footer";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import Analytics from "@/components/Analytics";
 import { siteConfig, siteTitle } from "@/site.config";
 import Toast from "@/components/Toast";
@@ -73,7 +72,6 @@ export default function RootLayout({ children }: Props) {
                     </main>
                     <Footer />
                 </Container>
-                <SpeedInsights />
                 <Analytics />
             </body>
         </html>
