@@ -3,14 +3,15 @@ import styles from "@/styles/components/Footer.module.scss";
 import Link from "next/link";
 import useUser from "@/hooks/useUser";
 import { siteConfig } from "@/site.config";
-import { getYear } from "date-fns";
 import { Email, LogoGithub } from "@carbon/icons-react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
+// Fixed when the module loads; a deploy a year keeps it current.
+const year = new Date().getFullYear();
+
 const Footer = () => {
     const { user, signIn, signOut } = useUser();
-    const year = getYear(Date.now());
     const { github, email } = siteConfig.links;
 
     // The auth routes redirect back with ?auth=success|failed; show it once and drop the param.

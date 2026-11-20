@@ -24,6 +24,16 @@ type CommentForm = {
     password: string;
 };
 
+const LOAD_ERROR = "댓글을 불러오는 중 오류가 발생했습니다.";
+
+const requestComments = async (recordId: number): Promise<Comment[]> => {
+    const res = await fetch(`/api/comments?recordId=${recordId}`);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error);
+
+    return data.comments;
+};
+
 const RecordComments = ({ record }: Props) => {
     const { user } = useUser();
     const [comments, setComments] = useState<Comment[]>([]);
@@ -34,49 +44,41 @@ const RecordComments = ({ record }: Props) => {
     const [showPasswordModal, setPasswordModal] = useState(false);
     const [showDeleteModal, setDeleteModal] = useState(false);
     const [isLoading, setLoading] = useState(true);
-    const [isPasswordRequired, setPasswordRequired] = useState(true);
+    const [nickname, setNickname] = useState("");
+
+    // Edits keep the comment's own name; new comments are the author's or a generated nickname.
+    const authorName = form.author || (user ? siteConfig.author.name : nickname);
+    // Visitors need a password, except when editing with one already verified.
+    const isPasswordRequired = !user && !(actionType === ActionType.EDIT && actionPassword);
 
     const updateForm = (key: keyof CommentForm, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
 
     const canSubmit = (() => {
-        if (!form.author || !form.content) return false;
+        if (!authorName || !form.content) return false;
         if (isPasswordRequired && !form.password) return false;
         return true;
     })();
 
-    const loadComments = useCallback(async () => {
-        setLoading(true);
+    const applyComments = useCallback((list: Comment[]) => {
+        setComments(list);
+        setNickname((prev) => prev || generateNickname(list.map((c) => c.author_name)));
+    }, []);
 
-        try {
-            const res = await fetch(`/api/comments?recordId=${record.id}`);
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error);
-
-            setComments(data.comments);
-        } catch (e) {
-            toast.error((e as Error).message || "댓글을 불러오는 중 오류가 발생했습니다.");
-        } finally {
-            setLoading(false);
-        }
-
-    }, [record.id]);
+    const loadComments = () =>
+        requestComments(record.id).then(applyComments).catch((e) => toast.error((e as Error).message || LOAD_ERROR));
 
     useEffect(() => {
-        loadComments();
-    }, [loadComments]);
+        let active = true;
 
-    useEffect(() => {
-        if (user) {
-            updateForm("author", siteConfig.author.name);
-            setPasswordRequired(false); // do not require password by default if user available (create mode) 
-        } else {
-            const existingNames = comments.map((c) => c.author_name);
-            updateForm("author", generateNickname(existingNames));
-            setPasswordRequired(true);
-        }
-    }, [user, comments]);
+        requestComments(record.id)
+            .then((list) => { if (active) applyComments(list); })
+            .catch((e) => { if (active) toast.error((e as Error).message || LOAD_ERROR); })
+            .finally(() => { if (active) setLoading(false); });
+
+        return () => { active = false; };
+    }, [record.id, applyComments]);
 
     const invalidateForm = () => {
         setForm({ author: "", content: "", password: "" });
@@ -86,19 +88,18 @@ const RecordComments = ({ record }: Props) => {
 
     const handleSubmit = async () => {
         const isEdit = actionType === ActionType.EDIT;
-        const password = isPasswordRequired ? form.password : undefined;
 
         try {
             const res = isEdit
                 ? await fetch(`/api/comments/${selectedComment?.id}`, {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ content: form.content, password: actionPassword || password })
+                    body: JSON.stringify({ content: form.content, password: actionPassword || undefined })
                 })
                 : await fetch("/api/comments", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ recordId: record.id, authorName: form.author, content: form.content, password })
+                    body: JSON.stringify({ recordId: record.id, authorName, content: form.content, password: user ? undefined : form.password })
                 });
             const data = await res.json().catch(() => ({}));
             if (!res.ok) throw new Error(data.error);
@@ -122,7 +123,6 @@ const RecordComments = ({ record }: Props) => {
             if (type === ActionType.EDIT) {
                 updateForm("author", comment.author_name);
                 updateForm("content", comment.content);
-                setPasswordRequired(false);
             } else {
                 setDeleteModal(true);
             }
@@ -138,7 +138,6 @@ const RecordComments = ({ record }: Props) => {
         if (actionType == ActionType.EDIT) {
             updateForm("author", selectedComment.author_name);
             updateForm("content", selectedComment.content);
-            setPasswordRequired(true);
         } else {
             setDeleteModal(true);
         }
@@ -189,7 +188,7 @@ const RecordComments = ({ record }: Props) => {
                         </ul> : null
                     ) : <Skeleton style={{ width: "100%", height: "4.5rem" }} />}
                 <div className={styles.inputWrapper}>
-                    <Input label="이름" type="text" value={form.author} disabled />
+                    <Input label="이름" type="text" value={authorName} disabled />
                     <div className={styles.contentWrapper}>
                         <label className={styles.contentLabel}>내용</label>
                         <textarea className={styles.contentInput} value={form.content} onChange={(e) => updateForm("content", e.target.value)} rows={5} />

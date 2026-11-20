@@ -2,7 +2,7 @@ import { Modal, ModalContent, ModalHeader, ModalTitle, ModalWrapper } from "@/co
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import styles from "@/styles/components/modals/PasswordModal.module.scss";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 interface Props {
@@ -31,18 +31,17 @@ const PasswordModal = ({ showModal, setModal, commentId, onSuccess }: Props) => 
         } catch (e) {
             toast.error((e as Error).message || "비밀번호 확인 중 오류가 발생했습니다.");
         } finally {
-            setModal(false);
+            handleOpenChange(false);
         }
     };
 
-    useEffect(() => {
-        if (!showModal) {
-            setPassword("");
-        }
-    }, [showModal]);
+    const handleOpenChange = (open: boolean) => {
+        if (!open) setPassword("");
+        setModal(open);
+    };
 
     return (
-        <Modal open={showModal} onOpenChange={setModal}>
+        <Modal open={showModal} onOpenChange={handleOpenChange}>
             <ModalWrapper>
                 <ModalHeader>
                     <ModalTitle>비밀번호 확인</ModalTitle>

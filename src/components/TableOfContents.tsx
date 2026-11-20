@@ -47,6 +47,8 @@ const TableOfContents = ({ contentClassName }: Props) => {
             depth: h.depth - minDepth + 1
         }));
 
+        // Headings only exist in the rendered DOM, so they are read after render.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setToc(items);
     }, [contentClassName]);
 
@@ -85,12 +87,8 @@ const TableOfContents = ({ contentClassName }: Props) => {
             if (isOpen && itemsRef.current && !itemsRef.current.contains(event.target as Node)) setOpen(false);
         };
 
-        if (isOpen) {
-            setVisible(true);
-            clearTimer();
-        } else {
-            startTimer();
-        }
+        if (isOpen) clearTimer();
+        else startTimer();
 
         document.addEventListener("mousedown", handleClickOutside);
 
@@ -117,7 +115,7 @@ const TableOfContents = ({ contentClassName }: Props) => {
 
     return (
         <div className={[styles.base, isVisible ? styles.visible : ""].join(" ")}>
-            <button ref={buttonRef} className={[styles.button, isOpen || !isVisible ? styles.hidden : ""].join(" ")} onClick={() => setOpen((prev) => !prev)}>
+            <button ref={buttonRef} className={[styles.button, isOpen || !isVisible ? styles.hidden : ""].join(" ")} onClick={() => { setVisible(true); setOpen((prev) => !prev); }}>
                 <TableOfContentsIcon size={16} />
             </button>
             <ul ref={itemsRef} className={[styles.items, isOpen ? styles.visible : ""].join(" ")}>

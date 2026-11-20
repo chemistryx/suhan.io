@@ -7,10 +7,6 @@ const LightboxImage = ({ src, alt }: ImgHTMLAttributes<HTMLImageElement>) => {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        if (state === "open") setMounted(true);
-    }, [state]);
-
-    useEffect(() => {
         if (mounted) {
             document.body.style.overflow = "hidden";
             document.body.style.marginRight = "15px";
@@ -27,10 +23,13 @@ const LightboxImage = ({ src, alt }: ImgHTMLAttributes<HTMLImageElement>) => {
 
     return (
         <>
-            <img className={styles.base} src={src} alt={alt} onClick={() => setState("open")} />
+            {/* Markdown images have no known size, which next/image requires. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className={styles.base} src={src} alt={alt} onClick={() => { setMounted(true); setState("open"); }} />
             {mounted && (
                 <Portal>
                     <div className={styles.overlay} data-state={state} onAnimationEnd={() => state === "closed" && setMounted(false)} onClick={() => setState("closed")}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={src} alt={alt} data-state={state} />
                     </div>
                 </Portal>
